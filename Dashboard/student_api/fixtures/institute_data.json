@@ -1,0 +1,42 @@
+[
+	{
+		"model": "student_api.Institue",
+		"pk": 1,
+		"fields": {
+			"institute_name": "git",
+			"under_campus": "1"
+		}
+	},
+	{
+		"model": "student_api.Institue",
+		"pk": 2,
+		"fields": {
+			"institute_name": "gim",
+			"under_campus": "1"
+		}
+	},
+	{
+		"model": "student_api.Institue",
+		"pk": 3,
+		"fields": {
+			"institute_name": "gst",
+			"under_campus": "2"
+		}
+	},
+	{
+		"model": "student_api.Institue",
+		"pk": 4,
+		"fields": {
+			"institute_name": "hbs",
+			"under_campus": "2"
+		}
+	},
+	{
+		"model": "student_api.Institue",
+		"pk": 5,
+		"fields": {
+			"institute_name": "gst",
+			"under_campus": "3"
+		}
+	}
+]

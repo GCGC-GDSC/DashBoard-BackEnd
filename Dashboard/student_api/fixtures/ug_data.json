@@ -1,0 +1,27 @@
+[
+	{
+		"model":"student_api.UnderGraduates",
+		"pk":1,
+		"fields":{
+			"graduates_ptr_id":"1",
+			"under_institute":"1"
+		}
+
+	},
+	{
+		"model":"student_api.UnderGraduates",
+		"pk":2,
+		"fields":{
+			"graduates_ptr_id":"3",
+			"under_institute":"3"
+		}
+	},
+	{
+		"model":"student_api.UnderGraduates",
+		"pk":3,
+		"fields":{
+			"graduates_ptr_id":"4",
+			"under_institute":"5"
+		}
+	}
+]

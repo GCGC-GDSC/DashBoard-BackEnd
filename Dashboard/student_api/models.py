@@ -1,5 +1,4 @@
 from django.db import models
-
 # Create your models here.
 
 class Campus(models.Model):
@@ -38,22 +37,22 @@ class Graduates(models.Model):
 	def total_yet_to_place(self):
 		return self.total_students_eligible-self.total_placed
 
-	highest_salary = models.DecimalField(max_digits = 5, decimal_places = 2)
-	average_salary = models.DecimalField(max_digits = 5, decimal_places = 2)
-	lowest_salary = models.DecimalField(max_digits = 5, decimal_places = 2)
+	highest_salary = models.DecimalField(max_digits = 5, decimal_places = 2, default=0.0)
+	average_salary = models.DecimalField(max_digits = 5, decimal_places = 2, default=0.0)
+	lowest_salary = models.DecimalField(max_digits = 5, decimal_places = 2, default=0.0)
 
 	def __str__(self):
 		return 'Grad'
 
 class UnderGraduates(Graduates):
-	under_institute = models.ForeignKey(Institue, on_delete=models.CASCADE)
+	under_institute = models.ForeignKey(Institue, on_delete=models.CASCADE, null=True)
 
 	def __str__(self):
 		return 'UG: '+str(self.under_institute)
 
 
 class PostGraduates(Graduates):
-	under_institute = models.ForeignKey(Institue, on_delete=models.CASCADE)
+	under_institute = models.ForeignKey(Institue, on_delete=models.CASCADE, null=True)
 	
 	def __str__(self):
 		return 'PG '+str(self.under_institute)

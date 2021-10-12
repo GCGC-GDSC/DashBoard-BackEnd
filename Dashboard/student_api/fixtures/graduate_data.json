@@ -1,0 +1,66 @@
+[
+	{
+		"model": "student_api.Graduates",
+		"pk": 1,
+		"fields": {
+			"total_students": 2097,
+			"total_final_years": 2038,
+			"total_higher_study_and_pay_crt": 27,
+			"total_not_intrested_in_placments": 740,
+			"total_backlogs": 65,
+			"total_offers": 1230,
+			"total_multiple_offers": 285,
+			"highest_salary": 19.0,
+			"average_salary": 2.2,
+			"lowest_salary": 4.34
+		}
+	},
+	{
+		"model": "student_api.Graduates",
+		"pk": 2,
+		"fields": {
+			"total_students": 0,
+			"total_final_years": 63,
+			"total_higher_study_and_pay_crt": 0,
+			"total_not_intrested_in_placments": 52,
+			"total_backlogs": 0,
+			"total_offers": 5,
+			"total_multiple_offers": 1,
+			"highest_salary": 4.5,
+			"average_salary": 3.8,
+			"lowest_salary": 3.36
+		}
+	},
+	{
+		"model": "student_api.Graduates",
+		"pk": 3,
+		"fields": {
+			"total_students": 1443,
+			"total_final_years": 1402,
+			"total_higher_study_and_pay_crt": 166,
+			"total_not_intrested_in_placments": 513,
+			"total_backlogs": 153,
+			"total_offers": 865,
+			"total_multiple_offers": 212,
+			"highest_salary": 32.0,
+			"average_salary": 4.51,
+			"lowest_salary": 3.5
+		}
+	},
+	{
+		"model": "student_api.Graduates",
+		"pk": 4,
+		"fields": {
+			"total_students": 750,
+			"total_final_years": 721,
+			"total_higher_study_and_pay_crt": 29,
+			"total_not_intrested_in_placments": 109,
+			"total_backlogs": 46,
+			"total_offers": 747,
+			"total_multiple_offers": 322,
+			"highest_salary": 18.0,
+			"average_salary": 1.8,
+			"lowest_salary": 4.09
+		}
+	}
+]
