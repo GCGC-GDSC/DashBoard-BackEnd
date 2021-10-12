@@ -1,0 +1,11 @@
+[
+	{
+		"model":"student_api.PostGraduates",
+		"pk":1,
+		"fields":{
+			"graduates_ptr_id":"2",
+			"under_institute":"1"
+		}
+
+	}
+]

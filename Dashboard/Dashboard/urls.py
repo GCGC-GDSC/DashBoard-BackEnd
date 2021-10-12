@@ -15,8 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
+
+
+def redirect_view(request):
+    response = redirect('/api/student/')
+    return response
+
 
 urlpatterns = [
+    path('',redirect_view),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/student/', include('student_api.urls')),
