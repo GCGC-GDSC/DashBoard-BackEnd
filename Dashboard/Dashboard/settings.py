@@ -52,6 +52,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://192.168.31.86:3000",
+]
+
 ROOT_URLCONF = 'Dashboard.urls'
 
 TEMPLATES = [
