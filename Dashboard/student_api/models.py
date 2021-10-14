@@ -3,12 +3,12 @@ from django.db import models
 
 class Campus(models.Model):
 	campus_name = models.CharField(max_length=30,default="")
-	institue_count = models.IntegerField(default=0)
+	institute_count = models.IntegerField(default=0)
 
 	def __str__(self):
 		return self.campus_name+" 'Campus"
 
-class Institue(models.Model):
+class Institute(models.Model):
 	institute_name = models.CharField(max_length=10,default="")
 	under_campus = models.ForeignKey(Campus, on_delete=models.CASCADE)
 
@@ -45,14 +45,14 @@ class Graduates(models.Model):
 		return 'Grad'
 
 class UnderGraduates(Graduates):
-	under_institute = models.ForeignKey(Institue, on_delete=models.CASCADE, null=True)
+	under_institute = models.ForeignKey(Institute, on_delete=models.CASCADE, null=True)
 
 	def __str__(self):
 		return 'UG: '+str(self.under_institute)
 
 
 class PostGraduates(Graduates):
-	under_institute = models.ForeignKey(Institue, on_delete=models.CASCADE, null=True)
+	under_institute = models.ForeignKey(Institute, on_delete=models.CASCADE, null=True)
 	
 	def __str__(self):
 		return 'PG '+str(self.under_institute)

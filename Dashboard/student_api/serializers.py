@@ -1,14 +1,14 @@
 from rest_framework import serializers
-from .models import Campus, Institue, UnderGraduates, PostGraduates
+from .models import Campus, Institute, UnderGraduates, PostGraduates
 
 class CampusSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Campus
-        fields = ('id','campus_name', 'institue_count','url')
+        fields = ('id','campus_name', 'institute_count','url')
 
-class InstitueSerializer(serializers.HyperlinkedModelSerializer):
+class InstituteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Institue
+        model = Institute
         fields = ('id','institute_name', 'under_campus','url')
 
 class GraduatesSerializer(serializers.HyperlinkedModelSerializer):
