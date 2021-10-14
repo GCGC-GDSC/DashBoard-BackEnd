@@ -4,7 +4,7 @@
 		"pk": 1,
 		"fields": {
 			"campus_name": "vskp",
-			"institue_count": 8
+			"institute_count": 8
 		}
 	},
 	{
@@ -12,7 +12,7 @@
 		"pk": 2,
 		"fields": {
 			"campus_name": "hyd",
-			"institue_count": 4
+			"institute_count": 4
 		}
 	},
 	{
@@ -20,7 +20,7 @@
 		"pk": 3,
 		"fields": {
 			"campus_name": "blr",
-			"institue_count": 3
+			"institute_count": 3
 		}
 	}
 ]

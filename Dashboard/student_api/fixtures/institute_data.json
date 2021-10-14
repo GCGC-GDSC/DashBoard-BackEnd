@@ -1,6 +1,6 @@
 [
 	{
-		"model": "student_api.Institue",
+		"model": "student_api.Institute",
 		"pk": 1,
 		"fields": {
 			"institute_name": "git",
@@ -8,7 +8,7 @@
 		}
 	},
 	{
-		"model": "student_api.Institue",
+		"model": "student_api.Institute",
 		"pk": 2,
 		"fields": {
 			"institute_name": "gim",
@@ -16,7 +16,7 @@
 		}
 	},
 	{
-		"model": "student_api.Institue",
+		"model": "student_api.Institute",
 		"pk": 3,
 		"fields": {
 			"institute_name": "gst",
@@ -24,7 +24,7 @@
 		}
 	},
 	{
-		"model": "student_api.Institue",
+		"model": "student_api.Institute",
 		"pk": 4,
 		"fields": {
 			"institute_name": "hbs",
@@ -32,7 +32,7 @@
 		}
 	},
 	{
-		"model": "student_api.Institue",
+		"model": "student_api.Institute",
 		"pk": 5,
 		"fields": {
 			"institute_name": "gst",
