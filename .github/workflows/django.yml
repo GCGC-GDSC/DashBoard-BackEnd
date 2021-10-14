@@ -45,7 +45,7 @@ jobs:
         pip install psycopg2-binary psycopg2 
     - name: Coverage report
       run: |
-        cd Dashboards
+        cd Dashboard
         pip install coverage
         coverage run manage.py test
         coverage report
