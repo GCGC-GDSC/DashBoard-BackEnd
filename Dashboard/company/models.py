@@ -81,3 +81,49 @@ class Gis(Company):
                 self.Physics_and_Electronics_MECS +
                 self.BioTechnology_BSc +
                 self.Interg_Biotecchnology_MSc )
+
+class Pharmacy(Company):
+    B_Pharmacy = models.IntegerField(default=0)
+    M_Pharmacy_Pharmaceutical_Analysis = models.IntegerField(default=0)
+    M_Pharmacy_Pharmacology = models.IntegerField(default=0)
+    M_Pharmacy_Quality_Assurance = models.IntegerField(default=0)
+    M_Pharmacy_Pharmaceutical_Chemistry = models.IntegerField(default=0)
+    M_Pharmacy_Pharmaceutics = models.IntegerField(default=0)
+
+    @property
+    def total(self):
+        return (self.B_Pharmacy +
+                self.M_Pharmacy_Pharmaceutical_Analysis +
+                self.M_Pharmacy_Pharmacology +
+                self.M_Pharmacy_Quality_Assurance +
+                self.M_Pharmacy_Pharmaceutical_Chemistry +
+                self.M_Pharmacy_Pharmaceutics)
+
+class Gim_BBA_BCOM(Company):
+    BBA = models.IntegerField(default=0)
+    BCOM = models.IntegerField(default=0)
+    BBA_Logistics = models.IntegerField(default=0)
+    BBA_Business_Analytics = models.IntegerField(default=0)
+
+    @property
+    def total(self):
+        return (self.BBA +
+                self.BCOM +
+                self.BBA_Logistics +
+                self.BBA_Business_Analytics)
+
+class Gim_MBA(Company):
+    MBA_Finance = models.IntegerField(default=0)
+    MBA_HR = models.IntegerField(default=0)
+    MBA_Marketing = models.IntegerField(default=0)
+    MBA_IB = models.IntegerField(default=0)
+    MBA = models.IntegerField(default=0)
+
+    @property
+    def total(self):
+        return (self.MBA_Finance +
+                self.MBA_HR +
+                self.MBA_Marketing +
+                self.MBA_IB +
+                self.MBA)
+
