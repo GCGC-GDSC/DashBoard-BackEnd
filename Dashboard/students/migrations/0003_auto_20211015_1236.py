@@ -19,9 +19,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Institute',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(default='', max_length=10, unique=True)),
-                ('under_campus', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='students.campus')),
+                ('id',
+                 models.BigAutoField(auto_created=True,
+                                     primary_key=True,
+                                     serialize=False,
+                                     verbose_name='ID')),
+                ('name',
+                 models.CharField(default='', max_length=10, unique=True)),
+                ('under_campus',
+                 models.ForeignKey(null=True,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   to='students.campus')),
             ],
         ),
     ]
