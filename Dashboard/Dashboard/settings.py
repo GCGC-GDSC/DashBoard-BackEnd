@@ -39,9 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Local Party
+    'students',
+
+    #Third Party
+    'rest_framework',
     'corsheaders',
-    'student_api',
-    'rest_framework'
+    'drf_yasg',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
