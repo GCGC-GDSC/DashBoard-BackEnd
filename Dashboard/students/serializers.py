@@ -1,17 +1,20 @@
 from rest_framework import serializers, status
 from .models import *
 
+
 class CampusSerialize(serializers.ModelSerializer):
     class Meta:
         model = Campus
-        fields = ('id','name','inst_count')
+        fields = ('id', 'name', 'inst_count')
         ordering = ['-id']
+
 
 class InstituteSerialize(serializers.ModelSerializer):
     class Meta:
         model = Institute
-        fields = ('id','name', 'campus_name')
+        fields = ('id', 'name', 'campus_name')
         ordering = ['-under_campus']
+
 
 class GraduatesSerialize(serializers.ModelSerializer):
     class Meta:
