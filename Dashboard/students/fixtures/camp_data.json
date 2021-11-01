@@ -1,0 +1,26 @@
+[
+	{
+		"model": "students.Campus",
+		"pk": 1,
+		"fields": {
+			"name": "vskp",
+			"inst_count": 8
+		}
+	},
+	{
+		"model": "students.Campus",
+		"pk": 2,
+		"fields": {
+			"name": "hyd",
+			"inst_count": 4
+		}
+	},
+	{
+		"model": "students.Campus",
+		"pk": 3,
+		"fields": {
+			"name": "blr",
+			"inst_count": 3
+		}
+	}
+]
