@@ -20,6 +20,7 @@ class GraduatesSerialize(serializers.ModelSerializer):
     class Meta:
         model = Graduates
         fields = (
+            'is_ug',
             'under_institute_name',
             'under_campus_name',
             'total_students',
