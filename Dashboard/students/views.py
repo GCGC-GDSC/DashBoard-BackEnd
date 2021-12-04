@@ -22,6 +22,11 @@ from .models import *
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerialize
 
+    def get_queryset(self,cmp,int,is_ug):
+        qs = Graduates.objects.filter(
+                    Q(under_campus=cmp) & Q(under_institute=int)
+                    & Q(is_ug=is_ug))
+        return qs
     def get(self, request):
         send_data = {}
         cmps = Campus.objects.all()
@@ -30,15 +35,9 @@ class GraduateList(generics.ListAPIView):
             ints = Campus.objects.get(name=cmp.name).institute_set.all()
             for int in ints:
                 send_data[cmp.name][int.name] = []
-                ug = Graduates.objects.filter(
-                    Q(under_campus=cmp) & Q(under_institute=int)
-                    & Q(is_ug=True))
+                ug = self.get_queryset(cmp,int,True)
                 ug_data = GraduatesSerialize(ug, many=True).data
-                pg = Graduates.objects.filter(
-                    Q(under_campus=cmp) & Q(under_institute=int)
-                    & Q(is_ug=False))
+                pg = self.get_queryset(cmp,int,False)
                 pg_data = GraduatesSerialize(pg, many=True).data
-                send_data[cmp.name][int.name].append(ug_data)
-                send_data[cmp.name][int.name].append(pg_data)
-
+                send_data[cmp.name][int.name].extend([ug_data, pg_data])
         return response.Response({'status': 'OK', 'result': send_data})
