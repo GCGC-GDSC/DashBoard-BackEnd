@@ -1,14 +1,13 @@
 from rest_framework import routers
 from django.urls import path, include
-from . import views
-
-router = routers.DefaultRouter()
-router.register(r'GIT', views.GitViewSet)
-router.register(r'GIS', views.GisViewset)
-router.register(r'Pharmacy', views.PharmacyViewset)
-router.register(r'Business', views.Gim_BBA_BCOMViewset)
-router.register(r'MBA', views.Gim_MBAViewset)
+from .views import *
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('git', GitList.as_view(), name='graduates-list'),
+    path('gis', GisList.as_view(), name='graduates-list'),
+    path('Pharmacy', PharmacyList.as_view(), name='graduates-list'),
+    path('BBA', Gim_BBA_BCOMList.as_view(), name='graduates-list'),
+    path('MBA', Gim_MBAList.as_view(), name='graduates-list'),
+    # path('campus/', CampusesList.as_view(), name='campus-list'),
+    # path('institute/<str:campus>', InstituteList.as_view(), name='institute-list'),
 ]
