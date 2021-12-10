@@ -20,7 +20,7 @@ class Company(models.Model):
     profile_offered = models.CharField(max_length=50, default="")
     package = models.DecimalField(max_digits=5, decimal_places=2)
 
-class Git(Company):
+class Git_ug(Company):
     CSE = models.IntegerField(default=-1)
     IT = models.IntegerField(default=-1)
     ECE = models.IntegerField(default=-1)
@@ -33,54 +33,74 @@ class Git(Company):
     def total_no_of_seats(self):
         return self.CSE + self.IT + self.ECE + self.EEE + self.Mech + self.Civil + self.Bio
 
-class Gis(Company):
-    MSc_chemistry_analytics = models.IntegerField(default=-1)
-    MSc_chemistry_organic = models.IntegerField(default=-1)
+class Git_pg(Company):
+    CST = models.IntegerField(default=-1)
+    CFIS = models.IntegerField(default=-1)
+    DS = models.IntegerField(default=-1)
+    VSLI = models.IntegerField(default=-1)
+    PSA = models.IntegerField(default=-1)
+    MD = models.IntegerField(default=-1)
+    MTA = models.IntegerField(default=-1)
+
+    @property
+    def total_no_of_seats(self):
+        return self.CST + self.CFIS + self.DS + self.VSLI + self.PSA + self.MD + self.MTA
+
+
+class Gis_ug(Company):
     BSc_Chemistry_Honors = models.IntegerField(default=-1)
     Computer_Science_BCA = models.IntegerField(default=-1)
+    Food_Science_Technology_BSc_Hons = models.IntegerField(default=-1)
+    Math_BSc = models.IntegerField(default=-1)
+    Enviromental_BEM = models.IntegerField(default=-1)
+    BioTechnology_BSc = models.IntegerField(default=-1)
+
+    @property
+    def total(self):
+        return (self.BSc_Chemistry_Honors +
+                self.Computer_Science_BCA +
+                self.Food_Science_Technology_BSc_Hons +
+                self.Math_BSc +
+                self.Enviromental_BEM +
+                self.BioTechnology_BSc)
+
+class Gis_pg(Company):
+    MSc_chemistry_analytics = models.IntegerField(default=-1)
+    MSc_chemistry_organic = models.IntegerField(default=-1)
     Computer_Science_MCA_3years = models.IntegerField(default=-1)
     Computer_Science_MCA_2years = models.IntegerField(default=-1)
     Biotechnology_MSc = models.IntegerField(default=-1)
     Microbiology_MSc = models.IntegerField(default=-1)
     Food_Science_Technology_MSc = models.IntegerField(default=-1)
-    Food_Science_Technology_BSc_Hons = models.IntegerField(default=-1)
     Math_MSc = models.IntegerField(default=-1)
     Math_MSc_Statistics = models.IntegerField(default=-1)
-    Math_BSc = models.IntegerField(default=-1)
     BioChemisty_Msc = models.IntegerField(default=-1)
     Enviromental_MSc = models.IntegerField(default=-1)
-    Enviromental_BEM = models.IntegerField(default=-1)
     Physics_and_Electronics_MSc = models.IntegerField(default=-1)
     Physics_and_Electronics_MPC = models.IntegerField(default=-1)
     Physics_and_Electronics_MPCS = models.IntegerField(default=-1)
     Physics_and_Electronics_MECS = models.IntegerField(default=-1)
-    BioTechnology_BSc = models.IntegerField(default=-1)
     Interg_Biotecchnology_MSc = models.IntegerField(default=-1)
 
     @property
     def total(self):
         return (self.MSc_chemistry_analytics +
                 self.MSc_chemistry_organic +
-                self.BSc_Chemistry_Honors +
-                self.Computer_Science_BCA +
                 self.Computer_Science_MCA_3years +
                 self.Computer_Science_MCA_2years +
                 self.Biotechnology_MSc +
                 self.Microbiology_MSc +
                 self.Food_Science_Technology_MSc +
-                self.Food_Science_Technology_BSc_Hons +
                 self.Math_MSc +
                 self.Math_MSc_Statistics +
-                self.Math_BSc +
                 self.BioChemisty_Msc +
                 self.Enviromental_MSc +
-                self.Enviromental_BEM +
                 self.Physics_and_Electronics_MSc +
                 self.Physics_and_Electronics_MPC +
                 self.Physics_and_Electronics_MPCS +
                 self.Physics_and_Electronics_MECS +
-                self.BioTechnology_BSc +
-                self.Interg_Biotecchnology_MSc )
+                self.Interg_Biotecchnology_MSc)
+
 
 class Pharmacy(Company):
     B_Pharmacy = models.IntegerField(default=-1)

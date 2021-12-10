@@ -1,38 +1,48 @@
 from rest_framework import serializers
-from .models import Git, Gis, Pharmacy, Gim_BBA_BCOM, Gim_MBA
+from .models import Git_ug, Gis_ug, Git_pg, Gis_pg, Pharmacy, Gim_BBA_BCOM, Gim_MBA
 
-class GitSerializer(serializers.ModelSerializer):
+class GitUgSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Git
+        model = Git_ug
         fields = ('id', 'name_of_the_company', 'profile_offered', 'package', 'CSE', 'IT', 'ECE', 'EEE', 'Mech', 'Civil', 'Bio', 'total_no_of_seats')
 
-
-class GisSerializer(serializers.ModelSerializer):
+class GitPgSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Gis
+        model = Git_pg
+        fields = ('id', 'name_of_the_company', 'profile_offered', 'package', 'CST', 'CFIS', 'DS', 'VSLI', 'PSA', 'MD', 'MTA')
+
+class GisPgSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gis_pg
         fields = ('id', 'name_of_the_company', 'profile_offered', 'package',
                   'MSc_chemistry_analytics',
                   'MSc_chemistry_organic',
-                  'BSc_Chemistry_Honors',
-                  'Computer_Science_BCA',
                   'Computer_Science_MCA_3years',
                   'Computer_Science_MCA_2years',
                   'Biotechnology_MSc',
                   'Microbiology_MSc',
                   'Food_Science_Technology_MSc',
-                  'Food_Science_Technology_BSc_Hons',
                   'Math_MSc',
                   'Math_MSc_Statistics',
-                  'Math_BSc',
                   'BioChemisty_Msc',
                   'Enviromental_MSc',
-                  'Enviromental_BEM',
                   'Physics_and_Electronics_MSc',
                   'Physics_and_Electronics_MPC',
                   'Physics_and_Electronics_MPCS',
                   'Physics_and_Electronics_MECS',
-                  'BioTechnology_BSc',
                   'Interg_Biotecchnology_MSc',
+                  'total')
+
+class GisUgSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gis_ug
+        fields = ('id', 'name_of_the_company', 'profile_offered', 'package',
+                  'BSc_Chemistry_Honors',
+                  'Computer_Science_BCA',
+                  'Food_Science_Technology_BSc_Hons',
+                  'Math_BSc',
+                  'Enviromental_BEM',
+                  'BioTechnology_BSc',
                   'total')
 
 class PharmacySerializer(serializers.ModelSerializer):

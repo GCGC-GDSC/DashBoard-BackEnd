@@ -3,8 +3,8 @@ from django.urls import path, include
 from .views import *
 
 urlpatterns = [
-    path('git', GitList.as_view()),
-    path('gis', GisList.as_view()),
+    path('institite/<str:institute>', GitUgList.as_view()),
+    path('gis', GisUgList.as_view()),
     path('Pharmacy', PharmacyList.as_view()),
     path('BBA', Gim_BBA_BCOMList.as_view()),
     path('MBA', Gim_MBAList.as_view()),
