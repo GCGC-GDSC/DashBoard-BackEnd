@@ -7,8 +7,13 @@ class GitList(generics.ListAPIView):
     serializer_class = GitSerializer
 
     def get(self, request):
-        send_data = {}
+        send_data = {'GIT': "this should work!!"}
+        git = Git.objects.all()
+        print("----------------------------------------------")
+        print(git)
+        print("----------------------------------------------")
 
+        return response.Response({'status': 'OK', 'result': send_data})
 
 class GisList(generics.ListAPIView):
     serializer_class = GisSerializer

@@ -1,13 +1,13 @@
 from rest_framework import serializers
 from .models import Git, Gis, Pharmacy, Gim_BBA_BCOM, Gim_MBA
 
-class GitSerializer(serializers.HyperlinkedModelSerializer):
+class GitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Git
         fields = ('id', 'name_of_the_company', 'profile_offered', 'package', 'CSE', 'IT', 'ECE', 'EEE', 'Mech', 'Civil', 'Bio', 'total_no_of_seats')
 
 
-class GisSerializer(serializers.HyperlinkedModelSerializer):
+class GisSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gis
         fields = ('id', 'name_of_the_company', 'profile_offered', 'package',
@@ -35,7 +35,7 @@ class GisSerializer(serializers.HyperlinkedModelSerializer):
                   'Interg_Biotecchnology_MSc',
                   'total')
 
-class PharmacySerializer(serializers.HyperlinkedModelSerializer):
+class PharmacySerializer(serializers.ModelSerializer):
     class Meta:
         model = Pharmacy
         fields = ('id', 'name_of_the_company', 'profile_offered', 'package',
@@ -47,7 +47,7 @@ class PharmacySerializer(serializers.HyperlinkedModelSerializer):
                   "M_Pharmacy_Pharmaceutics",
                   'total')
 
-class Gim_BBA_BCOMSerializer(serializers.HyperlinkedModelSerializer):
+class Gim_BBA_BCOMSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gim_BBA_BCOM
         fields = ('id', 'name_of_the_company', 'profile_offered', 'package',
@@ -57,7 +57,7 @@ class Gim_BBA_BCOMSerializer(serializers.HyperlinkedModelSerializer):
                     'BBA_Business_Analytics',
                     'total')
 
-class Gim_MBASerializer(serializers.HyperlinkedModelSerializer):
+class Gim_MBASerializer(serializers.ModelSerializer):
     class Meta:
         model = Gim_MBA
         fields = ('id', 'name_of_the_company', 'profile_offered', 'package',
