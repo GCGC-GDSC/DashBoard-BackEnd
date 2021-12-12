@@ -1,4 +1,5 @@
 from django.db import models
+from students.models import Institute
 
 """class Branch(models.Model):
     Branch_name = models.CharField(max_length=10, default="")
@@ -15,10 +16,41 @@ class PostGraduates(companies_stats):
     under_branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True)
 # --------------------------------------------------------------------------------------------------"""
 
+
+
+class Courses(models.Model):
+    course_name = models.CharField(max_length=30, default="", unique=True)
+    institue = models.ForeignKey(Institute, null=True, on_delete=models.CASCADE)
+    is_ug = models.BooleanField(default=True)
+
+    def __str__(self):
+        grad = "UG"
+        if(not self.is_ug):
+            grad = "PG"
+        return self.course_name + " " + self.institue.name +" " + grad
+
 class Company(models.Model):
     name_of_the_company = models.CharField(max_length=50, default="")
     profile_offered = models.CharField(max_length=50, default="")
     package = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return self.name_of_the_company
+
+
+class CompanyCousesPlaced(models.Model):
+    company_id = models.ForeignKey(Company, null=True, on_delete=models.CASCADE)
+    courses_id = models.ForeignKey(Courses, null=True, on_delete=models.CASCADE)
+    placed_count = models.IntegerField(default=-1)
+
+    def __str__(self):
+        return self.company_id.name_of_the_company+" - "+self.courses_id.course_name
+
+    class Meta:
+        ordering = ['company_id']
+
+
+# ------------------------------------------------------------------------------------------------------
 
 class Git_ug(Company):
     CSE = models.IntegerField(default=-1)

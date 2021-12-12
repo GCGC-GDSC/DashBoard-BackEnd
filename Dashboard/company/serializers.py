@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Git_ug, Gis_ug, Git_pg, Gis_pg, Pharmacy, Gim_BBA_BCOM, Gim_MBA
+from .models import (Courses, Company, CompanyCousesPlaced, Git_ug, Gis_ug, Git_pg, Gis_pg, Pharmacy, Gim_BBA_BCOM, Gim_MBA)
+
+class InstitueLevelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompanyCousesPlaced
+        fields = '__all__'
 
 class GitUgSerializer(serializers.ModelSerializer):
     class Meta:
