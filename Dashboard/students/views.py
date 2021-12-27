@@ -1,4 +1,5 @@
 from rest_framework import generics, status, views, response
+
 from django.db.models import Q, Count, Max
 from .serializers import *
 from .models import *
@@ -42,3 +43,7 @@ class GraduateList(generics.ListAPIView):
                 send_data[cmp.name][int.name].append(pg_data)
 
         return response.Response({'status': 'OK', 'result': send_data})
+
+class GraduateRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Graduates.objects.all()
+    serializer_class = GraduatesSerialize

@@ -35,4 +35,5 @@ class GraduatesSerialize(serializers.ModelSerializer):
             'highest_salary',
             'average_salary',
             'lowest_salary',
+            'is_ug'
         )

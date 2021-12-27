@@ -42,7 +42,12 @@ class InstitueCompanyList(generics.ListAPIView):
 
 
 # --------------------------------------------------------------------------------------
-class GitPgList(generics.ListAPIView):
+
+class InstituteRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Company.objects.all()
+    serializer_class = InstitueLevelSerializer
+
+"""class GitPgList(generics.ListAPIView):
     serializer_class = GitPgSerializer
 
     def get(self, request):
@@ -90,4 +95,4 @@ class Gim_MBAList(generics.ListAPIView):
     def get(self, request):
         send_data = {}
 
-        return response.Response({'status': 'OK', 'result': send_data})
+        return response.Response({'status': 'OK', 'result': send_data})"""

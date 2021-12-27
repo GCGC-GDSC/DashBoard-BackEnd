@@ -11,7 +11,7 @@ class GitUgSerializer(serializers.ModelSerializer):
         model = Git_ug
         fields = ('id', 'name_of_the_company', 'profile_offered', 'package', 'CSE', 'IT', 'ECE', 'EEE', 'Mech', 'Civil', 'Bio', 'total_no_of_seats')
 
-class GitPgSerializer(serializers.ModelSerializer):
+"""class GitPgSerializer(serializers.ModelSerializer):
     class Meta:
         model = Git_pg
         fields = ('id', 'name_of_the_company', 'profile_offered', 'package', 'CST', 'CFIS', 'DS', 'VSLI', 'PSA', 'MD', 'MTA')
@@ -81,4 +81,4 @@ class Gim_MBASerializer(serializers.ModelSerializer):
                   'MBA_Marketing',
                   'MBA_IB',
                   'MBA',
-                  'total')
+                  'total')"""
