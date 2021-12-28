@@ -1,84 +1,56 @@
 from rest_framework import serializers
-from .models import (Courses, Company, CompanyCousesPlaced, Git_ug, Gis_ug, Git_pg, Gis_pg, Pharmacy, Gim_BBA_BCOM, Gim_MBA)
+from .models import (
+    Company,
+    Courses,
+    CompanyCousesPlaced
+)
+from students.models import (
+    Institute,
+)
 
-class InstitueLevelSerializer(serializers.ModelSerializer):
+
+class CoursesSeralizer(serializers.ModelSerializer):
+    class Meta:
+        model = Courses
+        fields = ['id', 'course']
+
+
+class CompanyCousesPlacedSeralizer(serializers.ModelSerializer):
+    course_name = serializers.SerializerMethodField('_course_name')
+    is_ug = serializers.SerializerMethodField('_is_ug')
+
+    def _course_name(self, obj):
+        return obj.course.course
+
+    def _is_ug(self, obj):
+        return obj.course.is_ug
+
     class Meta:
         model = CompanyCousesPlaced
-        fields = '__all__'
+        fields = ['id', 'course_name', 'selected', 'is_ug']
 
-class GitUgSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Git_ug
-        fields = ('id', 'name_of_the_company', 'profile_offered', 'package', 'CSE', 'IT', 'ECE', 'EEE', 'Mech', 'Civil', 'Bio', 'total_no_of_seats')
 
-class GitPgSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Git_pg
-        fields = ('id', 'name_of_the_company', 'profile_offered', 'package', 'CST', 'CFIS', 'DS', 'VSLI', 'PSA', 'MD', 'MTA')
+class CompanySeralizer(serializers.ModelSerializer):
+    course = CompanyCousesPlacedSeralizer(
+        source='companycousesplaced_set', many=True)
 
-class GisPgSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Gis_pg
-        fields = ('id', 'name_of_the_company', 'profile_offered', 'package',
-                  'MSc_chemistry_analytics',
-                  'MSc_chemistry_organic',
-                  'Computer_Science_MCA_3years',
-                  'Computer_Science_MCA_2years',
-                  'Biotechnology_MSc',
-                  'Microbiology_MSc',
-                  'Food_Science_Technology_MSc',
-                  'Math_MSc',
-                  'Math_MSc_Statistics',
-                  'BioChemisty_Msc',
-                  'Enviromental_MSc',
-                  'Physics_and_Electronics_MSc',
-                  'Physics_and_Electronics_MPC',
-                  'Physics_and_Electronics_MPCS',
-                  'Physics_and_Electronics_MECS',
-                  'Interg_Biotecchnology_MSc',
-                  'total')
+        model = Company
+        fields = ['id', 'name_of_the_company',
+                  'profile_offered', 'package', 'course']
 
-class GisUgSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Gis_ug
-        fields = ('id', 'name_of_the_company', 'profile_offered', 'package',
-                  'BSc_Chemistry_Honors',
-                  'Computer_Science_BCA',
-                  'Food_Science_Technology_BSc_Hons',
-                  'Math_BSc',
-                  'Enviromental_BEM',
-                  'BioTechnology_BSc',
-                  'total')
+class InstituteLevelSeralizer(serializers.ModelSerializer):
+    campus = serializers.SerializerMethodField('_campus')
+    institue = serializers.SerializerMethodField('_institue')
 
-class PharmacySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Pharmacy
-        fields = ('id', 'name_of_the_company', 'profile_offered', 'package',
-                  "B_Pharmacy",
-                  "M_Pharmacy_Pharmaceutical_Analysis",
-                  "M_Pharmacy_Pharmacology",
-                  "M_Pharmacy_Quality_Assurance",
-                  "M_Pharmacy_Pharmaceutical_Chemistry",
-                  "M_Pharmacy_Pharmaceutics",
-                  'total')
+    companies = CompanySeralizer(many=True,read_only=True)
 
-class Gim_BBA_BCOMSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Gim_BBA_BCOM
-        fields = ('id', 'name_of_the_company', 'profile_offered', 'package',
-                  'BBA',
-                    'BCOM',
-                    'BBA_Logistics',
-                    'BBA_Business_Analytics',
-                    'total')
+    def _campus(self, obj):
+        return obj.under_campus.name
 
-class Gim_MBASerializer(serializers.ModelSerializer):
+    def _institue(self, obj):
+        return obj.name
+
     class Meta:
-        model = Gim_MBA
-        fields = ('id', 'name_of_the_company', 'profile_offered', 'package',
-                  'MBA_Finance',
-                  'MBA_HR',
-                  'MBA_Marketing',
-                  'MBA_IB',
-                  'MBA',
-                  'total')
+        model = Institute
+        fields = ['id', 'institue', 'campus','companies']

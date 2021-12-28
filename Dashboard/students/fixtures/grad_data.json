@@ -1,0 +1,21 @@
+[
+    {
+		"model": "students.Graduates",
+		"pk": 1,
+		"fields": {
+			"under_campus":"1",
+			"under_institute": "1",
+            "total_students":100,
+            "total_final_years":1500,
+            "total_higher_study_and_pay_crt":210,
+            "total_not_intrested_in_placments":70,
+            "total_backlogs":20,
+            "total_offers":600,
+            "total_multiple_offers":400,
+            "highest_salary":50.0,
+            "average_salary":12.0,
+            "lowest_salary":3.75,
+            "is_ug": true
+		}
+	}
+]
