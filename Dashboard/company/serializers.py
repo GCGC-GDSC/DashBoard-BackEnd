@@ -6,12 +6,26 @@ class InstitueLevelSerializer(serializers.ModelSerializer):
         model = CompanyCousesPlaced
         fields = '__all__'
 
-class GitUgSerializer(serializers.ModelSerializer):
+class CoursesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Courses
+        fields = '__all__'
+
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = '__all__'
+
+"""class CourseCompanySerializer(serializers.Serializer):
+    course = CoursesSerializer(many=True)
+    company = CompanySerializer(many=True)"""
+
+"""class GitUgSerializer(serializers.ModelSerializer):
     class Meta:
         model = Git_ug
         fields = ('id', 'name_of_the_company', 'profile_offered', 'package', 'CSE', 'IT', 'ECE', 'EEE', 'Mech', 'Civil', 'Bio', 'total_no_of_seats')
 
-"""class GitPgSerializer(serializers.ModelSerializer):
+class GitPgSerializer(serializers.ModelSerializer):
     class Meta:
         model = Git_pg
         fields = ('id', 'name_of_the_company', 'profile_offered', 'package', 'CST', 'CFIS', 'DS', 'VSLI', 'PSA', 'MD', 'MTA')

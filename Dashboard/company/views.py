@@ -1,8 +1,12 @@
-from rest_framework import generics, status, views, response
+from rest_framework import generics, status, views, response, viewsets
 from django.db.models import Q, Count, Max
 from .serializers import *
 from .models import *
 from students.models import Institute
+from collections import namedtuple
+from rest_framework.response import Response
+
+Data = namedtuple('data', ('courses', 'company'))
 
 class InstitueCompanyList(generics.ListAPIView):
     serializer_class = InstitueLevelSerializer
@@ -40,12 +44,12 @@ class InstitueCompanyList(generics.ListAPIView):
 
         return response.Response({'status': 'OK', 'result': send_data})
 
-
 # --------------------------------------------------------------------------------------
 
-class InstituteRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+class CompanyRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Company.objects.all()
-    serializer_class = InstitueLevelSerializer
+    serializer_class = CompanySerializer
+
 
 """class GitPgList(generics.ListAPIView):
     serializer_class = GitPgSerializer
