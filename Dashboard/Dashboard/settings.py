@@ -39,6 +39,10 @@ INSTALLED_APPS = [
 
     # Local Party
     'students',
+<<<<<<< HEAD
+=======
+    'company',
+>>>>>>> feature/Dheerajdoppalapudi/issue-14/company-route
 
     #Third Party
     'rest_framework',
