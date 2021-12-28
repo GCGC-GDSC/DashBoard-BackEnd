@@ -20,10 +20,6 @@ class GraduatesSerialize(serializers.ModelSerializer):
     class Meta:
         model = Graduates
         fields = (
-<<<<<<< HEAD
-            'is_ug',
-=======
->>>>>>> feature/Dheerajdoppalapudi/issue-14/company-route
             'under_institute_name',
             'under_campus_name',
             'total_students',
