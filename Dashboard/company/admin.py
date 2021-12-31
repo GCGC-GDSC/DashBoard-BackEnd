@@ -1,3 +1,8 @@
 from django.contrib import admin
+from .models import (Courses, Company, CompanyCousesPlaced)
 
-# Register your models here.
+
+admin.site.register(Courses)
+admin.site.register(Company)
+admin.site.register(CompanyCousesPlaced)
+

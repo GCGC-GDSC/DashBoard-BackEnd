@@ -3,11 +3,9 @@ from django.urls import path, include
 from .views import *
 
 urlpatterns = [
-    path('git', GitList.as_view(), name='graduates-list'),
-    path('gis', GisList.as_view(), name='graduates-list'),
-    path('Pharmacy', PharmacyList.as_view(), name='graduates-list'),
-    path('BBA', Gim_BBA_BCOMList.as_view(), name='graduates-list'),
-    path('MBA', Gim_MBAList.as_view(), name='graduates-list'),
-    # path('campus/', CampusesList.as_view(), name='campus-list'),
-    # path('institute/<str:campus>', InstituteList.as_view(), name='institute-list'),
+    path('compnay_list', CompanyList.as_view()),
+    path('institute_level', InstituteLevel.as_view()),
+    path('crud/course/<int:pk>/', CourseRetrieveUpdateDestroy.as_view()),
+    path('crud/company/<int:pk>/', CompanyRetrieveUpdateDestroy.as_view()),# this has to be changed
+    path('crud/companycourse/<int:pk>/', CompanyCousesRetrieveUpdateDestroy.as_view())
 ]
