@@ -11,7 +11,7 @@ from students.models import (
 class CoursesSeralizer(serializers.ModelSerializer):
     class Meta:
         model = Courses
-        fields = ['id', 'course']
+        fields = "__all__"
         ordering = ['-id']
 
 class CompanyCousesPlacedSeralizer(serializers.ModelSerializer):

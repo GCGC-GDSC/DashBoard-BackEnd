@@ -30,5 +30,8 @@ class CompanyCousesPlaced(models.Model):
         Courses, default=None, on_delete=models.CASCADE)
     selected = models.IntegerField(default=-1)
 
+    """class Meta:
+        unique = ['company', 'course']"""
+
     def __str__(self):
         return "Placement Details for Company " + str(self.company) + " for " + str(self.course)

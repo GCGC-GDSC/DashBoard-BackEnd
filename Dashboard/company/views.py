@@ -62,6 +62,8 @@ class CompanyCousesRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = CompanyCousesPlaced.objects.all()
     serializer_class = CompanyCousesPlacedSeralizer
 
+
+
 # class CoursesList(generics.ListAPIView):
 #     serializer_class = CompanySeralizer
 
