@@ -1,5 +1,4 @@
 from rest_framework import generics, status, views, response
-
 from django.db.models import Q, Count, Max
 from .serializers import *
 from .models import *
@@ -44,6 +43,19 @@ class GraduateList(generics.ListAPIView):
 
         return response.Response({'status': 'OK', 'result': send_data})
 
+
 class GraduateRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Graduates.objects.all()
     serializer_class = GraduatesSerialize
+
+class GraduateRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Graduates.objects.all()
+    serializer_class = GraduatesSerialize
+
+class InstituteRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Institute.objects.all()
+    serializer_class = InstituteSerialize
+
+class CampusRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Campus.objects.all()
+    serializer_class = CampusSerialize
