@@ -42,3 +42,20 @@ class GraduateList(generics.ListAPIView):
                 send_data[cmp.name][int.name].append(pg_data)
 
         return response.Response({'status': 'OK', 'result': send_data})
+
+
+class GraduateRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Graduates.objects.all()
+    serializer_class = GraduatesSerialize
+
+class GraduateRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Graduates.objects.all()
+    serializer_class = GraduatesSerialize
+
+class InstituteRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Institute.objects.all()
+    serializer_class = InstituteSerialize
+
+class CampusRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Campus.objects.all()
+    serializer_class = CampusSerialize
