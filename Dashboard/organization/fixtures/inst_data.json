@@ -1,6 +1,6 @@
 [
 	{
-		"model": "students.Institute",
+		"model": "organization.Institute",
 		"pk": 1,
 		"fields": {
 			"name": "git",
@@ -8,7 +8,7 @@
 		}
 	},
 	{
-		"model": "students.Institute",
+		"model": "organization.Institute",
 		"pk": 2,
 		"fields": {
 			"name": "gim",
@@ -16,7 +16,7 @@
 		}
 	},
 	{
-		"model": "students.Institute",
+		"model": "organization.Institute",
 		"pk": 3,
 		"fields": {
 			"name": "gst",
@@ -24,7 +24,7 @@
 		}
 	},
 	{
-		"model": "students.Institute",
+		"model": "organization.Institute",
 		"pk": 4,
 		"fields": {
 			"name": "hbs",
@@ -32,7 +32,7 @@
 		}
 	},
 	{
-		"model": "students.Institute",
+		"model": "organization.Institute",
 		"pk": 5,
 		"fields": {
 			"name": "gst",

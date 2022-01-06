@@ -7,12 +7,7 @@ from .models import (
 from students.models import (
     Institute,
 )
-
-
-class CoursesSeralizer(serializers.ModelSerializer):
-    class Meta:
-        model = Courses
-        fields = ['id', 'course']
+from organization.serializers import CompanySeralizer
 
 
 class CompanyCousesPlacedSeralizer(serializers.ModelSerializer):

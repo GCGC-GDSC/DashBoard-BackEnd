@@ -1,0 +1,102 @@
+[
+  {
+		"model": "organization.courses",
+		"pk": 1,
+		"fields": {
+			"campus": "1",
+			"institute": "1",
+      "course":"cse",
+      "is_ug": true
+		}
+	},
+  {
+		"model": "organization.courses",
+		"pk": 2,
+		"fields": {
+			"campus": "1",
+			"institute": "1",
+      "course":"ece",
+      "is_ug": true
+		}
+	},
+  {
+		"model": "organization.courses",
+		"pk": 3,
+		"fields": {
+			"campus": "1",
+			"institute": "1",
+      "course":"eee",
+      "is_ug": true
+		}
+	},
+  {
+		"model": "organization.courses",
+		"pk": 4,
+		"fields": {
+			"campus": "1",
+			"institute": "1",
+      "course":"cst",
+      "is_ug": false
+		}
+	},
+  {
+		"model": "organization.courses",
+		"pk": 5,
+		"fields": {
+			"campus": "1",
+			"institute": "1",
+      "course":"cfis",
+      "is_ug": false
+		}
+	},
+  {
+		"model": "organization.courses",
+		"pk": 6,
+		"fields": {
+			"campus": "1",
+			"institute": "2",
+      "course":"bba",
+      "is_ug": true
+		}
+	},
+  {
+		"model": "organization.courses",
+		"pk": 7,
+		"fields": {
+			"campus": "1",
+			"institute": "2",
+      "course":"b bcom",
+      "is_ug": true
+		}
+	},
+  {
+		"model": "organization.courses",
+		"pk": 8,
+		"fields": {
+			"campus": "1",
+			"institute": "2",
+      "course":"MBA Finance",
+      "is_ug": false
+		}
+	},
+  {
+		"model": "organization.courses",
+		"pk": 9,
+		"fields": {
+			"campus": "1",
+			"institute": "2",
+      "course":"MBA HR",
+      "is_ug": false
+		}
+	},
+  {
+		"model": "organization.courses",
+		"pk": 10,
+		"fields": {
+			"campus": "1",
+			"institute": "2",
+      "course":"MBA HR",
+      "is_ug": false
+		}
+	}
+]
