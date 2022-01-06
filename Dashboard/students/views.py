@@ -44,10 +44,6 @@ class GraduateList(generics.ListAPIView):
         return response.Response({'status': 'OK', 'result': send_data})
 
 
-class GraduateRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Graduates.objects.all()
-    serializer_class = GraduatesSerialize
-
 class GraduateRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Graduates.objects.all()
     serializer_class = GraduatesSerialize

@@ -39,7 +39,7 @@ INSTALLED_APPS = [
 
     # Local Party
     'students',
-    'company',
+    #'company',
 
     #Third Party
     'rest_framework',
