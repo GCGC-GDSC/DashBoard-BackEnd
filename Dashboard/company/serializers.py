@@ -8,11 +8,12 @@ from students.models import (
     Institute,
 )
 
+
 class CoursesSeralizer(serializers.ModelSerializer):
     class Meta:
         model = Courses
-        fields = "__all__"
-        ordering = ['-id']
+        fields = ['id', 'course']
+
 
 class CompanyCousesPlacedSeralizer(serializers.ModelSerializer):
     course_name = serializers.SerializerMethodField('_course_name')
@@ -27,6 +28,7 @@ class CompanyCousesPlacedSeralizer(serializers.ModelSerializer):
     class Meta:
         model = CompanyCousesPlaced
         fields = ['id', 'course_name', 'selected', 'is_ug']
+
 
 class CompanySeralizer(serializers.ModelSerializer):
     course = CompanyCousesPlacedSeralizer(
