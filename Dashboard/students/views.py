@@ -4,6 +4,7 @@ from django.db.models import Q, Count, Max
 from organization.serializers import CampusSerialize, InstituteSerialize 
 from .serializers import *
 from .models import *
+from rest_framework.decorators import api_view, permission_classes
 
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerialize
@@ -41,3 +42,9 @@ class InstituteRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 class CampusRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Campus.objects.all()
     serializer_class = CampusSerialize
+
+"""class overall(generics.ListAPIView):
+    serializer_class = GraduatesSerialize
+
+    def get_queryset(self):
+        queryset = Purchase.objects.all()"""

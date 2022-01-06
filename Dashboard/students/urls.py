@@ -9,4 +9,5 @@ urlpatterns = [
     # path('crud/campus/<int:pk>', CampusRetrieveUpdateDestroy.as_view(), name='campus-crud'),
     # path('campus/', CampusesList.as_view(), name='campus-list'),
     # path('institute/<str:campus>', InstituteList.as_view(), name='institute-list'),
+    #path('institute/<str:campus>', InstituteList.as_view(), name='institute-list'),
 ]
