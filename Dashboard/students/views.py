@@ -1,7 +1,7 @@
 from rest_framework import generics, status, views, response
 from organization.models import Institute, Campus
 from django.db.models import Q, Count, Max
-from organization.serializers import CampusSerialize, InstituteSerialize 
+from organization.serializers import CampusSerialize, InstituteSerialize
 from .serializers import *
 from .models import *
 
@@ -29,19 +29,48 @@ class GraduateList(generics.ListAPIView):
 
         return response.Response({'status': 'OK', 'result': send_data})
 
+# --
+# 
+# {  }
+#  
+# --
 
-class GraduateRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Graduates.objects.all()
-    serializer_class = GraduatesSerialize
 
-class GraduateRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Graduates.objects.all()
-    serializer_class = GraduatesSerialize
+class InstituteGradList(generics.ListAPIView):
+    serializer_class = InstituteGradListSeralizer
+    
+    def get(self,request,institute):
+        inst = Institute.objects.get(name=institute)
+        grds = Graduates.objects.filter(under_institute=inst)
+        send_data = InstituteGradListSeralizer(grds,many=True).data
 
-class InstituteRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Institute.objects.all()
-    serializer_class = InstituteSerialize
+        # [
+        #     # students detalis[student_details,placement_details,salary] , 
+        #     # 
+        #     # ug details[student_details,placement_details,salary] , 
+        #     # 
+        #     # pg details[student_details,placement_details,salary]
+        # ]
+        return response.Response({'status': 'OK', 'result': send_data})
 
-class CampusRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Campus.objects.all()
-    serializer_class = CampusSerialize
+
+
+
+
+# v0.2
+# class GraduateRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Graduates.objects.all()
+#     serializer_class = GraduatesSerialize
+
+# class GraduateRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Graduates.objects.all()
+#     serializer_class = GraduatesSerialize
+
+# class InstituteRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Institute.objects.all()
+#     serializer_class = InstituteSerialize
+
+# class CampusRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Campus.objects.all()
+#     serializer_class = CampusSerialize
+
