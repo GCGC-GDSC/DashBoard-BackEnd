@@ -1,0 +1,16 @@
+[
+    {
+        "model":"organization.Stream",
+        "pk": 1,
+		"fields": {
+			"name": "Engineering"
+		}
+    },
+    {
+        "model":"organization.Stream",
+        "pk": 2,
+		"fields": {
+			"name": "Management"
+		}
+    }
+]
