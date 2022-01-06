@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Local Party
+    'organization',
     'students',
-    'company',
+    #'company',
 
     #Third Party
     'rest_framework',

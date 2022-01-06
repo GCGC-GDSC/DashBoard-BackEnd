@@ -1,16 +1,8 @@
 from django.db import models
-from students.models import (Institute, Campus)
+from students.models import (Institute, Campus, Courses)
 
 
-class Courses(models.Model):
-    campus = models.ForeignKey(Campus, default=None, on_delete=models.CASCADE)
-    institute = models.ForeignKey(
-        Institute, default=None, on_delete=models.CASCADE)
-    course = models.CharField(max_length=10, default="")
-    is_ug = models.BooleanField(default=True)
 
-    def __str__(self):
-        return self.course
 
 
 class Company(models.Model):

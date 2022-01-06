@@ -1,26 +1,6 @@
 from django.db import models
+from organization.models import (Institute, Campus)
 
-
-class Campus(models.Model):
-    name = models.CharField(max_length=30, default="", unique=True)
-    inst_count = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.name
-
-
-class Institute(models.Model):
-    name = models.CharField(max_length=10, default="")
-    under_campus = models.ForeignKey(Campus,
-                                     on_delete=models.CASCADE,
-                                     null=True)
-
-    @property
-    def campus_name(self):
-        return str(self.under_campus)
-
-    def __str__(self):
-        return self.name
 
 
 class Graduates(models.Model):
@@ -71,3 +51,6 @@ class Graduates(models.Model):
             return 'UG ' + institute
         else:
             return 'PG ' + institute
+
+    class Meta:
+        unique_together = (('under_campus','under_institute'),)
