@@ -1,23 +1,9 @@
 from rest_framework import generics, status, views, response
+from organization.models import Institute, Campus
 from django.db.models import Q, Count, Max
+from organization.serializers import CampusSerialize, InstituteSerialize 
 from .serializers import *
 from .models import *
-
-# class CampusesList(generics.ListAPIView):
-# 	serializer_class = CampusSerialize
-# 	def get(self,request):
-# 		qs = Campus.objects.all()
-# 		send_data = CampusSerialize(qs,many=True).data
-# 		return response.Response({'status':'OK','result':send_data})
-
-# class InstituteList(generics.ListAPIView):
-# 	serializer_class = InstituteSerialize
-# 	def get(self,request,campus):
-# 		campus = self.kwargs['campus'].strip()
-# 		qs = Campus.objects.get(name=campus).institute_set.all()
-# 		send_data = InstituteSerialize(qs,many=True).data
-# 		return response.Response({'status':'OK','result':send_data})
-
 
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerialize

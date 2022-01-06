@@ -1,6 +1,6 @@
 [
 	{
-		"model": "students.Campus",
+		"model": "organization.Campus",
 		"pk": 1,
 		"fields": {
 			"name": "vskp",
@@ -8,7 +8,7 @@
 		}
 	},
 	{
-		"model": "students.Campus",
+		"model": "organization.Campus",
 		"pk": 2,
 		"fields": {
 			"name": "hyd",
@@ -16,7 +16,7 @@
 		}
 	},
 	{
-		"model": "students.Campus",
+		"model": "organization.Campus",
 		"pk": 3,
 		"fields": {
 			"name": "blr",
