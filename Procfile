@@ -1,3 +1,3 @@
 web: gunicorn Dashboard.wsgi --log-file -
-release: python manage.py makemigrations --noinput
-release: python manage.py migrate --noinput
+release: python Dashboard/manage.py makemigrations --noinput
+release: python Dashboard/manage.py migrate --noinput
