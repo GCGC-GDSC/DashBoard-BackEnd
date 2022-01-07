@@ -14,14 +14,26 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CompanyCousesPlaced',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id',
+                 models.BigAutoField(auto_created=True,
+                                     primary_key=True,
+                                     serialize=False,
+                                     verbose_name='ID')),
                 ('placed', models.IntegerField(default=-1)),
-                ('company', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='company.company')),
-                ('courses', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='company.courses')),
+                ('company',
+                 models.ForeignKey(default=None,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   to='company.company')),
+                ('courses',
+                 models.ForeignKey(default=None,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   to='company.courses')),
             ],
         ),
         migrations.AddField(
-    model_name='company',
-    name='courses',
-    field=models.ManyToManyField(through='company.CompanyCousesPlaced', to='company.Courses'),
-)    ]
+            model_name='company',
+            name='courses',
+            field=models.ManyToManyField(through='company.CompanyCousesPlaced',
+                                         to='company.Courses'),
+        )
+    ]
