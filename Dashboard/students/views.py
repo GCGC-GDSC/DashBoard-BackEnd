@@ -60,7 +60,7 @@ class Overall(generics.ListAPIView):
 
     def get(self, request, stream):
         send_data = {}
-        stream = self.kwargs['stream']
+        print("stream: ", stream)
         stream_data = Stream.objects.filter(name=stream)
         inst_data = Institute.objects.filter(stream=stream_data[0].id)
         for inst in inst_data:
