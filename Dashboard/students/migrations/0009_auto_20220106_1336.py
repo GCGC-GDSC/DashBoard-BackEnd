@@ -19,17 +19,17 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='graduates',
             name='under_campus',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='organization.campus'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='organization.campus'),
         ),
         migrations.AlterField(
             model_name='graduates',
             name='under_institute',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='organization.institute'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='organization.institute'),
         ),
-        migrations.DeleteModel(
-            name='Campus',
-        ),
-        migrations.DeleteModel(
-            name='Institute',
-        ),
+        migrations.DeleteModel(name='Campus', ),
+        migrations.DeleteModel(name='Institute', ),
     ]

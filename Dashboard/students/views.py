@@ -55,6 +55,7 @@ class InstituteGradList(generics.ListAPIView):
         # ]
         return response.Response({'status': 'OK', 'result': send_data})
 
+
 class Overall(generics.ListAPIView):
     serializer_class = GraduatesSerialize
 
@@ -64,11 +65,12 @@ class Overall(generics.ListAPIView):
         inst_data = Institute.objects.filter(stream=stream_data[0].id)
         for inst in inst_data:
             send_data[inst.name] = []
-            graduates = Graduates.objects.filter(under_institute = inst.id)
+            graduates = Graduates.objects.filter(under_institute=inst.id)
             data = GraduatesSerialize(graduates, many=True).data
             send_data[inst.name].append(data)
 
         return response.Response({'status': 'OK', 'result': send_data})
+
 
 # v0.2
 # class GraduateRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):

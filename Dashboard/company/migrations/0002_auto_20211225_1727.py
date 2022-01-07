@@ -34,25 +34,11 @@ class Migration(migrations.Migration):
             model_name='pharmacy',
             name='company_ptr',
         ),
-        migrations.DeleteModel(
-            name='Gim_BBA_BCOM',
-        ),
-        migrations.DeleteModel(
-            name='Gim_MBA',
-        ),
-        migrations.DeleteModel(
-            name='Gis_pg',
-        ),
-        migrations.DeleteModel(
-            name='Gis_ug',
-        ),
-        migrations.DeleteModel(
-            name='Git_pg',
-        ),
-        migrations.DeleteModel(
-            name='Git_ug',
-        ),
-        migrations.DeleteModel(
-            name='Pharmacy',
-        ),
+        migrations.DeleteModel(name='Gim_BBA_BCOM', ),
+        migrations.DeleteModel(name='Gim_MBA', ),
+        migrations.DeleteModel(name='Gis_pg', ),
+        migrations.DeleteModel(name='Gis_ug', ),
+        migrations.DeleteModel(name='Git_pg', ),
+        migrations.DeleteModel(name='Git_ug', ),
+        migrations.DeleteModel(name='Pharmacy', ),
     ]
