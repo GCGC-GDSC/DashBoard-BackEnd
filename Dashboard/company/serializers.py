@@ -1,12 +1,7 @@
 from rest_framework import serializers
-from .models import (
-    Company,
-    Courses,
-    CompanyCousesPlaced
-)
+from .models import (Company, Courses, CompanyCousesPlaced)
 from students.models import (
-    Institute,
-)
+    Institute, )
 from organization.serializers import CompanySeralizer
 
 
@@ -26,19 +21,21 @@ class CompanyCousesPlacedSeralizer(serializers.ModelSerializer):
 
 
 class CompanySeralizer(serializers.ModelSerializer):
-    course = CompanyCousesPlacedSeralizer(
-        source='companycousesplaced_set', many=True)
+    course = CompanyCousesPlacedSeralizer(source='companycousesplaced_set',
+                                          many=True)
 
     class Meta:
         model = Company
-        fields = ['id', 'name_of_the_company',
-                  'profile_offered', 'package', 'course']
+        fields = [
+            'id', 'name_of_the_company', 'profile_offered', 'package', 'course'
+        ]
+
 
 class InstituteLevelSeralizer(serializers.ModelSerializer):
     campus = serializers.SerializerMethodField('_campus')
     institue = serializers.SerializerMethodField('_institue')
 
-    companies = CompanySeralizer(many=True,read_only=True)
+    companies = CompanySeralizer(many=True, read_only=True)
 
     def _campus(self, obj):
         return obj.under_campus.name
@@ -48,4 +45,4 @@ class InstituteLevelSeralizer(serializers.ModelSerializer):
 
     class Meta:
         model = Institute
-        fields = ['id', 'institue', 'campus','companies']
+        fields = ['id', 'institue', 'campus', 'companies']

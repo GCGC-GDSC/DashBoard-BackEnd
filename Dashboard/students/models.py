@@ -2,7 +2,6 @@ from django.db import models
 from organization.models import (Institute, Campus)
 
 
-
 class Graduates(models.Model):
     under_campus = models.ForeignKey(Campus, on_delete=models.CASCADE)
     under_institute = models.ForeignKey(Institute, on_delete=models.CASCADE)

@@ -14,18 +14,31 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Stream',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(default='', max_length=20, unique=True)),
+                ('id',
+                 models.BigAutoField(auto_created=True,
+                                     primary_key=True,
+                                     serialize=False,
+                                     verbose_name='ID')),
+                ('name',
+                 models.CharField(default='', max_length=20, unique=True)),
             ],
         ),
         migrations.AlterField(
             model_name='institute',
             name='under_campus',
-            field=models.ForeignKey(default='', null=True, on_delete=django.db.models.deletion.CASCADE, to='organization.campus'),
+            field=models.ForeignKey(
+                default='',
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='organization.campus'),
         ),
         migrations.AddField(
             model_name='institute',
             name='stream',
-            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='organization.stream'),
+            field=models.ForeignKey(
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='organization.stream'),
         ),
     ]
