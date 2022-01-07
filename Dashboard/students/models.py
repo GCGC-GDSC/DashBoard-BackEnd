@@ -51,6 +51,3 @@ class Graduates(models.Model):
             return 'UG ' + institute
         else:
             return 'PG ' + institute
-
-    class Meta:
-        unique_together = (('under_campus','under_institute'),)

@@ -1,6 +1,12 @@
 from django.db import models
 
 
+class Stream(models.Model):
+    name = models.CharField(max_length=20, default="", unique=True)
+    def __str__(self):
+        return self.name
+
+
 class Campus(models.Model):
     name = models.CharField(max_length=30, default="", unique=True)
     inst_count = models.IntegerField(default=0)
@@ -13,7 +19,10 @@ class Institute(models.Model):
     name = models.CharField(max_length=10, default="")
     under_campus = models.ForeignKey(Campus,
                                      on_delete=models.CASCADE,
+                                     default="",
                                      null=True)
+    stream = models.ForeignKey(
+        Stream, on_delete=models.CASCADE, default=None, null=True)
 
     @property
     def campus_name(self):
@@ -21,6 +30,7 @@ class Institute(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Courses(models.Model):
     campus = models.ForeignKey(Campus, default=None, on_delete=models.CASCADE)
