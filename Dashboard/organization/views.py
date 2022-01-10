@@ -1,6 +1,6 @@
 from rest_framework import generics, status, views, response
-from .models import Campus, Institute, Courses
-from .serializers import CampusSerialize, InstituteSerialize, CoursesSeralizer
+from .models import Campus, Institute, Courses, Stream
+from .serializers import CampusSerialize, InstituteSerialize, CoursesSeralizer, StreamsSeralizer
 
 
 class CampusList(generics.ListAPIView):
@@ -24,4 +24,12 @@ class CoursesList(generics.ListAPIView):
 
     def get(self, requst):
         send_data = CoursesSeralizer(Courses.objects.all(), many=True).data
+        return response.Response({'status': 'OK', 'result': send_data})
+
+
+class StreamsList(generics.ListAPIView):
+    serializer_class = StreamsSeralizer
+
+    def get(self, request):
+        send_data = StreamsSeralizer(Stream.objects.all(), many=True).data
         return response.Response({'status': 'OK', 'result': send_data})

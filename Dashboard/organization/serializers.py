@@ -31,3 +31,10 @@ class CoursesSeralizer(serializers.ModelSerializer):
     class Meta:
         model = Courses
         fields = ['id', 'course', 'is_ug', 'campus_name', 'institute_name']
+
+
+class StreamsSeralizer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Stream
+        fields = '__all__'
