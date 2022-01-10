@@ -26,10 +26,10 @@ class CoursesList(generics.ListAPIView):
         send_data = CoursesSeralizer(Courses.objects.all(), many=True).data
         return response.Response({'status': 'OK', 'result': send_data})
 
+
 class StreamsList(generics.ListAPIView):
     serializer_class = StreamsSeralizer
 
-    def get(self,request):
-        send_data = StreamsSeralizer(Stream.objects.all(),many=True).data
+    def get(self, request):
+        send_data = StreamsSeralizer(Stream.objects.all(), many=True).data
         return response.Response({'status': 'OK', 'result': send_data})
-

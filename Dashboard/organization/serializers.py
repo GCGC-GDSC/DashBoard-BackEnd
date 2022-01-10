@@ -32,6 +32,7 @@ class CoursesSeralizer(serializers.ModelSerializer):
         model = Courses
         fields = ['id', 'course', 'is_ug', 'campus_name', 'institute_name']
 
+
 class StreamsSeralizer(serializers.ModelSerializer):
 
     class Meta:
