@@ -66,7 +66,8 @@ class Overall(generics.ListAPIView):
         for inst in inst_data:
             send_data[inst.name] = []
             graduates = Graduates.objects.filter(under_institute=inst.id)
-            data = GraduatesSerialize(graduates, many=True).data
+            #data = GraduatesSerialize(graduates, many=True).data
+            data = InstituteGradListSeralizer(graduates, many=True).data
             send_data[inst.name].append(data)
 
         return response.Response({'status': 'OK', 'result': send_data})
