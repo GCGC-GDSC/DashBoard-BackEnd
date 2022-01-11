@@ -3,10 +3,19 @@ from .models import *
 
 
 class CampusSerialize(serializers.ModelSerializer):
+    institutes = serializers.SerializerMethodField('_institutes')
+
+    def _institutes(self,obj):
+        res = []
+        insts = Institute.objects.filter(under_campus=obj)
+        for i in insts:
+            res.append(i.name)
+        return res
+
 
     class Meta:
         model = Campus
-        fields = ('id', 'name', 'inst_count')
+        fields = ('id', 'name', 'inst_count','institutes')
         ordering = ['-id']
 
 
