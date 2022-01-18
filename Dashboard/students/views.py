@@ -2,6 +2,11 @@ from rest_framework import generics, status, views, response
 from organization.models import Institute, Campus, Stream
 from django.db.models import Q, Count, Max
 from organization.serializers import CampusSerialize, InstituteSerialize
+from rest_framework.decorators import api_view
+from rest_framework.status import HTTP_400_BAD_REQUEST
+from rest_framework.response import Response
+
+
 from .serializers import *
 from .models import *
 
@@ -72,6 +77,26 @@ class Overall(generics.ListAPIView):
 
         return response.Response({'status': 'OK', 'result': send_data})
 
+class SelectGraduates(generics.ListAPIView):
+    queryset = Graduates.objects.all()
+    serializer_class = DataUpdateSerializer
+
+    def get(self, request, institute, grad):
+        send_data = {}
+        inst = Institute.objects.filter(name=institute)
+        if grad=='ug':
+            grads = Graduates.objects.filter(under_institute=inst[0].id, is_ug=True)
+            print("grads id : ", grads[0].id)
+            data = DataUpdateSerializer(grads, many=True).data
+        elif grad=='pg':
+            grads = Graduates.objects.filter(under_institute=inst[0].id, is_ug=False)
+            print("grads id : ", grads[0].id)
+            data = DataUpdateSerializer(grads, many=True).data
+        return response.Response({'status': 'OK', 'result': data})
+
+class UpdateGraduates(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Graduates.objects.all()
+    serializer_class = DataUpdateSerializer
 
 # v0.2
 # class GraduateRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
@@ -89,3 +114,26 @@ class Overall(generics.ListAPIView):
 # class CampusRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 #     queryset = Campus.objects.all()
 #     serializer_class = CampusSerialize
+
+
+"""@api_view(['GET', 'PUT'])
+def inventory_list(request, institute, grad):
+
+    if request.method == 'GET':
+        inst = Institute.objects.filter(name=institute)
+        if grad == 'ug':
+            grads = Graduates.objects.filter(under_institute=inst[0].id, is_ug=True)
+            data = DataUpdateSerializer(grads, many=True).data
+        elif grad == 'pg':
+            grads = Graduates.objects.filter(under_institute=inst[0].id, is_ug=False)
+            data = DataUpdateSerializer(grads, many=True).data
+        return response.Response({'status': 'OK', 'result': data})
+
+    elif request.method == 'PUT':
+        serializer = DataUpdateSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+"""

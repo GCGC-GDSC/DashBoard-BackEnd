@@ -43,3 +43,8 @@ class InstituteGradListSeralizer(serializers.ModelSerializer):
     class Meta:
         model = Graduates
         fields = ['student_details', 'placement_details', 'salary', 'is_ug']
+
+class DataUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Graduates
+        fields = '__all__'
