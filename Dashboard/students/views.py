@@ -6,7 +6,6 @@ from rest_framework.decorators import api_view
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.response import Response
 
-
 from .serializers import *
 from .models import *
 
@@ -77,6 +76,7 @@ class Overall(generics.ListAPIView):
 
         return response.Response({'status': 'OK', 'result': send_data})
 
+
 class SelectGraduates(generics.ListAPIView):
     queryset = Graduates.objects.all()
     serializer_class = DataUpdateSerializer
@@ -84,19 +84,23 @@ class SelectGraduates(generics.ListAPIView):
     def get(self, request, institute, grad):
         send_data = {}
         inst = Institute.objects.filter(name=institute)
-        if grad=='ug':
-            grads = Graduates.objects.filter(under_institute=inst[0].id, is_ug=True)
+        if grad == 'ug':
+            grads = Graduates.objects.filter(under_institute=inst[0].id,
+                                             is_ug=True)
             print("grads id : ", grads[0].id)
             data = DataUpdateSerializer(grads, many=True).data
-        elif grad=='pg':
-            grads = Graduates.objects.filter(under_institute=inst[0].id, is_ug=False)
+        elif grad == 'pg':
+            grads = Graduates.objects.filter(under_institute=inst[0].id,
+                                             is_ug=False)
             print("grads id : ", grads[0].id)
             data = DataUpdateSerializer(grads, many=True).data
         return response.Response({'status': 'OK', 'result': data})
 
+
 class UpdateGraduates(generics.RetrieveUpdateDestroyAPIView):
     queryset = Graduates.objects.all()
     serializer_class = DataUpdateSerializer
+
 
 # v0.2
 # class GraduateRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
@@ -114,8 +118,6 @@ class UpdateGraduates(generics.RetrieveUpdateDestroyAPIView):
 # class CampusRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 #     queryset = Campus.objects.all()
 #     serializer_class = CampusSerialize
-
-
 """@api_view(['GET', 'PUT'])
 def inventory_list(request, institute, grad):
 

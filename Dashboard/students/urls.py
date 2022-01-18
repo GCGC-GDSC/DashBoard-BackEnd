@@ -13,7 +13,8 @@ urlpatterns = [
     # path('institute/<str:campus>', InstituteList.as_view(), name='institute-list'),
     path('overall/<stream>/', Overall.as_view(), name='overall-view'),
     #path('testing/<pk>', dataUpdate.as_view(), name='overall-view'),
-    path('select/<institute>/<grad>', SelectGraduates.as_view(), name='data-select-view'),
+    path('select/<institute>/<grad>',
+         SelectGraduates.as_view(),
+         name='data-select-view'),
     path('update/<pk>', UpdateGraduates.as_view(), name='data-update-view'),
-
 ]
