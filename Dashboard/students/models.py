@@ -9,7 +9,13 @@ class Graduates(models.Model):
     total_final_years = models.IntegerField(default=0)
     total_higher_study_and_pay_crt = models.IntegerField(default=0)
     total_not_intrested_in_placments = models.IntegerField(default=0)
-    total_backlogs = models.IntegerField(default=0)
+    
+    # total_backlogs = models.IntegerField(default=0)
+    total_backlogs_opted_for_placements = models.IntegerField(default=0)
+    total_backlogs_opted_for_higherstudies = models.IntegerField(default=0)
+    total_backlogs_opted_for_other_career_options = models.IntegerField(
+        default=0)
+
     total_offers = models.IntegerField(default=0)
     total_multiple_offers = models.IntegerField(default=0)
     highest_salary = models.DecimalField(max_digits=5,
@@ -43,6 +49,13 @@ class Graduates(models.Model):
     @property
     def under_campus_name(self):
         return str(self.under_campus)
+
+    @property
+    def total_backlogs(self):
+        return (self.total_backlogs_opted_for_higherstudies + 
+                self.total_backlogs_opted_for_placements + 
+                self.total_backlogs_opted_for_other_career_options
+                )
 
     def __str__(self):
         institute = str(self.under_institute)
