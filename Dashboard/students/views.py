@@ -6,7 +6,6 @@ from rest_framework.decorators import api_view
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.response import Response
 
-
 from .serializers import *
 from .models import *
 
@@ -77,63 +76,72 @@ class Overall(generics.ListAPIView):
 
         return response.Response({'status': 'OK', 'result': send_data})
 
+
 class SelectGraduates(generics.ListAPIView):
     queryset = Graduates.objects.all()
-    serializer_class = DataUpdateSerializer
+    serializer_class = GraduatesSerialize
 
     def get(self, request, institute, grad):
-        send_data = {}
-        inst = Institute.objects.filter(name=institute)
-        if grad=='ug':
-            grads = Graduates.objects.filter(under_institute=inst[0].id, is_ug=True)
-            print("grads id : ", grads[0].id)
-            data = DataUpdateSerializer(grads, many=True).data
-        elif grad=='pg':
-            grads = Graduates.objects.filter(under_institute=inst[0].id, is_ug=False)
-            print("grads id : ", grads[0].id)
-            data = DataUpdateSerializer(grads, many=True).data
-        return response.Response({'status': 'OK', 'result': data})
-
-class UpdateGraduates(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Graduates.objects.all()
-    serializer_class = DataUpdateSerializer
-
-# v0.2
-# class GraduateRetriveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Graduates.objects.all()
-#     serializer_class = GraduatesSerialize
-
-# class GraduateRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Graduates.objects.all()
-#     serializer_class = GraduatesSerialize
-
-# class InstituteRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Institute.objects.all()
-#     serializer_class = InstituteSerialize
-
-# class CampusRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Campus.objects.all()
-#     serializer_class = CampusSerialize
-
-
-"""@api_view(['GET', 'PUT'])
-def inventory_list(request, institute, grad):
-
-    if request.method == 'GET':
         inst = Institute.objects.filter(name=institute)
         if grad == 'ug':
-            grads = Graduates.objects.filter(under_institute=inst[0].id, is_ug=True)
-            data = DataUpdateSerializer(grads, many=True).data
+            grads = Graduates.objects.filter(under_institute=inst[0].id,
+                                             is_ug=True)
+            send_data = GraduatesSerialize(grads, many=True).data
         elif grad == 'pg':
-            grads = Graduates.objects.filter(under_institute=inst[0].id, is_ug=False)
-            data = DataUpdateSerializer(grads, many=True).data
-        return response.Response({'status': 'OK', 'result': data})
+            grads = Graduates.objects.filter(under_institute=inst[0].id,
+                                             is_ug=False)
+            send_data = GraduatesSerialize(grads, many=True).data
+        else:
+            send_data = []
+        return response.Response({'status': 'OK', 'result': send_data})
 
-    elif request.method == 'PUT':
-        serializer = DataUpdateSerializer(data=request.data)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-"""
+class UpdateGraduates(generics.UpdateAPIView):
+    queryset = Graduates.objects.all()
+    serializer_class = GraduatesSerialize
+
+    def patch(self, request, *args, **kwargs):
+        data = request.data
+        qs.total_students = data['total_students']
+        qs.total_final_years = data.get('total_final_years',
+                                        qs.total_final_years)
+        qs.total_higher_study_and_pay_crt = data.get(
+            'total_higher_study_and_pay_crt',
+            qs.total_higher_study_and_pay_crt)
+        qs.total_not_intrested_in_placments = data.get(
+            'total_not_intrested_in_placments',
+            qs.total_not_intrested_in_placments)
+        qs.total_offers = data.get('total_offers', qs.total_offers)
+        qs.total_multiple_offers = data.get('total_multiple_offers',
+                                            qs.total_multiple_offers)
+        qs.highest_salary = data.get('highest_salary', qs.highest_salary)
+        qs.lowest_salary = data.get('lowest_salary', qs.lowest_salary)
+        qs.average_salary = data.get('average_salary', qs.average_salary)
+        qs.save()
+
+        return response.Response({
+            'status': 'OK',
+            'message': "send data succefully"
+        })
+
+    def put(self, request, pk, *args, **kwargs):
+        qs = Graduates.objects.get(id=pk)
+
+        data = request.data
+        qs.total_students = data['total_students']
+        qs.total_final_years = data['total_final_years']
+        qs.total_higher_study_and_pay_crt = data[
+            'total_higher_study_and_pay_crt']
+        qs.total_not_intrested_in_placments = data[
+            'total_not_intrested_in_placments']
+        qs.total_offers = data['total_offers']
+        qs.total_multiple_offers = data['total_multiple_offers']
+        qs.highest_salary = data['highest_salary']
+        qs.lowest_salary = data['lowest_salary']
+        qs.average_salary = data['average_salary']
+        qs.save()
+
+        return response.Response({
+            'status': 'OK',
+            'message': "send data succefully"
+        })
