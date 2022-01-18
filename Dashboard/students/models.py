@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 from organization.models import (Institute, Campus)
 
 
@@ -9,7 +10,7 @@ class Graduates(models.Model):
     total_final_years = models.IntegerField(default=0)
     total_higher_study_and_pay_crt = models.IntegerField(default=0)
     total_not_intrested_in_placments = models.IntegerField(default=0)
-    
+
     # total_backlogs = models.IntegerField(default=0)
     total_backlogs_opted_for_placements = models.IntegerField(default=0)
     total_backlogs_opted_for_higherstudies = models.IntegerField(default=0)
@@ -28,6 +29,8 @@ class Graduates(models.Model):
                                         decimal_places=2,
                                         default=0.0)
     is_ug = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
 
     @property
     def total_students_eligible(self):
@@ -52,8 +55,8 @@ class Graduates(models.Model):
 
     @property
     def total_backlogs(self):
-        return (self.total_backlogs_opted_for_higherstudies + 
-                self.total_backlogs_opted_for_placements + 
+        return (self.total_backlogs_opted_for_higherstudies +
+                self.total_backlogs_opted_for_placements +
                 self.total_backlogs_opted_for_other_career_options
                 )
 
