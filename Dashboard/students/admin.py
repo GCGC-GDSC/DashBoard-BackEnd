@@ -14,17 +14,22 @@ from django.db.models import Q
 
 
 class GraduatesResource(resources.ModelResource):
+
     class meta:
         model = Graduates
 
+
 class ExcelImportForm(forms.Form):
     excel_upload = forms.FileField()
+
 
 class GraduatesAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super().get_urls()
-        new_urls = [path('upload-excel/', self.upload_excel), ]
+        new_urls = [
+            path('upload-excel/', self.upload_excel),
+        ]
         return new_urls + urls
 
     def upload_excel(self, request):
@@ -38,9 +43,11 @@ class GraduatesAdmin(admin.ModelAdmin):
                 messages.warning(request, 'The wrong file type was uploaded')
                 return HttpResponseRedirect(request.path_info)
 
-            imported_data = dataset.load(excel_file.read(),headers=False, format='xlsx')
+            imported_data = dataset.load(excel_file.read(),
+                                         headers=False,
+                                         format='xlsx')
             print("imported_data: \n", imported_data)
-            
+
             data = {}
             for key_val in imported_data:
                 data[key_val[0]] = key_val[1]
@@ -48,10 +55,11 @@ class GraduatesAdmin(admin.ModelAdmin):
 
             try:
                 qs = Graduates.objects.get(
-                    Q(under_campus=Campus.objects.get(name=data['under_campus'])) &
-                    Q(under_institute=Institute.objects.get(name=data['under_institute'])) &
-                    Q(is_ug=data['is_ug'])
-                )
+                    Q(under_campus=Campus.objects.get(
+                        name=data['under_campus']))
+                    & Q(under_institute=Institute.objects.get(
+                        name=data['under_institute']))
+                    & Q(is_ug=data['is_ug']))
             except KeyError as e:
                 messages.warning(request, 'The wrong file format')
                 return HttpResponseRedirect(request.path_info)
@@ -75,10 +83,10 @@ class GraduatesAdmin(admin.ModelAdmin):
             qs.lowest_salary = data.get('lowest_salary', qs.lowest_salary)
             qs.average_salary = data.get('average_salary', qs.average_salary)
             qs.save()
-            
 
         form = ExcelImportForm()
         data = {"form": form}
         return render(request, "admin/excel_upload.html", data)
+
 
 admin.site.register(Graduates, GraduatesAdmin)

@@ -153,6 +153,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
 from tablib import Dataset
 
+
 class FileUploadView(views.APIView):
     parser_classes = [FileUploadParser]
 
@@ -160,10 +161,12 @@ class FileUploadView(views.APIView):
         excel_file = request.data['file']
         dataset = Dataset()
         if not excel_file.name.endswith('.xlsx'):
-            return Response("File should be excel only",status=404)
-        imported_data = dataset.load(excel_file.read(),headers=False, format='xlsx')
+            return Response("File should be excel only", status=404)
+        imported_data = dataset.load(excel_file.read(),
+                                     headers=False,
+                                     format='xlsx')
         print("imported_data: \n", imported_data)
-        
+
         data = {}
         for key_val in imported_data:
             data[key_val[0]] = key_val[1]
@@ -171,10 +174,9 @@ class FileUploadView(views.APIView):
 
         try:
             qs = Graduates.objects.get(
-                Q(under_campus=Campus.objects.get(name=data['under_campus'])) &
-                Q(under_institute=Institute.objects.get(name=data['under_institute'])) &
-                Q(is_ug=data['is_ug'])
-            )
+                Q(under_campus=Campus.objects.get(name=data['under_campus']))
+                & Q(under_institute=Institute.objects.get(
+                    name=data['under_institute'])) & Q(is_ug=data['is_ug']))
         except KeyError as e:
             messages.warning(request, 'The wrong file format')
             return HttpResponseRedirect(request.path_info)
@@ -182,7 +184,7 @@ class FileUploadView(views.APIView):
             messages.warning(request, 'Invalid Data')
             return HttpResponseRedirect(request.path_info)
 
-        print("qs",qs)
+        print("qs", qs)
 
         qs.total_students = data['total_students']
         qs.total_final_years = data.get('total_final_years',
@@ -200,5 +202,5 @@ class FileUploadView(views.APIView):
         qs.lowest_salary = data.get('lowest_salary', qs.lowest_salary)
         qs.average_salary = data.get('average_salary', qs.average_salary)
         qs.save()
-        
+
         return Response("Data sent", status=204)
