@@ -57,8 +57,7 @@ class Graduates(models.Model):
     def total_backlogs(self):
         return (self.total_backlogs_opted_for_higherstudies +
                 self.total_backlogs_opted_for_placements +
-                self.total_backlogs_opted_for_other_career_options
-                )
+                self.total_backlogs_opted_for_other_career_options)
 
     def __str__(self):
         institute = str(self.under_institute)
@@ -66,3 +65,7 @@ class Graduates(models.Model):
             return 'UG ' + institute
         else:
             return 'PG ' + institute
+
+
+class ExcelData(models.Model):
+    uploadedFile = models.FileField(upload_to="UploadedFiles/")
