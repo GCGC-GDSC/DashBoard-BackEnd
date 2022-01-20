@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_yasg',
     'django_crontab',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -103,9 +104,7 @@ ROOT_URLCONF = 'Dashboard.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            # os.path.join(BASE_DIR, 'Dashboard_Frontend/build')
-        ],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
