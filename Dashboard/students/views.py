@@ -5,7 +5,8 @@ from organization.serializers import CampusSerialize, InstituteSerialize
 from rest_framework.decorators import api_view
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.response import Response
-
+from django.contrib import messages
+from django.http import HttpResponse
 from .serializers import *
 from .models import *
 
@@ -145,3 +146,4 @@ class UpdateGraduates(generics.UpdateAPIView):
             'status': 'OK',
             'message': "send data succefully"
         })
+
