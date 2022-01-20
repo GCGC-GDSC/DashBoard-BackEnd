@@ -66,3 +66,7 @@ class Graduates(models.Model):
             return 'UG ' + institute
         else:
             return 'PG ' + institute
+
+
+class ExcelData(models.Model):
+    uploadedFile = models.FileField(upload_to = "UploadedFiles/")
