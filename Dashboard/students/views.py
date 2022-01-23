@@ -204,7 +204,7 @@ class FileUploadView(views.APIView):
         qs.save()
         print(qs)
         return Response("Data sent", status=204)
-    
+
     def post(self, request, format=None):
         excel_file = request.data['file']
         dataset = Dataset()
