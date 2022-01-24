@@ -9,7 +9,7 @@ class GraduatesSerialize(serializers.ModelSerializer):
         model = Graduates
         fields = ('id', 'under_institute_name', 'under_campus_name',
                   'total_students', 'total_final_years',
-                  'total_higher_study_and_pay_crt',
+                      'total_higher_study_and_pay_crt',
                   'total_not_intrested_in_placments', 'total_backlogs',
                   'total_students_eligible', 'total_offers',
                   'total_multiple_offers', 'total_placed',

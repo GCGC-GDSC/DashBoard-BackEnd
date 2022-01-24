@@ -78,6 +78,27 @@ class Overall(generics.ListAPIView):
 
         return response.Response({'status': 'OK', 'result': send_data})
 
+class Gbstats(generics.ListAPIView):
+    serializer_class = GraduatesSerialize
+
+    def get(self, request):
+        send_data = {}
+        campus = Campus.objects.all()
+        for i in campus:
+            send_data[i.name] = {}
+
+            ug_grads = Graduates.objects.filter(under_campus=i, is_ug=True)
+            send_data[i.name]["UG"] = []
+            ug_data = GraduatesSerialize(ug_grads, many=True).data
+            send_data[i.name]["UG"].append(ug_data)
+
+            pg_grads = Graduates.objects.filter(under_campus=i, is_ug=False)
+            send_data[i.name]["PG"] = []
+            pg_data = GraduatesSerialize(pg_grads, many=True).data
+            send_data[i.name]["PG"].append(pg_data)
+
+        return response.Response({'status': 'OK', 'result': send_data})
+
 
 class SelectGraduates(generics.ListAPIView):
     queryset = Graduates.objects.all()
@@ -88,10 +109,13 @@ class SelectGraduates(generics.ListAPIView):
         if grad == 'ug':
             grads = Graduates.objects.filter(under_institute=inst[0].id,
                                              is_ug=True)
+            print("---------------------------------------------",type(grads))
             send_data = GraduatesSerialize(grads, many=True).data
         elif grad == 'pg':
+
             grads = Graduates.objects.filter(under_institute=inst[0].id,
                                              is_ug=False)
+            print("---------------------------------------------", type(grads))
             send_data = GraduatesSerialize(grads, many=True).data
         else:
             send_data = []
@@ -252,3 +276,61 @@ class FileUploadView(views.APIView):
         qs.save()
         print(qs)
         return Response("Data sent", status=204)
+
+"""for i in campus:
+            send_data[i.name] = []
+            ug_grads = Graduates.objects.filter(under_campus=i, is_ug=True)
+            pg_grads = Graduates.objects.filter(under_campus=i, is_ug=False)
+            total_students = 0
+            total_final_years = 0
+            total_higher_study_and_pay_crt = 0
+            total_not_intrested_in_placments = 0
+            total_backlogs_opted_for_placements = 0
+            total_backlogs_opted_for_higherstudies = 0
+            total_backlogs_opted_for_other_career_options = 0
+            total_offers = 0
+            total_multiple_offers = 0
+            total_students_eligible = 0
+            total_placed = 0
+            total_backlogs = 0
+            highest_salary = 0
+            average_salary = 0
+            lowest_salary = 99999
+
+            for ug_grads in ug_grads:
+                total_students = ug_grads.total_students
+                total_final_years = ug_grads.total_final_years
+                total_higher_study_and_pay_crt = ug_grads.total_higher_study_and_pay_crt
+                total_not_intrested_in_placments = ug_grads.total_not_intrested_in_placments
+                total_backlogs_opted_for_placements = ug_grads.total_backlogs_opted_for_placements
+                total_backlogs_opted_for_higherstudies = ug_grads.total_backlogs_opted_for_higherstudies
+                total_backlogs_opted_for_other_career_options = ug_grads.total_backlogs_opted_for_other_career_options
+                total_offers = ug_grads.total_offers
+                total_multiple_offers = ug_grads.total_multiple_offers
+                total_students_eligible = ug_grads.total_students_eligible
+                total_placed = ug_grads.total_placed
+                total_yet_to_place = ug_grads.total_yet_to_place
+                total_backlogs = ug_grads.total_backlogs
+                highest_salary = max(highest_salary, ug_grads.highest_salary)
+                #average_salary = sum(ug_grads.average_salary)
+                lowest_salary = min(lowest_salary, ug_grads.lowest_salary)
+
+            ls = [total_students,
+                    total_final_years,
+                    total_higher_study_and_pay_crt,
+                    total_not_intrested_in_placments,
+                    total_backlogs_opted_for_placements,
+                    total_backlogs_opted_for_higherstudies,
+                    total_backlogs_opted_for_other_career_options,
+                    total_offers,
+                    total_multiple_offers,
+                    total_students_eligible,
+                    total_placed,
+                    total_yet_to_place,
+                    total_backlogs,
+                    highest_salary,
+                    average_salary,
+                    lowest_salary]
+            data = testSerialize(ls).data
+            send_data[i.name].append(data)
+            print(send_data)"""
