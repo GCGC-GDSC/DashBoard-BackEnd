@@ -78,6 +78,7 @@ class Overall(generics.ListAPIView):
 
         return response.Response({'status': 'OK', 'result': send_data})
 
+
 class Gbstats(generics.ListAPIView):
     serializer_class = GraduatesSerialize
 
@@ -109,7 +110,7 @@ class SelectGraduates(generics.ListAPIView):
         if grad == 'ug':
             grads = Graduates.objects.filter(under_institute=inst[0].id,
                                              is_ug=True)
-            print("---------------------------------------------",type(grads))
+            print("---------------------------------------------", type(grads))
             send_data = GraduatesSerialize(grads, many=True).data
         elif grad == 'pg':
 
@@ -276,6 +277,7 @@ class FileUploadView(views.APIView):
         qs.save()
         print(qs)
         return Response("Data sent", status=204)
+
 
 """for i in campus:
             send_data[i.name] = []
