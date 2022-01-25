@@ -185,6 +185,7 @@ class FileUploadView(views.APIView):
 
     def put(self, request, format=None):
         excel_file = request.data['file']
+        print(excel_file)
         dataset = Dataset()
         if not excel_file.name.endswith('.xlsx'):
             return Response("File should be excel only", status=404)
@@ -194,20 +195,24 @@ class FileUploadView(views.APIView):
         print("imported_data: \n", imported_data)
 
         data = {}
-        
+        print(Campus.objects.filter(name=imported_data[0][1]))
+        print(Institute.objects.filter(name=imported_data[1][1]))
         try:
             under_campus = Campus.objects.get(name=imported_data[0][1])
             under_institute = Institute.objects.get(name=imported_data[1][1])
+            is_ug = imported_data[-1][1]
         except Campus.DoesNotExist:
             return Response("Campus Invalid: "+str(imported_data))
         except Institute.DoesNotExist:
             return Response("Institute Invalid"+str(imported_data[1]))
-
-        for key_val in imported_data[2:]:
-            data[key_val[0]] = key_val[1]
         
-        qs,create = Graduates.objects.get_or_create(under_campus=under_campus,under_institute=under_institute)
-
+        
+        for key_val in imported_data[2:-1]:
+            data[key_val[0]] = key_val[1]
+        print(data)
+        print(Graduates.objects.filter(under_campus=under_campus,under_institute=under_institute,is_ug=is_ug))
+        qs,create = Graduates.objects.get_or_create(under_campus=under_campus,under_institute=under_institute,is_ug=is_ug)
+        print(qs)
         qs.total_students = data['total_students']
         qs.total_final_years = data['total_final_years']
         qs.total_higher_study_and_pay_crt = data[
@@ -226,9 +231,7 @@ class FileUploadView(views.APIView):
         qs.lowest_salary = data['lowest_salary']
         qs.average_salary = data['average_salary']
         qs.save()
-        
 
-        qs.save()
         return Response("Data sent", status=204)
     
     def post(self, request, format=None):
@@ -252,57 +255,9 @@ class FileUploadView(views.APIView):
 
         for key_val in imported_data[2:]:
             data[key_val[0]] = key_val[1]
-        print(data)
+        # print(data)
 
         qs = Graduates(under_campus=under_campus,under_institute=under_institute, **data)
-        qs.save()
-        print(qs)
-        return Response("Data sent", status=204)
-
-    def post(self, request, format=None):
-        excel_file = request.data['file']
-        dataset = Dataset()
-        if not excel_file.name.endswith('.xlsx'):
-            return Response("File should be excel only", status=404)
-        imported_data = dataset.load(excel_file.read(),
-                                     headers=False,
-                                     format='xlsx')
-        print("imported_data: \n", imported_data)
-
-        data = {}
-        for key_val in imported_data:
-            data[key_val[0]] = key_val[1]
-        print(data)
-
-        try:
-            qs = Graduates.objects.get(
-                Q(under_campus=Campus.objects.get(name=data['under_campus']))
-                & Q(under_institute=Institute.objects.get(
-                    name=data['under_institute'])) & Q(is_ug=data['is_ug']))
-        except KeyError as e:
-            messages.warning(request, 'The wrong file format')
-            return HttpResponseRedirect(request.path_info)
-        except Graduates.DoesNotExist:
-            messages.warning(request, 'Invalid Data')
-            return HttpResponseRedirect(request.path_info)
-
-        print("qs", qs)
-
-        qs.total_students = data['total_students']
-        qs.total_final_years = data.get('total_final_years',
-                                        qs.total_final_years)
-        qs.total_higher_study_and_pay_crt = data.get(
-            'total_higher_study_and_pay_crt',
-            qs.total_higher_study_and_pay_crt)
-        qs.total_not_intrested_in_placments = data.get(
-            'total_not_intrested_in_placments',
-            qs.total_not_intrested_in_placments)
-        qs.total_offers = data.get('total_offers', qs.total_offers)
-        qs.total_multiple_offers = data.get('total_multiple_offers',
-                                            qs.total_multiple_offers)
-        qs.highest_salary = data.get('highest_salary', qs.highest_salary)
-        qs.lowest_salary = data.get('lowest_salary', qs.lowest_salary)
-        qs.average_salary = data.get('average_salary', qs.average_salary)
         qs.save()
         print(qs)
         return Response("Data sent", status=204)
