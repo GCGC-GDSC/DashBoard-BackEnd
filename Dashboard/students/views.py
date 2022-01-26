@@ -93,9 +93,7 @@ class Gbstats(generics.ListAPIView):
         send_data['UG'] = GBstatsSerializer(ug_grad).data
         send_data['PG'] = GBstatsSerializer(pg_grad).data
 
-
         return response.Response({'status': 'OK', 'result': send_data})
-
         '''ug_total_final_years = ug_grad.aggregate(
             sum=Sum('total_final_years')).get('sum')
 
