@@ -1,6 +1,6 @@
 from rest_framework import generics, status, views, response
 from organization.models import Institute, Campus, Stream
-from django.db.models import Q, Count, Max
+from django.db.models import Q, Count, Max, Sum, Min, Avg
 from organization.serializers import CampusSerialize, InstituteSerialize
 from rest_framework.decorators import api_view
 from rest_framework.status import HTTP_400_BAD_REQUEST
@@ -83,25 +83,156 @@ class Overall(generics.ListAPIView):
 
 
 class Gbstats(generics.ListAPIView):
-    serializer_class = GraduatesSerialize
+    serializer_class = GBstatsSerializer
 
     def get(self, request):
-        send_data = {}
-        campus = Campus.objects.all()
-        for i in campus:
-            send_data[i.name] = {}
+        send_data = {'UG': {}, 'PG': {}}
+        ug_grad = Graduates.objects.filter(is_ug=True)
+        pg_grad = Graduates.objects.filter(is_ug=False)
 
-            ug_grads = Graduates.objects.filter(under_campus=i, is_ug=True)
-            send_data[i.name]["UG"] = []
-            ug_data = GraduatesSerialize(ug_grads, many=True).data
-            send_data[i.name]["UG"].append(ug_data)
-
-            pg_grads = Graduates.objects.filter(under_campus=i, is_ug=False)
-            send_data[i.name]["PG"] = []
-            pg_data = GraduatesSerialize(pg_grads, many=True).data
-            send_data[i.name]["PG"].append(pg_data)
+        send_data['UG'] = GBstatsSerializer(ug_grad).data
+        send_data['PG'] = GBstatsSerializer(pg_grad).data
 
         return response.Response({'status': 'OK', 'result': send_data})
+        '''ug_total_final_years = ug_grad.aggregate(
+            sum=Sum('total_final_years')).get('sum')
+
+        ug_total_not_intrested_in_placments = ug_grad.aggregate(
+            sum=Sum('total_not_intrested_in_placments')).get('sum')
+
+        ug_total_backlogs_opted_for_higherstudies = ug_grad.aggregate(
+            sum=Sum('total_backlogs_opted_for_higherstudies')).get('sum')
+        ug_total_backlogs_opted_for_placements = ug_grad.aggregate(
+            sum=Sum('total_backlogs_opted_for_placements')).get('sum')
+        ug_total_backlogs_opted_for_other_career_options = ug_grad.aggregate(
+            sum=Sum('total_backlogs_opted_for_other_career_options')).get(
+                'sum')
+
+        ug_total_backlogs = ug_total_backlogs_opted_for_higherstudies + ug_total_backlogs_opted_for_placements + ug_total_backlogs_opted_for_other_career_options
+
+        ug_total_students_eligible = (ug_total_final_years -
+                                      ug_total_backlogs +
+                                      ug_total_not_intrested_in_placments)
+
+        ug_placed = (
+            ug_grad.aggregate(sum=Sum('total_offers')).get('sum') -
+            ug_grad.aggregate(sum=Sum('total_multiple_offers')).get('sum'))
+
+        ug_yet_to_place = (ug_total_students_eligible - ug_placed)
+
+        pg_total_final_years = pg_grad.aggregate(
+            sum=Sum('total_final_years')).get('sum')
+        pg_total_not_intrested_in_placments = pg_grad.aggregate(
+            sum=Sum('total_not_intrested_in_placments')).get('sum')
+        pg_total_backlogs_opted_for_higherstudies = pg_grad.aggregate(
+            sum=Sum('total_backlogs_opted_for_higherstudies')).get('sum')
+        pg_total_backlogs_opted_for_placements = pg_grad.aggregate(
+            sum=Sum('total_backlogs_opted_for_placements')).get('sum')
+        pg_total_backlogs_opted_for_other_career_options = pg_grad.aggregate(
+            sum=Sum('total_backlogs_opted_for_other_career_options')).get(
+                'sum')
+
+        pg_total_backlogs = pg_total_not_intrested_in_placments + pg_total_backlogs_opted_for_placements + pg_total_backlogs_opted_for_other_career_options
+        pg_total_students_eligible = (pg_total_final_years -
+                                      pg_total_backlogs +
+                                      pg_total_not_intrested_in_placments)
+
+        pg_placed = (
+            pg_grad.aggregate(sum=Sum('total_offers')).get('sum') -
+            pg_grad.aggregate(sum=Sum('total_multiple_offers')).get('sum'))
+
+        pg_yet_to_place = (pg_total_students_eligible - pg_placed)
+
+        send_data['UG']['student_details'] = {
+            'total_students':
+            ug_grad.aggregate(sum=Sum('total_students')).get('sum'),
+
+            'total_final_years':
+            ug_grad.aggregate(sum=Sum('total_final_years')).get('sum'),
+
+            'total_backlogs':
+            (ug_grad.aggregate(
+                sum=Sum('total_backlogs_opted_for_higherstudies')).get('sum') +
+             ug_grad.aggregate(
+                 sum=Sum('total_backlogs_opted_for_placements')).get('sum') +
+             ug_grad.aggregate(sum=Sum(
+                 'total_backlogs_opted_for_other_career_options')).get('sum')),
+
+            'total_higher_study_and_pay_crt':
+            ug_grad.aggregate(
+                sum=Sum('total_higher_study_and_pay_crt')).get('sum')
+        }
+
+        send_data['UG']['placement_details'] = {
+            
+            "total_students_eligible":
+            (ug_total_final_years - ug_total_backlogs +
+             ug_total_not_intrested_in_placments),
+            
+            "total_not_intrested_in_placments": (ug_grad.aggregate(
+                sum=Sum('total_not_intrested_in_placments')).get('sum')),
+            
+            "total_offers":
+            (ug_grad.aggregate(sum=Sum('total_offers')).get('sum')),
+            
+            "placed":
+            (ug_grad.aggregate(sum=Sum('total_offers')).get('sum') -
+             ug_grad.aggregate(sum=Sum('total_multiple_offers')).get('sum')),
+            
+            "yet_to_place":
+            ug_yet_to_place,
+            
+            "total_multiple_offers":
+            ug_grad.aggregate(sum=Sum('total_multiple_offers')).get('sum')
+        }
+
+        send_data['UG']['salary'] = {
+            "highest": ug_grad.aggregate(max=Max('highest_salary')).get('max'),
+            "average": ug_grad.aggregate(avg=Avg('average_salary')).get('avg'),
+            "lowest": ug_grad.aggregate(min=Min('lowest_salary')).get('min')
+        }
+
+        send_data['PG']['student_details'] = {
+            'total_students':
+            pg_grad.aggregate(sum=Sum('total_students')).get('sum'),
+            'total_final_years':
+            pg_grad.aggregate(sum=Sum('total_final_years')).get('sum'),
+            'total_backlogs':
+            (pg_grad.aggregate(
+                sum=Sum('total_backlogs_opted_for_higherstudies')).get('sum') +
+             pg_grad.aggregate(
+                 sum=Sum('total_backlogs_opted_for_placements')).get('sum') +
+             pg_grad.aggregate(sum=Sum(
+                 'total_backlogs_opted_for_other_career_options')).get('sum')),
+            'total_higher_study_and_pay_crt':
+            pg_grad.aggregate(
+                sum=Sum('total_higher_study_and_pay_crt')).get('sum')
+        }
+
+        send_data['PG']['placement_details'] = {
+            "total_students_eligible":
+            (pg_total_final_years - pg_total_backlogs +
+             pg_total_not_intrested_in_placments),
+            "total_not_intrested_in_placments": (pg_grad.aggregate(
+                sum=Sum('total_not_intrested_in_placments')).get('sum')),
+            "total_offers":
+            pg_grad.aggregate(sum=Sum('total_offers')).get('sum'),
+            "placed":
+            (pg_grad.aggregate(sum=Sum('total_offers')).get('sum') -
+             pg_grad.aggregate(sum=Sum('total_multiple_offers')).get('sum')),
+            "yet_to_place":
+            pg_yet_to_place,
+            "total_multiple_offers":
+            pg_grad.aggregate(sum=Sum('total_multiple_offers')).get('sum')
+        }
+
+        send_data['PG']['salary'] = {
+            "highest": pg_grad.aggregate(max=Max('highest_salary')).get('max'),
+            "average": pg_grad.aggregate(avg=Avg('average_salary')).get('avg'),
+            "lowest": pg_grad.aggregate(min=Min('lowest_salary')).get('min')
+        }
+
+        return response.Response({'status': 'OK', 'result': send_data})'''
 
 
 class SelectGraduates(generics.ListAPIView):
@@ -113,13 +244,11 @@ class SelectGraduates(generics.ListAPIView):
         if grad == 'ug':
             grads = Graduates.objects.filter(under_institute=inst[0].id,
                                              is_ug=True)
-            print("---------------------------------------------", type(grads))
             send_data = GraduatesSerialize(grads, many=True).data
         elif grad == 'pg':
 
             grads = Graduates.objects.filter(under_institute=inst[0].id,
                                              is_ug=False)
-            print("---------------------------------------------", type(grads))
             send_data = GraduatesSerialize(grads, many=True).data
         else:
             send_data = []
@@ -177,9 +306,6 @@ class UpdateGraduates(generics.UpdateAPIView):
         })
 
 
-
-
-
 class FileUploadView(views.APIView):
     parser_classes = [FileUploadParser]
 
@@ -195,24 +321,21 @@ class FileUploadView(views.APIView):
         print("imported_data: \n", imported_data)
 
         data = {}
-        print(Campus.objects.filter(name=imported_data[0][1]))
-        print(Institute.objects.filter(name=imported_data[1][1]))
         try:
             under_campus = Campus.objects.get(name=imported_data[0][1])
             under_institute = Institute.objects.get(name=imported_data[1][1])
             is_ug = imported_data[-1][1]
         except Campus.DoesNotExist:
-            return Response("Campus Invalid: "+str(imported_data))
+            return Response("Campus Invalid: " + str(imported_data))
         except Institute.DoesNotExist:
-            return Response("Institute Invalid"+str(imported_data[1]))
-        
-        
+            return Response("Institute Invalid" + str(imported_data[1]))
+
         for key_val in imported_data[2:-1]:
             data[key_val[0]] = key_val[1]
-        print(data)
-        print(Graduates.objects.filter(under_campus=under_campus,under_institute=under_institute,is_ug=is_ug))
-        qs,create = Graduates.objects.get_or_create(under_campus=under_campus,under_institute=under_institute,is_ug=is_ug)
-        print(qs)
+        qs, create = Graduates.objects.get_or_create(
+            under_campus=under_campus,
+            under_institute=under_institute,
+            is_ug=is_ug)
         qs.total_students = data['total_students']
         qs.total_final_years = data['total_final_years']
         qs.total_higher_study_and_pay_crt = data[
@@ -233,7 +356,7 @@ class FileUploadView(views.APIView):
         qs.save()
 
         return Response("Data sent", status=204)
-    
+
     def post(self, request, format=None):
         excel_file = request.data['file']
         dataset = Dataset()
@@ -242,81 +365,22 @@ class FileUploadView(views.APIView):
         imported_data = dataset.load(excel_file.read(),
                                      headers=False,
                                      format='xlsx')
-        
+
         data = {}
 
         try:
             under_campus = Campus.objects.get(name=imported_data[0][1])
             under_institute = Institute.objects.get(name=imported_data[1][1])
         except Campus.DoesNotExist:
-            return Response("Campus Invalid: "+str(imported_data))
+            return Response("Campus Invalid: " + str(imported_data))
         except Institute.DoesNotExist:
-            return Response("Institute Invalid"+str(imported_data[1]))
+            return Response("Institute Invalid" + str(imported_data[1]))
 
         for key_val in imported_data[2:]:
             data[key_val[0]] = key_val[1]
-        # print(data)
 
-        qs = Graduates(under_campus=under_campus,under_institute=under_institute, **data)
+        qs = Graduates(under_campus=under_campus,
+                       under_institute=under_institute,
+                       **data)
         qs.save()
-        print(qs)
         return Response("Data sent", status=204)
-
-
-"""for i in campus:
-            send_data[i.name] = []
-            ug_grads = Graduates.objects.filter(under_campus=i, is_ug=True)
-            pg_grads = Graduates.objects.filter(under_campus=i, is_ug=False)
-            total_students = 0
-            total_final_years = 0
-            total_higher_study_and_pay_crt = 0
-            total_not_intrested_in_placments = 0
-            total_backlogs_opted_for_placements = 0
-            total_backlogs_opted_for_higherstudies = 0
-            total_backlogs_opted_for_other_career_options = 0
-            total_offers = 0
-            total_multiple_offers = 0
-            total_students_eligible = 0
-            total_placed = 0
-            total_backlogs = 0
-            highest_salary = 0
-            average_salary = 0
-            lowest_salary = 99999
-
-            for ug_grads in ug_grads:
-                total_students = ug_grads.total_students
-                total_final_years = ug_grads.total_final_years
-                total_higher_study_and_pay_crt = ug_grads.total_higher_study_and_pay_crt
-                total_not_intrested_in_placments = ug_grads.total_not_intrested_in_placments
-                total_backlogs_opted_for_placements = ug_grads.total_backlogs_opted_for_placements
-                total_backlogs_opted_for_higherstudies = ug_grads.total_backlogs_opted_for_higherstudies
-                total_backlogs_opted_for_other_career_options = ug_grads.total_backlogs_opted_for_other_career_options
-                total_offers = ug_grads.total_offers
-                total_multiple_offers = ug_grads.total_multiple_offers
-                total_students_eligible = ug_grads.total_students_eligible
-                total_placed = ug_grads.total_placed
-                total_yet_to_place = ug_grads.total_yet_to_place
-                total_backlogs = ug_grads.total_backlogs
-                highest_salary = max(highest_salary, ug_grads.highest_salary)
-                #average_salary = sum(ug_grads.average_salary)
-                lowest_salary = min(lowest_salary, ug_grads.lowest_salary)
-
-            ls = [total_students,
-                    total_final_years,
-                    total_higher_study_and_pay_crt,
-                    total_not_intrested_in_placments,
-                    total_backlogs_opted_for_placements,
-                    total_backlogs_opted_for_higherstudies,
-                    total_backlogs_opted_for_other_career_options,
-                    total_offers,
-                    total_multiple_offers,
-                    total_students_eligible,
-                    total_placed,
-                    total_yet_to_place,
-                    total_backlogs,
-                    highest_salary,
-                    average_salary,
-                    lowest_salary]
-            data = testSerialize(ls).data
-            send_data[i.name].append(data)
-            print(send_data)"""
