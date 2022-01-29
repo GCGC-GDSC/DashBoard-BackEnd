@@ -26,6 +26,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('students/', include('students.urls')),
     path('organization/', include('organization.urls')),
+
+    path('auth/', include('authentication.urls')),
+    path('social_auth/', include(('social_auth.urls', 'social_auth'),
+                                 namespace="social_auth")),
+                                 
     # path('data/', include('data.urls')),
     #path('company/', include('company.urls')),
 ]
