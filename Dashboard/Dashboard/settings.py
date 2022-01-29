@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     # Local Party
     'organization',
     'students',
-    'accounts',
+    'authentication',
+    # 'accounts',
     #'company',
 
     #Third Party
