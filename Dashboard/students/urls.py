@@ -11,6 +11,6 @@ urlpatterns = [
          SelectGraduates.as_view(),
          name='data-select-view'),
     path('update/<pk>', UpdateGraduates.as_view(), name='data-update-view'),
-    re_path(r'^upload/', FileUploadView.as_view()),
+#     re_path(r'^upload/', FileUploadView.as_view()),
     path('gbstats/', Gbstats.as_view(), name='test-list'),
 ]

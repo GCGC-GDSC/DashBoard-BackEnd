@@ -9,6 +9,7 @@ ACCESS_LEVEL = (
 
 
 class Accounts(models.Model):
+    eid = models.CharField(max_length=10,unique=True,default="")
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=50)
     campus = models.ForeignKey(Campus,
@@ -23,3 +24,6 @@ class Accounts(models.Model):
                              choices=ACCESS_LEVEL,
                              default='both')
     can_edit = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.eid)+" "+str(self.name)

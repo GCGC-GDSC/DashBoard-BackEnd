@@ -167,7 +167,7 @@ class UpdateGraduates(generics.UpdateAPIView):
         })
 
 
-class FileUploadView(views.APIView):
+'''class FileUploadView(views.APIView):
     parser_classes = [FileUploadParser]
 
     def put(self, request, format=None):
@@ -242,4 +242,4 @@ class FileUploadView(views.APIView):
                        under_institute=under_institute,
                        **data)
         qs.save()
-        return Response("Data sent", status=204)
+        return Response("Data sent", status=204)'''
