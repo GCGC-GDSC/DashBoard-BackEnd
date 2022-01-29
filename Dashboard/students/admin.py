@@ -100,7 +100,7 @@ class GraduatesAdmin(admin.ModelAdmin):
 
         form = ExcelImportForm()
         data = {"form": form}
-        
+
         return render(request, "admin/excel_upload.html", data)
 
 
