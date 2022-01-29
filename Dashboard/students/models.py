@@ -9,6 +9,7 @@ class Graduates(models.Model):
     total_students = models.IntegerField(default=0)
     total_final_years = models.IntegerField(default=0)
     total_higher_study_and_pay_crt = models.IntegerField(default=0)
+    total_opted_for_higher_studies = models.IntegerField(default=0)
     total_not_intrested_in_placments = models.IntegerField(default=0)
 
     # total_backlogs = models.IntegerField(default=0)
