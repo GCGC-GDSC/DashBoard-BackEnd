@@ -15,7 +15,6 @@ from rest_framework.parsers import FileUploadParser
 from tablib import Dataset
 from accounts.models import Accounts
 
-
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerializer
 
