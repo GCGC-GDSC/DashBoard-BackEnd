@@ -9,9 +9,7 @@ class Authenticate(views.APIView):
         try:
             qs = Accounts.objects.get(email=email)
         except:
-            return response.Response('Enter with correct email!')
+            return response.Response({'status':'error','result':'email not verified'})
         
-        qs = Accounts.objects.get(email=email)
-
-        send_data = AccountSerialize(qs).data
-        return response.Response({'status':'OK','result':send_data})
+        send_data = (AccountSerialize(qs).data)
+        return response.Response({'status':'OK',"result":send_data})
