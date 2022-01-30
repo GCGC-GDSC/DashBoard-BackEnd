@@ -17,7 +17,8 @@ class AccountSerialize(serializers.ModelSerializer):
     
     def _institute_name(self,obj):
         try:
-            qs = AccountsCampusLevel.objects.get(accounts_ptr=obj)
+            qs = AccountsInstituteLevel.objects.get(accounts_ptr=obj)
+            print(qs)
             return str(qs.institute)
         except:
             return "all"
