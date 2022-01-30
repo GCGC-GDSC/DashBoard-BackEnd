@@ -9,6 +9,7 @@ class Graduates(models.Model):
     total_students = models.IntegerField(default=0)
     total_final_years = models.IntegerField(default=0)
     total_higher_study_and_pay_crt = models.IntegerField(default=0)
+    total_opted_for_higher_studies_only = models.IntegerField(default=0)
     total_not_intrested_in_placments = models.IntegerField(default=0)
 
     # total_backlogs = models.IntegerField(default=0)
@@ -34,8 +35,10 @@ class Graduates(models.Model):
 
     @property
     def total_students_eligible(self):
-        return self.total_final_years - (self.total_backlogs +
-                                         self.total_not_intrested_in_placments)
+        return (self.total_final_years - self.total_higher_study_and_pay_crt -
+                self.total_opted_for_higher_studies_only -
+                self.total_not_intrested_in_placments -
+                self.total_backlogs_opted_for_placements)
 
     @property
     def total_placed(self):

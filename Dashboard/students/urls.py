@@ -14,6 +14,8 @@ urlpatterns = [
          name='data-select-view'),
     path('update/<pk>', UpdateGraduates.as_view(), name='data-update-view'),
     re_path(r'^upload/', utils.FileUploadView.as_view()),
+    path('update/<str:eid>/<pk>', UpdateGraduates.as_view(), name='data-update-view'),
+#     re_path(r'^upload/', FileUploadView.as_view()),
     path('gbstats/', Gbstats.as_view(), name='test-list'),
     path('exportexcel/', utils.export_data_to_excel, name='export-excel')
 ]

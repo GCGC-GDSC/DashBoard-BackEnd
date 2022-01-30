@@ -186,9 +186,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.FileUploadParser',
-    ]
+    # 'DEFAULT_PARSER_CLASSES': [
+    #     'rest_framework.parsers.FileUploadParser',
+    # ]
 }
 
 #django_heroku.settings(locals())
