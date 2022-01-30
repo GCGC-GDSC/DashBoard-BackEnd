@@ -13,7 +13,8 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
 from tablib import Dataset
-
+import pandas as pd
+from django.http import JsonResponse
 
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerialize
