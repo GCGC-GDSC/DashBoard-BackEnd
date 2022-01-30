@@ -13,10 +13,11 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
 from tablib import Dataset
+from accounts.models import Accounts
 
 
 class GraduateList(generics.ListAPIView):
-    serializer_class = GraduatesSerialize
+    serializer_class = GraduatesSerializer
 
     def get(self, request):
         send_data = {}
@@ -29,11 +30,11 @@ class GraduateList(generics.ListAPIView):
                 ug = Graduates.objects.filter(
                     Q(under_campus=cmp) & Q(under_institute=int)
                     & Q(is_ug=True))
-                ug_data = GraduatesSerialize(ug, many=True).data
+                ug_data = GraduatesSerializer(ug, many=True).data
                 pg = Graduates.objects.filter(
                     Q(under_campus=cmp) & Q(under_institute=int)
                     & Q(is_ug=False))
-                pg_data = GraduatesSerialize(pg, many=True).data
+                pg_data = GraduatesSerializer(pg, many=True).data
                 send_data[cmp.name][int.name].append(ug_data)
                 send_data[cmp.name][int.name].append(pg_data)
 
@@ -66,7 +67,7 @@ class InstituteGradList(generics.ListAPIView):
 
 
 class Overall(generics.ListAPIView):
-    serializer_class = GraduatesSerialize
+    serializer_class = GraduatesSerializer
 
     def get(self, request, stream):
         send_data = {}
@@ -98,19 +99,19 @@ class Gbstats(generics.ListAPIView):
 
 class SelectGraduates(generics.ListAPIView):
     queryset = Graduates.objects.all()
-    serializer_class = GraduatesSerialize
+    serializer_class = GraduatesSerializer
 
     def get(self, request, institute, grad):
         inst = Institute.objects.filter(name=institute)
         if grad == 'ug':
             grads = Graduates.objects.filter(under_institute=inst[0].id,
                                              is_ug=True)
-            send_data = GraduatesSerialize(grads, many=True).data
+            send_data = GraduatesSerializer(grads, many=True).data
         elif grad == 'pg':
 
             grads = Graduates.objects.filter(under_institute=inst[0].id,
                                              is_ug=False)
-            send_data = GraduatesSerialize(grads, many=True).data
+            send_data = GraduatesSerializer(grads, many=True).data
         else:
             send_data = []
         return response.Response({'status': 'OK', 'result': send_data})
@@ -118,48 +119,79 @@ class SelectGraduates(generics.ListAPIView):
 
 class UpdateGraduates(generics.UpdateAPIView):
     queryset = Graduates.objects.all()
-    serializer_class = GraduatesSerialize
+    serializer_class = UpdateGraduatesSerializer
 
-    def patch(self, request, *args, **kwargs):
+    def patch(self, request, eid, pk, *args, **kwargs):
+        try:
+            user = Accounts.objects.get(eid=eid)
+        except:
+            return response.Response({
+                'status': 'error',
+                'result': 'email is not authenticated'
+            })
+
+        try:
+            qs = Graduates.objects.get(id=pk)
+        except:
+            return response.Response({
+                'status': 'error',
+                'result': 'institute does not exist'
+            })
+
+        if not user.can_edit:
+            return response.Response({
+                'status': 'error',
+                'result': 'permission denied'
+            })
+
         data = request.data
-        qs.total_students = data['total_students']
-        qs.total_final_years = data.get('total_final_years',
-                                        qs.total_final_years)
-        qs.total_higher_study_and_pay_crt = data.get(
-            'total_higher_study_and_pay_crt',
-            qs.total_higher_study_and_pay_crt)
-        qs.total_not_intrested_in_placments = data.get(
-            'total_not_intrested_in_placments',
-            qs.total_not_intrested_in_placments)
-        qs.total_offers = data.get('total_offers', qs.total_offers)
-        qs.total_multiple_offers = data.get('total_multiple_offers',
-                                            qs.total_multiple_offers)
-        qs.highest_salary = data.get('highest_salary', qs.highest_salary)
-        qs.lowest_salary = data.get('lowest_salary', qs.lowest_salary)
-        qs.average_salary = data.get('average_salary', qs.average_salary)
-        qs.save()
+        serializer = UpdateGraduatesSerializer(qs, data=data, partial=True)
 
+        if not serializer.is_valid():
+            return response.Response({
+                'status': 'error',
+                'result': 'Invalid data'
+            })
+
+        serializer.save()
         return response.Response({
             'status': 'OK',
             'message': "send data succefully"
         })
 
-    def put(self, request, pk, *args, **kwargs):
-        qs = Graduates.objects.get(id=pk)
+    def put(self, request, eid, pk, *args, **kwargs):
+        try:
+            user = Accounts.objects.get(eid=eid)
+        except:
+            return response.Response({
+                'status': 'error',
+                'result': 'email is not authenticated'
+            })
 
+        try:
+            qs = Graduates.objects.get(id=pk)
+        except:
+            return response.Response({
+                'status': 'error',
+                'result': 'institute does not exist'
+            })
+
+        if not user.can_edit:
+            return response.Response({
+                'status': 'error',
+                'result': 'permission denied'
+            })
         data = request.data
-        qs.total_students = data['total_students']
-        qs.total_final_years = data['total_final_years']
-        qs.total_higher_study_and_pay_crt = data[
-            'total_higher_study_and_pay_crt']
-        qs.total_not_intrested_in_placments = data[
-            'total_not_intrested_in_placments']
-        qs.total_offers = data['total_offers']
-        qs.total_multiple_offers = data['total_multiple_offers']
-        qs.highest_salary = data['highest_salary']
-        qs.lowest_salary = data['lowest_salary']
-        qs.average_salary = data['average_salary']
-        qs.save()
+
+        serializer = UpdateGraduatesSerializer(qs, data=data)
+
+        if not serializer.is_valid():
+            return response.Response({
+                'status': 'error',
+                'result': 'Invalid data'
+            })
+
+        serializer.save()
 
         return response.Response({
             'status': 'OK',
