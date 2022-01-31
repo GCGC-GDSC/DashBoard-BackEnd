@@ -64,10 +64,11 @@ class Graduates(models.Model):
 
     def __str__(self):
         institute = str(self.under_institute)
+        campus = str(self.under_campus)
         if self.is_ug:
-            return 'UG ' + institute
+            return 'UG ' + institute + " " + campus
         else:
-            return 'PG ' + institute
+            return 'PG ' + institute + " " + campus
 
 
 class ExcelData(models.Model):

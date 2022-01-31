@@ -104,12 +104,12 @@ class GBstatsSerializer(serializers.ModelSerializer):
                 'total_backlogs_opted_for_other_career_options')).get('sum')
 
         serializer = (Graduates.objects.filter(id__in=obj).aggregate(
-            total_student=Sum('total_students'),
+            total_students=Sum('total_students'),
             total_final_years=Sum('total_final_years'),
             total_higher_study_and_pay_crt=Sum(
                 'total_higher_study_and_pay_crt')))
         serializer.update({
-            'total_backlog': (total_backlogs_opted_for_higherstudies +
+            'total_backlogs': (total_backlogs_opted_for_higherstudies +
                               total_backlogs_opted_for_other_career_options +
                               total_backlogs_opted_for_placements)
         })

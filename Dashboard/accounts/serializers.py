@@ -1,6 +1,7 @@
 from rest_framework import serializers, status
 from .models import *
-
+from organization.serializers import *
+from organization.models import *
 
 class AccountSerialize(serializers.ModelSerializer):
     campus = serializers.SerializerMethodField('_campus_name')
@@ -11,22 +12,24 @@ class AccountSerialize(serializers.ModelSerializer):
     def _campus_name(self,obj):
         try:
             qs = AccountsCampusLevel.objects.get(accounts_ptr=obj)
-            return str(qs.campus)
+            return [str(qs.campus)]
         except:
-            return "all"
+            qs = CampusSerializeParse(Campus.objects.all(),many=True).data
+            return qs
     
     def _institute_name(self,obj):
         try:
-            qs = AccountsCampusLevel.objects.get(accounts_ptr=obj)
-            return str(qs.institute)
+            qs = AccountsInstituteLevel.objects.get(accounts_ptr=obj)
+            return [str(qs.institute)]
         except:
-            return "all"
+            qs = InstituteSerializeParse(Institute.objects.all(),many=True).data
+            return qs
     def _grad_level(self,obj):
         try:
             qs = AccountsGraduationLevel.objects.get(accounts_ptr=obj)
-            return str(qs.grad)
+            return [str(qs.grad)]
         except:
-            return "all"
+            return ["ug","pg"]
 
     def _role_name(self,obj):
         try:
