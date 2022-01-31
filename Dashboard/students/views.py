@@ -25,7 +25,7 @@ class GraduateList(generics.ListAPIView):
             send_data[cmp.name] = {}
             ints = Campus.objects.get(name=cmp.name).institute_set.all()
             for int in ints:
-                send_data[cmp.name][int.name] = {}
+                send_data[cmp.name][int.name] = []
                 ug = Graduates.objects.filter(
                     Q(under_campus=cmp) & Q(under_institute=int)
                     & Q(is_ug=True))

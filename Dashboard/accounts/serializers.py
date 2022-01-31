@@ -12,7 +12,7 @@ class AccountSerialize(serializers.ModelSerializer):
     def _campus_name(self,obj):
         try:
             qs = AccountsCampusLevel.objects.get(accounts_ptr=obj)
-            return [str(qs.campus)]
+            return [{'name':str(qs.campus)}]
         except:
             qs = CampusSerializeParse(Campus.objects.all(),many=True).data
             return qs
@@ -20,7 +20,7 @@ class AccountSerialize(serializers.ModelSerializer):
     def _institute_name(self,obj):
         try:
             qs = AccountsInstituteLevel.objects.get(accounts_ptr=obj)
-            return [str(qs.institute)]
+            return [{'name':str(qs.institute),'campus':str(qs.campus)}]
         except:
             qs = InstituteSerializeParse(Institute.objects.all(),many=True).data
             return qs
