@@ -64,12 +64,12 @@ class GraduatesAdmin(admin.ModelAdmin):
                 messages.warning(request, 'The wrong file format')
                 return HttpResponseRedirect(request.path_info)
             except Graduates.DoesNotExist:
-                messages.warning(request, 'Invalid Data')
+                messages.warning(request, 'Invalid Data Graduated Data does not exist')
                 return HttpResponseRedirect(request.path_info)
 
             serializer = GraduatesSerializer(qs,data=data)
             if not serializer.is_valid():
-                messages.warning(request, 'Invalid Data')
+                messages.warning(request, 'Invalid Data serializer is not valid')
                 return HttpResponseRedirect(request.path_info)
             
             serializer.save()
