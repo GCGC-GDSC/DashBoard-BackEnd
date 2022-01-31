@@ -51,7 +51,7 @@ class StreamsSeralizer(serializers.ModelSerializer):
 class CampusSerializeParse(serializers.ModelSerializer):
     class Meta:
         model = Campus
-        fields = ['id','name']
+        fields = ['name']
 
 class InstituteSerializeParse(serializers.ModelSerializer):
     campus = serializers.SerializerMethodField('_campus')
@@ -59,4 +59,4 @@ class InstituteSerializeParse(serializers.ModelSerializer):
         return str(obj.under_campus)
     class Meta:
         model = Institute
-        fields = ['id','name','campus']
+        fields = ['name','campus']
