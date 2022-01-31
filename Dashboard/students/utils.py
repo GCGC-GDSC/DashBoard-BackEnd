@@ -8,6 +8,9 @@ from rest_framework.parsers import FileUploadParser
 from tablib import Dataset
 import pandas as pd
 from django.http import JsonResponse
+from rest_framework import generics
+from django.http import HttpResponse
+from wsgiref.util import FileWrapper
 
 
 class FileUploadView(views.APIView):
@@ -89,24 +92,53 @@ class FileUploadView(views.APIView):
         qs.save()
         return Response("Data sent", status=204)
 
-def export_data_to_excel(request):
+def export_data_to_excel(request, name):
+    ext = '.xlsx'
+    searchfilename = name+ext
     obj = Graduates.objects.all()
     data = []
     for i in obj:
+
+        if i.total_final_years == 0:
+            Percentage_of_students_opted_HS_to_the_total_number = 0
+            Percentage_of_students_having_backlogs_to_the_total_number_of_students = 0
+            Percentage_of_students_eligible_for_and_requiring_placement = 0
+        else:
+            Percentage_of_students_opted_HS_to_the_total_number = round(((i.total_not_intrested_in_placments/i.total_final_years)*100), 2)
+            Percentage_of_students_having_backlogs_to_the_total_number_of_students = round(((i.total_backlogs/i.total_final_years)*100), 2)
+            Percentage_of_students_eligible_for_and_requiring_placement = round(((i.total_students_eligible/i.total_final_years)*100), 2)
+
+        if i.total_placed == 0:
+            Percentage_of_students_placed_out_of_eligible_students = 0
+        else:
+            Percentage_of_students_placed_out_of_eligible_students = round(((i.total_placed/i.total_students_eligible)*100), 2)
+
+        if i.total_yet_to_place == 0:
+            Percentage_of_students_yet_to_be_placed_out_of_eligible_students = 0
+        else:
+            Percentage_of_students_yet_to_be_placed_out_of_eligible_students = round(((i.total_yet_to_place/i.total_students_eligible)*100), 2)
+
         data.append({
             "total_students": i.total_students,
             "total_final_years": i.total_final_years,
             "total_higher_study_and_pay_crt": i.total_higher_study_and_pay_crt,
             "total_not_intrested_in_placments": i.total_not_intrested_in_placments,
+            "No_of_students_opted_out_of_any_Career_Fulfillment_activities": "",
             "total_backlogs": i.total_backlogs,
             "total_backlogs_opted_for_placements": i.total_backlogs_opted_for_placements,
             "total_backlogs_opted_for_higherstudies": i.total_backlogs_opted_for_higherstudies,
             "total_backlogs_opted_for_other_career_options": i.total_backlogs_opted_for_other_career_options,
+            "total_students_eligible": i.total_students_eligible,
             "total_offers": i.total_offers,
             "total_multiple_offers": i.total_multiple_offers,
-            "total_students_eligible": i.total_students_eligible,
             "total_placed": i.total_placed,
             "total_yet_to_place": i.total_yet_to_place,
+            "Percentage_of_students_opted_HS_to_the_total_number": Percentage_of_students_opted_HS_to_the_total_number,
+            "Percentage_of_students_having_backlogs_to_the_total_number_of_students": Percentage_of_students_having_backlogs_to_the_total_number_of_students,
+            "Percentage_of_students_eligible_for_and_requiring_placement": Percentage_of_students_eligible_for_and_requiring_placement,
+            "Percentage_of_students_placed_out_of_eligible_students": Percentage_of_students_placed_out_of_eligible_students,
+            "Percentage_of_students_yet_to_be_placed_out_of_eligible_students": Percentage_of_students_yet_to_be_placed_out_of_eligible_students,
+            "salary_details": "",
             "highest_salary": i.highest_salary,
             "average_salary": i.average_salary,
             "lowest_salary": i.lowest_salary,
@@ -117,7 +149,7 @@ def export_data_to_excel(request):
             "under_institute": i.under_institute,
         })
 
-    wb = openpyxl.load_workbook('vskp.xlsx')
+    wb = openpyxl.load_workbook(searchfilename)
     sheet = wb.get_sheet_by_name('CF 2022')
 
     sheet_obj = wb.active
@@ -135,7 +167,7 @@ def export_data_to_excel(request):
         try:
             num = 5
             val = dic[inst.lower()]
-            #print("val", val, inst)
+            print("val", val, inst)
             if da['is_ug'] is False:
                 val += 1
 
@@ -150,3 +182,13 @@ def export_data_to_excel(request):
     return JsonResponse({
         'status': 200
     })
+
+class FileDownloadListAPIView(generics.ListAPIView):
+
+    def get(self, request, name, format=None):
+        export_data_to_excel(request, name)
+        document = open('out.xlsx', 'rb')
+        filename = name+'.xlsx'
+        response = HttpResponse(FileWrapper(document), content_type='application/msexcel')
+        response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+        return response
