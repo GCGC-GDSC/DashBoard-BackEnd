@@ -46,3 +46,17 @@ class StreamsSeralizer(serializers.ModelSerializer):
     class Meta:
         model = Stream
         fields = '__all__'
+
+
+class CampusSerializeParse(serializers.ModelSerializer):
+    class Meta:
+        model = Campus
+        fields = ['id','name']
+
+class InstituteSerializeParse(serializers.ModelSerializer):
+    campus = serializers.SerializerMethodField('_campus')
+    def _campus(self,obj):
+        return str(obj.under_campus)
+    class Meta:
+        model = Institute
+        fields = ['id','name','campus']
