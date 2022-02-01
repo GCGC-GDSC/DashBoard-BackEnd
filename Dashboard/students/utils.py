@@ -173,14 +173,15 @@ def export_data_to_excel(request, name):
                 val += 1
 
             for i in da:
-                totnum = 64 + val
-                if totnum <= 90:
-                    cell = chr(64 + val) + str(num)
-                else:
-                    diff = totnum - 90
-                    cell = chr(65) + chr(64 + diff) + str(num)
-                inpval = da[i]
-                sheet[cell] = inpval
+                if num<28:
+                    totnum = 64 + val
+                    if totnum <= 90:
+                        cell = chr(64 + val) + str(num)
+                    else:
+                        diff = totnum - 90
+                        cell = chr(65) + chr(64 + diff) + str(num)
+                    inpval = da[i]
+                    sheet[cell] = inpval
                 num += 1
         except:
             print("does not belong to this campus", inst)
@@ -192,10 +193,10 @@ def export_data_to_excel(request, name):
 class FileDownloadListAPIView(generics.ListAPIView):
 
     def get(self, request, name, format=None):
-        lookup_name = {'blr':'Bangulore_Campus'}
+        filename = f"{str(name).upper()} Career Fulfillment Statistics - 2022 Batch"
         export_data_to_excel(request, name)
         document = open('media/out.xlsx', 'rb')
-        filename = name+'.xlsx'
+        filename = filename+'.xlsx'
         response = HttpResponse(FileWrapper(document), content_type='application/msexcel')
         response['Content-Disposition'] = 'attachment; filename="%s"' % filename
         return response
