@@ -173,15 +173,16 @@ def export_data_to_excel(request, name):
                 val += 1
 
             for i in da:
-                totnum = 64 + val
-                if totnum <= 90:
-                    cell = chr(64 + val) + str(num)
-                else:
-                    diff = totnum - 90
-                    cell = chr(65) + chr(64 + diff) + str(num)
-                inpval = da[i]
-                sheet[cell] = inpval
-                num += 1
+                if num > 27:
+                    totnum = 64 + val
+                    if totnum <= 90:
+                        cell = chr(64 + val) + str(num)
+                    else:
+                        diff = totnum - 90
+                        cell = chr(65) + chr(64 + diff) + str(num)
+                    inpval = da[i]
+                    sheet[cell] = inpval
+                    num += 1
         except:
             print("does not belong to this campus", inst)
     wb.save('media/out.xlsx')
