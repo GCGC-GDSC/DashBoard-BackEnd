@@ -10,7 +10,9 @@ urlpatterns = [
     path('select/<institute>/<grad>',
          SelectGraduates.as_view(),
          name='data-select-view'),
-    path('update/<str:eid>/<pk>', UpdateGraduates.as_view(), name='data-update-view'),
-#     re_path(r'^upload/', FileUploadView.as_view()),
+    path('update/<str:eid>/<pk>',
+         UpdateGraduates.as_view(),
+         name='data-update-view'),
+    #     re_path(r'^upload/', FileUploadView.as_view()),
     path('gbstats/', Gbstats.as_view(), name='test-list'),
 ]
