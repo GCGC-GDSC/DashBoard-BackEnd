@@ -29,7 +29,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='institute',
             name='under_campus',
-            field=models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='organization.campus'),
+            field=models.ForeignKey(
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='organization.campus'),
         ),
         migrations.AlterField(
             model_name='stream',

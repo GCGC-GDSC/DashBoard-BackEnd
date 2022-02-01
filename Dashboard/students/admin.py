@@ -13,6 +13,7 @@ from organization.models import *
 from django.db.models import Q
 from .serializers import *
 
+
 class GraduatesResource(resources.ModelResource):
 
     class meta:
@@ -64,16 +65,18 @@ class GraduatesAdmin(admin.ModelAdmin):
                 messages.warning(request, 'The wrong file format')
                 return HttpResponseRedirect(request.path_info)
             except Graduates.DoesNotExist:
-                messages.warning(request, 'Invalid Data Graduated Data does not exist')
+                messages.warning(request,
+                                 'Invalid Data Graduated Data does not exist')
                 return HttpResponseRedirect(request.path_info)
 
-            serializer = GraduatesSerializer(qs,data=data)
+            serializer = GraduatesSerializer(qs, data=data)
             if not serializer.is_valid():
-                messages.warning(request, 'Invalid Data serializer is not valid')
+                messages.warning(request,
+                                 'Invalid Data serializer is not valid')
                 return HttpResponseRedirect(request.path_info)
-            
+
             serializer.save()
-            
+
             messages.info(request, 'Updated Data')
             HttpResponseRedirect(request.path_info)
 
