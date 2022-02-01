@@ -192,8 +192,9 @@ def export_data_to_excel(request, name):
 class FileDownloadListAPIView(generics.ListAPIView):
 
     def get(self, request, name, format=None):
+        lookup_name = {'blr':'Bangulore_Campus'}
         export_data_to_excel(request, name)
-        document = open('out.xlsx', 'rb')
+        document = open('media/out.xlsx', 'rb')
         filename = name+'.xlsx'
         response = HttpResponse(FileWrapper(document), content_type='application/msexcel')
         response['Content-Disposition'] = 'attachment; filename="%s"' % filename
