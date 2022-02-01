@@ -122,8 +122,8 @@ def export_data_to_excel(request, name):
             "total_students": i.total_students,
             "total_final_years": i.total_final_years,
             "total_higher_study_and_pay_crt": i.total_higher_study_and_pay_crt,
-            "total_not_intrested_in_placments": i.total_not_intrested_in_placments,
-            "No_of_students_opted_out_of_any_Career_Fulfillment_activities": "",
+            "total_opted_for_higher_studies_only": i.total_opted_for_higher_studies_only,
+            "No_of_students_opted_out_of_any_Career_Fulfillment_activities": i.total_not_intrested_in_placments,
             "total_backlogs": i.total_backlogs,
             "total_backlogs_opted_for_placements": i.total_backlogs_opted_for_placements,
             "total_backlogs_opted_for_higherstudies": i.total_backlogs_opted_for_higherstudies,
@@ -148,8 +148,9 @@ def export_data_to_excel(request, name):
             "under_campus": i.under_campus,
             "under_institute": i.under_institute,
         })
-
-    wb = openpyxl.load_workbook(searchfilename)
+    searchpath = "media/"+searchfilename
+    #print("=============================", searchpath, "============================")
+    wb = openpyxl.load_workbook(searchpath)
     sheet = wb.get_sheet_by_name('CF 2022')
 
     sheet_obj = wb.active
@@ -172,13 +173,18 @@ def export_data_to_excel(request, name):
                 val += 1
 
             for i in da:
-                cell = chr(64 + val) + str(num)
+                totnum = 64 + val
+                if totnum <= 90:
+                    cell = chr(64 + val) + str(num)
+                else:
+                    diff = totnum - 90
+                    cell = chr(65) + chr(64 + diff) + str(num)
                 inpval = da[i]
                 sheet[cell] = inpval
                 num += 1
         except:
             print("does not belong to this campus", inst)
-    wb.save('out.xlsx')
+    wb.save('media/out.xlsx')
     return JsonResponse({
         'status': 200
     })
