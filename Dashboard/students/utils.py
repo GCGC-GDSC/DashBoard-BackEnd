@@ -11,8 +11,10 @@ from django.http import JsonResponse
 from rest_framework import generics
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
+from .serializers import *
 
 
+"""
 class FileUploadView(views.APIView):
     parser_classes = [FileUploadParser]
 
@@ -91,7 +93,7 @@ class FileUploadView(views.APIView):
                        **data)
         qs.save()
         return Response("Data sent", status=204)
-
+"""
 def export_data_to_excel(request, name):
     ext = '.xlsx'
     searchfilename = name+ext
@@ -151,7 +153,7 @@ def export_data_to_excel(request, name):
     searchpath = "media/"+searchfilename
     #print("=============================", searchpath, "============================")
     wb = openpyxl.load_workbook(searchpath)
-    sheet = wb.get_sheet_by_name('sheet1')
+    sheet = wb.get_sheet_by_name('CF 2022')
 
     sheet_obj = wb.active
 
@@ -191,7 +193,8 @@ def export_data_to_excel(request, name):
     })
 
 class FileDownloadListAPIView(generics.ListAPIView):
-
+    serializer_class = GraduatesSerializer
+    
     def get(self, request, name, format=None):
         filename = f"{str(name).upper()} Career Fulfillment Statistics - 2022 Batch"
         export_data_to_excel(request, name)
