@@ -151,7 +151,7 @@ def export_data_to_excel(request, name):
     searchpath = "media/"+searchfilename
     #print("=============================", searchpath, "============================")
     wb = openpyxl.load_workbook(searchpath)
-    sheet = wb.get_sheet_by_name('CF 2022')
+    sheet = wb.get_sheet_by_name('sheet1')
 
     sheet_obj = wb.active
 
@@ -173,7 +173,7 @@ def export_data_to_excel(request, name):
                 val += 1
 
             for i in da:
-                if num > 27:
+                if num<28:
                     totnum = 64 + val
                     if totnum <= 90:
                         cell = chr(64 + val) + str(num)
@@ -182,7 +182,7 @@ def export_data_to_excel(request, name):
                         cell = chr(65) + chr(64 + diff) + str(num)
                     inpval = da[i]
                     sheet[cell] = inpval
-                    num += 1
+                num += 1
         except:
             print("does not belong to this campus", inst)
     wb.save('media/out.xlsx')
@@ -194,7 +194,7 @@ class FileDownloadListAPIView(generics.ListAPIView):
 
     def get(self, request, name, format=None):
         export_data_to_excel(request, name)
-        document = open('out.xlsx', 'rb')
+        document = open('media/out.xlsx', 'rb')
         filename = name+'.xlsx'
         response = HttpResponse(FileWrapper(document), content_type='application/msexcel')
         response['Content-Disposition'] = 'attachment; filename="%s"' % filename
