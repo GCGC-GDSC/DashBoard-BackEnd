@@ -11,5 +11,7 @@ class Authenticate(views.APIView):
         except:
             return response.Response({'status':'error','result':'email not verified'})
         
+        send_data = []        
         send_data = (AccountSerialize(qs).data)
+
         return response.Response({'status':'OK',"result":send_data})
