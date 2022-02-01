@@ -151,7 +151,7 @@ def export_data_to_excel(request, name):
     searchpath = "media/"+searchfilename
     #print("=============================", searchpath, "============================")
     wb = openpyxl.load_workbook(searchpath)
-    sheet = wb.get_sheet_by_name('CF 2022')
+    sheet = wb.get_sheet_by_name('sheet1')
 
     sheet_obj = wb.active
 
