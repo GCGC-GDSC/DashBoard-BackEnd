@@ -5,6 +5,7 @@ from django.db.models import Q, Count, Max, Sum, Min, Avg
 
 
 class GraduatesSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Graduates
         fields = ('id', 'under_institute_name', 'under_campus_name',
@@ -15,14 +16,14 @@ class GraduatesSerializer(serializers.ModelSerializer):
                   'total_backlogs_opted_for_placements',
                   'total_backlogs_opted_for_higherstudies',
                   'total_backlogs_opted_for_other_career_options',
-                  'total_backlogs',
-                  'total_students_eligible', 'total_offers',
+                  'total_backlogs', 'total_students_eligible', 'total_offers',
                   'total_multiple_offers', 'total_placed',
                   'total_yet_to_place', 'highest_salary', 'average_salary',
                   'lowest_salary', 'is_ug')
 
 
 class UpdateGraduatesSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Graduates
         fields = (
@@ -104,14 +105,14 @@ class GBstatsSerializer(serializers.ModelSerializer):
                 'total_backlogs_opted_for_other_career_options')).get('sum')
 
         serializer = (Graduates.objects.filter(id__in=obj).aggregate(
-            total_student=Sum('total_students'),
+            total_students=Sum('total_students'),
             total_final_years=Sum('total_final_years'),
             total_higher_study_and_pay_crt=Sum(
                 'total_higher_study_and_pay_crt')))
         serializer.update({
-            'total_backlog': (total_backlogs_opted_for_higherstudies +
-                              total_backlogs_opted_for_other_career_options +
-                              total_backlogs_opted_for_placements)
+            'total_backlogs': (total_backlogs_opted_for_higherstudies +
+                               total_backlogs_opted_for_other_career_options +
+                               total_backlogs_opted_for_placements)
         })
 
         return serializer
@@ -140,14 +141,17 @@ class GBstatsSerializer(serializers.ModelSerializer):
             Sum('total_offers'))['total_offers__sum']
         total_multiple_offers = Graduates.objects.filter(id__in=obj).aggregate(
             Sum('total_multiple_offers'))['total_multiple_offers__sum']
-        total_higher_study_and_pay_crt = Graduates.objects.filter(id__in=obj).aggregate(
-            Sum('total_higher_study_and_pay_crt'))['total_higher_study_and_pay_crt__sum']
-        total_opted_for_higher_studies_only = Graduates.objects.filter(id__in=obj).aggregate(
-            Sum('total_opted_for_higher_studies_only'))['total_opted_for_higher_studies_only__sum']
-        total_students_eligible = (total_final_years - total_higher_study_and_pay_crt -
-                                        total_opted_for_higher_studies_only -
-                                        total_not_intrested_in_placments -
-                                        total_backlogs_opted_for_placements)
+        total_higher_study_and_pay_crt = Graduates.objects.filter(
+            id__in=obj).aggregate(Sum('total_higher_study_and_pay_crt')
+                                  )['total_higher_study_and_pay_crt__sum']
+        total_opted_for_higher_studies_only = Graduates.objects.filter(
+            id__in=obj).aggregate(Sum('total_opted_for_higher_studies_only')
+                                  )['total_opted_for_higher_studies_only__sum']
+        total_students_eligible = (total_final_years -
+                                   total_higher_study_and_pay_crt -
+                                   total_opted_for_higher_studies_only -
+                                   total_not_intrested_in_placments -
+                                   total_backlogs_opted_for_placements)
 
         serializer = (Graduates.objects.filter(id__in=obj).aggregate(
             total_not_intrested_in_placments=Sum(
@@ -159,7 +163,8 @@ class GBstatsSerializer(serializers.ModelSerializer):
             "placed": (total_offers - total_multiple_offers),
             "yet_to_place":
             (total_students_eligible - (total_offers - total_multiple_offers)),
-            "total_students_eligible": total_students_eligible
+            "total_students_eligible":
+            total_students_eligible
         })
 
         return serializer

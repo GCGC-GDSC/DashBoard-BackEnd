@@ -11,6 +11,7 @@ from tablib import Dataset
 from import_export.admin import ImportExportModelAdmin, ImportMixin, ImportForm, ConfirmImportForm
 from organization.models import *
 from django.db.models import Q
+from .serializers import *
 
 
 class GraduatesResource(resources.ModelResource):
@@ -64,37 +65,18 @@ class GraduatesAdmin(admin.ModelAdmin):
                 messages.warning(request, 'The wrong file format')
                 return HttpResponseRedirect(request.path_info)
             except Graduates.DoesNotExist:
-                messages.warning(request, 'Invalid Data')
+                messages.warning(request,
+                                 'Invalid Data Graduated Data does not exist')
                 return HttpResponseRedirect(request.path_info)
 
-            qs.total_students = data['total_students']
-            qs.total_final_years = data.get('total_final_years',
-                                            qs.total_final_years)
-            qs.total_higher_study_and_pay_crt = data.get(
-                'total_higher_study_and_pay_crt',
-                qs.total_higher_study_and_pay_crt)
-            qs.total_opted_for_higher_studies = data.get(
-                'total_opted_for_higher_studies',
-                qs.total_opted_for_higher_studies)
-            qs.total_not_intrested_in_placments = data.get(
-                'total_not_intrested_in_placments',
-                qs.total_not_intrested_in_placments)
-            qs.total_backlogs_opted_for_placements = data.get(
-                'total_backlogs_opted_for_placements',
-                qs.total_backlogs_opted_for_placements)
-            qs.total_backlogs_opted_for_higherstudies = data.get(
-                'total_backlogs_opted_for_higherstudies',
-                qs.total_backlogs_opted_for_higherstudies)
-            qs.total_backlogs_opted_for_other_career_options = data.get(
-                'total_backlogs_opted_for_other_career_options',
-                qs.total_backlogs_opted_for_other_career_options)
-            qs.total_offers = data.get('total_offers', qs.total_offers)
-            qs.total_multiple_offers = data.get('total_multiple_offers',
-                                                qs.total_multiple_offers)
-            qs.highest_salary = data.get('highest_salary', qs.highest_salary)
-            qs.lowest_salary = data.get('lowest_salary', qs.lowest_salary)
-            qs.average_salary = data.get('average_salary', qs.average_salary)
-            qs.save()
+            serializer = GraduatesSerializer(qs, data=data)
+            if not serializer.is_valid():
+                messages.warning(request,
+                                 'Invalid Data serializer is not valid')
+                return HttpResponseRedirect(request.path_info)
+
+            serializer.save()
+
             messages.info(request, 'Updated Data')
             HttpResponseRedirect(request.path_info)
 

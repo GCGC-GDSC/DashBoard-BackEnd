@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-#import django_heroku
+import django_heroku
 from django.core.exceptions import ImproperlyConfigured
 
 
@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     # Local Party
     'organization',
     'students',
-    'accounts',
+    'account',
     #'company',
 
     #Third Party
@@ -191,4 +191,4 @@ REST_FRAMEWORK = {
     # ]
 }
 
-#django_heroku.settings(locals())
+django_heroku.settings(locals())

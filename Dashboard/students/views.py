@@ -13,7 +13,6 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
 from tablib import Dataset
-from accounts.models import Accounts
 
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerializer
@@ -66,7 +65,7 @@ class InstituteGradList(generics.ListAPIView):
 
 
 class Overall(generics.ListAPIView):
-    serializer_class = GraduatesSerializer
+    serializer_class = InstituteGradListSeralizer
 
     def get(self, request, stream):
         send_data = {}
@@ -74,8 +73,13 @@ class Overall(generics.ListAPIView):
         inst_data = Institute.objects.filter(stream=stream_data[0].id)
         for inst in inst_data:
             send_data[inst.name] = []
-            graduates = Graduates.objects.filter(under_institute=inst.id)
-            #data = GraduatesSerialize(graduates, many=True).data
+            graduates = Graduates.objects.filter(under_institute=inst.id,
+                                                 is_ug=True)
+            data = InstituteGradListSeralizer(graduates, many=True).data
+            send_data[inst.name].append(data)
+
+            graduates = Graduates.objects.filter(under_institute=inst.id,
+                                                 is_ug=False)
             data = InstituteGradListSeralizer(graduates, many=True).data
             send_data[inst.name].append(data)
 
