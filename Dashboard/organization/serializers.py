@@ -49,14 +49,18 @@ class StreamsSeralizer(serializers.ModelSerializer):
 
 
 class CampusSerializeParse(serializers.ModelSerializer):
+
     class Meta:
         model = Campus
-        fields = ['id','name']
+        fields = ['name']
+
 
 class InstituteSerializeParse(serializers.ModelSerializer):
     campus = serializers.SerializerMethodField('_campus')
-    def _campus(self,obj):
+
+    def _campus(self, obj):
         return str(obj.under_campus)
+
     class Meta:
         model = Institute
-        fields = ['id','name','campus']
+        fields = ['name', 'campus']
