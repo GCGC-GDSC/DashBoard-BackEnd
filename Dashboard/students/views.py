@@ -13,6 +13,18 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.parsers import FileUploadParser
 from tablib import Dataset
+import traceback
+import logging
+from rest_framework.status import *
+
+
+logging.basicConfig(
+    filename='debug.log',
+    filemode='a',
+    format='%(asctime)s %(levelname)s-%(message)s',
+    datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
 
 
 class GraduateList(generics.ListAPIView):
@@ -20,25 +32,26 @@ class GraduateList(generics.ListAPIView):
 
     def get(self, request):
         send_data = {}
-        cmps = Campus.objects.all()
-        for cmp in cmps:
-            send_data[cmp.name] = {}
-            ints = Campus.objects.get(name=cmp.name).institute_set.all()
-            for int in ints:
-                send_data[cmp.name][int.name] = []
-                ug = Graduates.objects.filter(
-                    Q(under_campus=cmp) & Q(under_institute=int)
-                    & Q(is_ug=True))
-                ug_data = GraduatesSerializer(ug, many=True).data
-                pg = Graduates.objects.filter(
-                    Q(under_campus=cmp) & Q(under_institute=int)
-                    & Q(is_ug=False))
-                pg_data = GraduatesSerializer(pg, many=True).data
-                send_data[cmp.name][int.name].append(ug_data)
-                send_data[cmp.name][int.name].append(pg_data)
-
+        try:
+            cmps = Campus.objects.all()
+            for cmp in cmps:
+                send_data[cmp.name] = {}
+                ints = Campus.objects.get(name=cmp.name).institute_set.all()
+                for int in ints:
+                    send_data[cmp.name][int.name] = []
+                    ug = Graduates.objects.filter(
+                        Q(under_campus=cmp) & Q(under_institute=int)
+                        & Q(is_ug=True))
+                    ug_data = GraduatesSerializer(ug, many=True).data
+                    pg = Graduates.objects.filter(
+                        Q(under_campus=cmp) & Q(under_institute=int)
+                        & Q(is_ug=False))
+                    pg_data = GraduatesSerializer(pg, many=True).data
+                    send_data[cmp.name][int.name].append(ug_data)
+                    send_data[cmp.name][int.name].append(pg_data)
+        except Exception as e:
+            return response.Response({'status':'error','result':str(e)},status=HTTP_500_INTERNAL_SERVER_ERROR)
         return response.Response({'status': 'OK', 'result': send_data})
-
 
 # --
 #
@@ -51,7 +64,10 @@ class InstituteGradList(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
 
     def get(self, request, institute):
-        inst = Institute.objects.get(name=institute)
+        try:
+            inst = Institute.objects.get(name=institute)
+        except Exception as e:
+            return response.Response({'status':'error','result':str(e)},status=HTTP_400_BAD_REQUEST)
         grds = Graduates.objects.filter(under_institute=inst)
         send_data = InstituteGradListSeralizer(grds, many=True).data
 
@@ -71,6 +87,10 @@ class Overall(generics.ListAPIView):
     def get(self, request, stream):
         send_data = {}
         stream_data = Stream.objects.filter(name=stream)
+
+        if len(stream_data)==0:
+            return response.Response({'status':'error','result':'Stream Does not Exists'},status=HTTP_400_BAD_REQUEST)
+        
         inst_data = Institute.objects.filter(stream=stream_data[0].id)
         for inst in inst_data:
             send_data[inst.name] = []
@@ -97,7 +117,6 @@ class Gbstats(generics.ListAPIView):
 
         send_data['UG'] = GBstatsSerializer(ug_grad).data
         send_data['PG'] = GBstatsSerializer(pg_grad).data
-
         return response.Response({'status': 'OK', 'result': send_data})
 
 
@@ -132,7 +151,7 @@ class UpdateGraduates(generics.UpdateAPIView):
             return response.Response({
                 'status': 'error',
                 'result': 'email is not authenticated'
-            })
+            },status=HTTP_423_LOCKED)
 
         try:
             qs = Graduates.objects.get(id=pk)
@@ -140,13 +159,13 @@ class UpdateGraduates(generics.UpdateAPIView):
             return response.Response({
                 'status': 'error',
                 'result': 'institute does not exist'
-            })
+            },status=HTTP_400_BAD_REQUEST)
 
         if not user.can_edit:
             return response.Response({
                 'status': 'error',
                 'result': 'permission denied'
-            })
+            },status=HTTP_423_LOCKED)
 
         data = request.data
         serializer = UpdateGraduatesSerializer(qs, data=data, partial=True)
@@ -155,13 +174,13 @@ class UpdateGraduates(generics.UpdateAPIView):
             return response.Response({
                 'status': 'error',
                 'result': 'Invalid data'
-            })
+            },status=HTTP_205_RESET_CONTENT)
 
         serializer.save()
         return response.Response({
             'status': 'OK',
             'message': "send data succefully"
-        })
+        },status=HTTP_202_ACCEPTED)
 
     def put(self, request, eid, pk, *args, **kwargs):
         try:
@@ -170,7 +189,7 @@ class UpdateGraduates(generics.UpdateAPIView):
             return response.Response({
                 'status': 'error',
                 'result': 'email is not authenticated'
-            })
+            },status=HTTP_423_LOCKED)
 
         try:
             qs = Graduates.objects.get(id=pk)
@@ -178,13 +197,13 @@ class UpdateGraduates(generics.UpdateAPIView):
             return response.Response({
                 'status': 'error',
                 'result': 'institute does not exist'
-            })
+            },status=HTTP_400_BAD_REQUEST)
 
         if not user.can_edit:
             return response.Response({
                 'status': 'error',
                 'result': 'permission denied'
-            })
+            },status=HTTP_423_LOCKED)
         data = request.data
 
         serializer = UpdateGraduatesSerializer(qs, data=data)
@@ -193,14 +212,18 @@ class UpdateGraduates(generics.UpdateAPIView):
             return response.Response({
                 'status': 'error',
                 'result': 'Invalid data'
-            })
+            },status=HTTP_205_RESET_CONTENT)
 
         serializer.save()
+
+        f = open('DBLog.txt','a')
+        f.write(f'{user.name} - {user.eid} Created a new Graduate Model {data['name']}')
+        f.close()
 
         return response.Response({
             'status': 'OK',
             'message': "send data succefully"
-        })
+        },status=HTTP_201_CREATED)
 
 
 '''class FileUploadView(views.APIView):
