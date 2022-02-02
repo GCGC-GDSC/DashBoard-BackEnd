@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 import django_heroku
 from django.core.exceptions import ImproperlyConfigured
-
+import logging
 
 def get_env_variable(var_name):
     try:
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     #'company',
 
     #Third Party
+    # 'django_db_logger',
     'rest_framework',
     'corsheaders',
     'drf_yasg',
