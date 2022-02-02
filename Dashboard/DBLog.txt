@@ -11,4 +11,5 @@ Access persmissions were assigned to Useres By SuperAdminUser
                     by <span className="author_name">wss(aa)</span> at <span className="time">04:19 PM, 2 February 2022</span>
                     </p>
 
-        
+        <p className="log_line"> Data <span className="campus_path">`VSKP>GIT>UG`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">wss(aa)</span> at <span className="time">06:09 PM, 2 February 2022</span></p>
+<p className="log_line"> Data <span className="campus_path">`VSKP>GIT>UG`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">wss(aa)</span> at <span className="time">06:10 PM, 2 February 2022</span></p>

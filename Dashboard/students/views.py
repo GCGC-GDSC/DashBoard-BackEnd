@@ -233,9 +233,11 @@ class UpdateGraduates(generics.UpdateAPIView):
         return response.Response(
             {
                 'status': 'OK',
-                'message': "send data succefully"
+                'message': "send data succefully",
+                'result': serializer.data
             },
             status=HTTP_201_CREATED)
+    
 
     def put(self, request, eid, pk, *args, **kwargs):
         try:
@@ -305,7 +307,8 @@ class UpdateGraduates(generics.UpdateAPIView):
         return response.Response(
             {
                 'status': 'OK',
-                'message': "send data succefully"
+                'message': "send data succefully",
+                'result': serializer.data
             },
             status=HTTP_201_CREATED)
 
