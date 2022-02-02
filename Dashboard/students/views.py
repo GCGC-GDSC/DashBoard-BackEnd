@@ -216,9 +216,9 @@ class UpdateGraduates(generics.UpdateAPIView):
 
         serializer.save()
 
-        f = open('DBLog.txt','a')
-        f.write(f'{user.name} - {user.eid} Created a new Graduate Model {data['name']}')
-        f.close()
+        #f = open('DBLog.txt','a')
+        #f.write(f'{user.name} - {user.eid} Created a new Graduate Model {data['name']}')
+        #f.close()
 
         return response.Response({
             'status': 'OK',
