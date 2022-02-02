@@ -16,6 +16,9 @@ from tablib import Dataset
 import traceback
 import logging
 from rest_framework.status import *
+from account.models import *
+import datetime
+import calendar
 
 logging.basicConfig(
     filename='debug.log',
@@ -177,13 +180,22 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_400_BAD_REQUEST)
 
-        if not user.can_edit:
+        if user.access=='view':
             return response.Response(
                 {
                     'status': 'error',
                     'result': 'permission denied'
                 },
                 status=HTTP_423_LOCKED)
+
+        try:
+            grad = Graduates.objects.get(id=pk)
+        except Exception as e:
+            return response.Response(
+                {
+                    'status': 'error',
+                    'result': 'Institute does not exits',
+                },status=HTTP_400_BAD_REQUEST)
 
         data = request.data
         serializer = UpdateGraduatesSerializer(qs, data=data, partial=True)
@@ -197,12 +209,22 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_205_RESET_CONTENT)
 
         serializer.save()
+        ug_pg = 'UG' if grad.is_ug==True else 'PG'
+        timer = str(datetime.datetime.today().strftime("%I:%M %p"))
+        month = datetime.datetime.now().month
+        year = str(datetime.datetime.now().year)
+        day = str(datetime.datetime.now().day)
+        data_time = timer+", "+day+" "+calendar.month_name[month]+" "+year
+        f = open('DBLog.txt','a')
+        f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n")
+        f.close()
+
         return response.Response(
             {
                 'status': 'OK',
                 'message': "send data succefully"
             },
-            status=HTTP_202_ACCEPTED)
+            status=HTTP_201_CREATED)
 
     def put(self, request, eid, pk, *args, **kwargs):
         try:
@@ -225,7 +247,7 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_400_BAD_REQUEST)
 
-        if not user.can_edit:
+        if user.access=='view':
             return response.Response(
                 {
                     'status': 'error',
@@ -233,6 +255,16 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_423_LOCKED)
         data = request.data
+
+        try:
+            grad = Graduates.objects.get(id=pk)
+        except Exception as e:
+            return response.Response(
+                {
+                    'status': 'error',
+                    'result': 'Institute does not exits',
+                },status=HTTP_400_BAD_REQUEST)
+
 
         serializer = UpdateGraduatesSerializer(qs, data=data)
 
@@ -245,10 +277,16 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_205_RESET_CONTENT)
 
         serializer.save()
-
-        #f = open('DBLog.txt','a')
-        #f.write(f'{user.name} - {user.eid} Created a new Graduate Model {data['name']}')
-        #f.close()
+        ug_pg = 'UG' if grad.is_ug==True else 'PG'
+        
+        timer = str(datetime.datetime.today().strftime("%I:%M %p"))
+        month = datetime.datetime.now().month
+        year = str(datetime.datetime.now().year)
+        day = str(datetime.datetime.now().day)
+        data_time = timer+", "+day+" "+calendar.month_name[month]+" "+year
+        f = open('DBLog.txt','a')
+        f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n")
+        f.close()
 
         return response.Response(
             {
