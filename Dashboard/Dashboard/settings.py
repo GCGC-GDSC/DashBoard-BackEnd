@@ -16,6 +16,7 @@ import django_heroku
 from django.core.exceptions import ImproperlyConfigured
 import logging
 
+
 def get_env_variable(var_name):
     try:
         return os.environ[var_name]

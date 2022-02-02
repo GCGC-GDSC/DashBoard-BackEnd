@@ -12,14 +12,20 @@ class Authenticate(views.APIView):
         try:
             qs = Accounts.objects.get(email=email)
         except:
-            return response.Response({
-                'status': 'error',
-                'result': 'email not verified'
-            },status=HTTP_423_LOCKED)
+            return response.Response(
+                {
+                    'status': 'error',
+                    'result': 'email not verified'
+                },
+                status=HTTP_423_LOCKED)
 
         send_data = []
         try:
             send_data = AccountSerialize(qs).data
         except Exception as e:
-            return response.Response({'status':'error','result':str(e)},status=HTTP_500_INTERNAL_SERVER_ERROR)
+            return response.Response({
+                'status': 'error',
+                'result': str(e)
+            },
+                                     status=HTTP_500_INTERNAL_SERVER_ERROR)
         return response.Response({'status': 'OK', "result": send_data})
