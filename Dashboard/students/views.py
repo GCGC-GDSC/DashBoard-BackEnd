@@ -77,9 +77,16 @@ class InstituteGradList(generics.ListAPIView):
                 'result': str(e)
             },
                                      status=HTTP_400_BAD_REQUEST)
-        grds = Graduates.objects.filter(under_institute=inst)
-        send_data = InstituteGradListSeralizer(grds, many=True).data
-
+        send_data = []
+        
+        ug = Graduates.objects.filter(under_institute=inst,is_ug=True)
+        ug = InstituteGradListSeralizer(ug, many=True).data
+        send_data.append(ug[0])
+        
+        pg = Graduates.objects.filter(under_institute=inst,is_ug=False)
+        pg = InstituteGradListSeralizer(pg, many=True).data
+        send_data.append(pg[0])
+        
         # [
         #     # students detalis[student_details,placement_details,salary] ,
         #     #
