@@ -62,7 +62,8 @@ class InstituteGradListSeralizer(serializers.ModelSerializer):
             "total_final_years": obj.total_final_years,
             "total_backlogs": obj.total_backlogs,
             "total_higher_study_and_pay_crt":
-            obj.total_higher_study_and_pay_crt
+            obj.total_higher_study_and_pay_crt,
+            "total_opted_for_higher_studies_only":obj.total_opted_for_higher_studies_only,
         }
 
     def _placement_details(self, obj):
