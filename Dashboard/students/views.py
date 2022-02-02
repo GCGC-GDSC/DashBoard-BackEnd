@@ -200,7 +200,8 @@ class UpdateGraduates(generics.UpdateAPIView):
         return response.Response(
             {
                 'status': 'OK',
-                'message': "send data succefully"
+                'message': "send data succefully",
+                'data': serializer
             },
             status=HTTP_202_ACCEPTED)
 
