@@ -6,3 +6,9 @@ Campus `blr` is Created By SuperAdminUser
 Institutes Added Under `blr`
 Accounts were Created By SuperAdminUser
 Access persmissions were assigned to Useres By SuperAdminUser
+                    <p className="log_line">
+                    Data <span className="campus_path">`VSKP>GIT>UG`</span> was <span className="action_name added"> Added</span>
+                    by <span className="author_name">wss(aa)</span> at <span className="time">04:19 PM, 2 February 2022</span>
+                    </p>
+
+        

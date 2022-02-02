@@ -222,7 +222,12 @@ class UpdateGraduates(generics.UpdateAPIView):
         day = str(datetime.datetime.now().day)
         data_time = timer+", "+day+" "+calendar.month_name[month]+" "+year
         f = open('DBLog.txt','a')
-        f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n")
+        # f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n")
+        
+        filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
+        
+        f.write(filecontent)
+
         f.close()
 
         return response.Response(
@@ -291,7 +296,10 @@ class UpdateGraduates(generics.UpdateAPIView):
         day = str(datetime.datetime.now().day)
         data_time = timer+", "+day+" "+calendar.month_name[month]+" "+year
         f = open('DBLog.txt','a')
-        f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n")
+        # f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n")
+        filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
+        
+        f.write(filecontent)
         f.close()
 
         return response.Response(
