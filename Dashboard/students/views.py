@@ -27,7 +27,6 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
-
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerializer
 
