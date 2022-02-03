@@ -231,4 +231,4 @@ class LogsDataListAPIView(generics.ListAPIView):
         for line in last_lines:
             send_data.append(line)
 
-        return Response({'status':'ok','result':send_data})
+        return Response({'status':'ok','result':send_data[::-1]})
