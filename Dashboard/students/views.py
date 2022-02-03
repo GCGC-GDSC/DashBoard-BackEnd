@@ -222,7 +222,7 @@ class UpdateGraduates(generics.UpdateAPIView):
             {
                 'status': 'OK',
                 'message': "send data succefully",
-                'data': serializer
+                'data': serializer.data
             },
             status=HTTP_201_CREATED)
 
