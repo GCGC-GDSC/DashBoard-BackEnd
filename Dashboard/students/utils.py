@@ -107,7 +107,7 @@ def export_data_to_excel(request, name):
             Percentage_of_students_having_backlogs_to_the_total_number_of_students = 0
             Percentage_of_students_eligible_for_and_requiring_placement = 0
         else:
-            Percentage_of_students_opted_HS_to_the_total_number = round(((i.total_not_intrested_in_placments/i.total_final_years)*100), 2)
+            Percentage_of_students_opted_HS_to_the_total_number = round(((i.total_opted_for_higher_studies_only/i.total_final_years)*100), 2)
             Percentage_of_students_having_backlogs_to_the_total_number_of_students = round(((i.total_backlogs/i.total_final_years)*100), 2)
             Percentage_of_students_eligible_for_and_requiring_placement = round(((i.total_students_eligible/i.total_final_years)*100), 2)
 
@@ -171,7 +171,7 @@ def export_data_to_excel(request, name):
         try:
             num = 5
             val = dic[inst.lower()]
-            print("val", val, inst)
+            #print("val", val, inst)
             if da['is_ug'] is False:
                 val += 1
 
