@@ -4,6 +4,23 @@ from .models import Graduates
 from django.db.models import Q, Count, Max, Sum, Min, Avg
 from math import *
 
+map = {
+    'git': 'GIT',
+    'gim': 'GIM',
+    'gis': 'GIS',
+    'gsoa': 'GSoA',
+    'gin': 'GIN',
+    'gip': 'GIP',
+    'gsol': 'GSoL',
+    'gsgs': 'GSGS',
+    'soth': 'SoTH',
+    'hbs': 'HBS',
+    'soph': 'SoPH',
+    'sosh': 'SoSH',
+    'sotb': 'SoTB',
+    'sosp': 'SoSP',
+    'gsbb': 'GSBB',
+}
 
 class GraduatesSerializer(serializers.ModelSerializer):
 
@@ -12,6 +29,13 @@ class GraduatesSerializer(serializers.ModelSerializer):
     Percentage_of_students_eligible_for_and_requiring_placement = serializers.SerializerMethodField('_Percentage_of_students_eligible_for_and_requiring_placement')
     Percentage_of_students_placed_out_of_eligible_students = serializers.SerializerMethodField('_Percentage_of_students_placed_out_of_eligible_students')
     Percentage_of_students_yet_to_be_placed_out_of_eligible_students = serializers.SerializerMethodField('_Percentage_of_students_yet_to_be_placed_out_of_eligible_students')
+    under_institute_name = serializers.SerializerMethodField('_under_institute_name')
+
+    def _under_institute_name(self, i):
+        try:
+            return map[i.under_institute_name]
+        except:
+            return "instutenot found"
 
     def _Percentage_of_students_opted_HS_to_the_total_number(self,i):
         try:
