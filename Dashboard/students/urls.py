@@ -17,5 +17,6 @@ urlpatterns = [
     #re_path(r'^upload/', FileUploadView.as_view()),
     path('gbstats/', Gbstats.as_view(), name='test-list'),
     path('exportexcel/', utils.export_data_to_excel, name='export-excel'),
-    path('download/<str:name>', utils.FileDownloadListAPIView.as_view())
+    path('download/<str:name>', utils.FileDownloadListAPIView.as_view(),name='download-api'),
+    path('logs',utils.LogsDataListAPIView.as_view(),name='logs-api')
 ]

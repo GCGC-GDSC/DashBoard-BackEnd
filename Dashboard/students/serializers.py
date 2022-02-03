@@ -2,9 +2,46 @@ from rest_framework import serializers, status
 from organization.models import Institute
 from .models import Graduates
 from django.db.models import Q, Count, Max, Sum, Min, Avg
+from math import *
 
 
 class GraduatesSerializer(serializers.ModelSerializer):
+
+    Percentage_of_students_opted_HS_to_the_total_number = serializers.SerializerMethodField('_Percentage_of_students_opted_HS_to_the_total_number')
+    Percentage_of_students_having_backlogs_to_the_total_number_of_students  = serializers.SerializerMethodField('_Percentage_of_students_having_backlogs_to_the_total_number_of_students')
+    Percentage_of_students_eligible_for_and_requiring_placement = serializers.SerializerMethodField('_Percentage_of_students_eligible_for_and_requiring_placement')
+    Percentage_of_students_placed_out_of_eligible_students = serializers.SerializerMethodField('_Percentage_of_students_placed_out_of_eligible_students')
+    Percentage_of_students_yet_to_be_placed_out_of_eligible_students = serializers.SerializerMethodField('_Percentage_of_students_yet_to_be_placed_out_of_eligible_students')
+
+    def _Percentage_of_students_opted_HS_to_the_total_number(self,i):
+        try:
+            return round(((i.total_opted_for_higher_studies_only/i.total_final_years)*100), 2)
+        except:
+            return 0
+
+    def _Percentage_of_students_having_backlogs_to_the_total_number_of_students(self,i):
+        try:
+            return round(((i.total_backlogs/i.total_final_years)*100), 2)
+        except:
+            return 0
+
+    def _Percentage_of_students_eligible_for_and_requiring_placement(self,i):
+        try:
+            return round(((i.total_students_eligible/i.total_final_years)*100), 2)
+        except:
+            return 0
+
+    def _Percentage_of_students_placed_out_of_eligible_students(self,i):
+        try:
+            return round(((i.total_placed/i.total_students_eligible)*100), 2)
+        except:
+            return 0
+
+    def _Percentage_of_students_yet_to_be_placed_out_of_eligible_students(self,i):
+        try:
+            return round(((i.total_yet_to_place/i.total_students_eligible)*100), 2)
+        except:
+            return 0
 
     class Meta:
         model = Graduates
@@ -19,10 +56,55 @@ class GraduatesSerializer(serializers.ModelSerializer):
                   'total_backlogs', 'total_students_eligible', 'total_offers',
                   'total_multiple_offers', 'total_placed',
                   'total_yet_to_place', 'highest_salary', 'average_salary',
-                  'lowest_salary', 'is_ug')
+                  'lowest_salary', 
+                  
+                  'Percentage_of_students_opted_HS_to_the_total_number',
+                  'Percentage_of_students_having_backlogs_to_the_total_number_of_students',
+                  'Percentage_of_students_eligible_for_and_requiring_placement',
+                  'Percentage_of_students_placed_out_of_eligible_students',
+                  'Percentage_of_students_yet_to_be_placed_out_of_eligible_students',
+
+                  'is_ug')
 
 
 class UpdateGraduatesSerializer(serializers.ModelSerializer):
+
+    Percentage_of_students_opted_HS_to_the_total_number = serializers.SerializerMethodField('_Percentage_of_students_opted_HS_to_the_total_number')
+    Percentage_of_students_having_backlogs_to_the_total_number_of_students  = serializers.SerializerMethodField('_Percentage_of_students_having_backlogs_to_the_total_number_of_students')
+    Percentage_of_students_eligible_for_and_requiring_placement = serializers.SerializerMethodField('_Percentage_of_students_eligible_for_and_requiring_placement')
+    Percentage_of_students_placed_out_of_eligible_students = serializers.SerializerMethodField('_Percentage_of_students_placed_out_of_eligible_students')
+    Percentage_of_students_yet_to_be_placed_out_of_eligible_students = serializers.SerializerMethodField('_Percentage_of_students_yet_to_be_placed_out_of_eligible_students')
+
+    def _Percentage_of_students_opted_HS_to_the_total_number(self,i):
+        try:
+            return round(((i.total_opted_for_higher_studies_only/i.total_final_years)*100), 2)
+        except:
+            return 0
+
+    def _Percentage_of_students_having_backlogs_to_the_total_number_of_students(self,i):
+        try:
+            return round(((i.total_backlogs/i.total_final_years)*100), 2)
+        except:
+            return 0
+
+    def _Percentage_of_students_eligible_for_and_requiring_placement(self,i):
+        try:
+            return round(((i.total_students_eligible/i.total_final_years)*100), 2)
+        except:
+            return 0
+
+    def _Percentage_of_students_placed_out_of_eligible_students(self,i):
+        try:
+            return round(((i.total_placed/i.total_students_eligible)*100), 2)
+        except:
+            return 0
+
+    def _Percentage_of_students_yet_to_be_placed_out_of_eligible_students(self,i):
+        try:
+            return round(((i.total_yet_to_place/i.total_students_eligible)*100), 2)
+        except:
+            return 0
+
 
     class Meta:
         model = Graduates
@@ -44,6 +126,12 @@ class UpdateGraduatesSerializer(serializers.ModelSerializer):
             'highest_salary',
             'average_salary',
             'lowest_salary',
+
+            'Percentage_of_students_opted_HS_to_the_total_number',
+            'Percentage_of_students_having_backlogs_to_the_total_number_of_students',
+            'Percentage_of_students_eligible_for_and_requiring_placement',
+            'Percentage_of_students_placed_out_of_eligible_students',
+            'Percentage_of_students_yet_to_be_placed_out_of_eligible_students',
         )
 
 
@@ -62,7 +150,8 @@ class InstituteGradListSeralizer(serializers.ModelSerializer):
             "total_final_years": obj.total_final_years,
             "total_backlogs": obj.total_backlogs,
             "total_higher_study_and_pay_crt":
-            obj.total_higher_study_and_pay_crt
+            obj.total_higher_study_and_pay_crt,
+            "total_opted_for_higher_studies_only":obj.total_opted_for_higher_studies_only,
         }
 
     def _placement_details(self, obj):

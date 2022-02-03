@@ -32,29 +32,29 @@ class GraduateList(generics.ListAPIView):
 
     def get(self, request):
         send_data = {}
-        try:
-            cmps = Campus.objects.all()
-            for cmp in cmps:
-                send_data[cmp.name] = {}
-                ints = Campus.objects.get(name=cmp.name).institute_set.all()
-                for int in ints:
-                    send_data[cmp.name][int.name] = []
-                    ug = Graduates.objects.filter(
-                        Q(under_campus=cmp) & Q(under_institute=int)
-                        & Q(is_ug=True))
-                    ug_data = GraduatesSerializer(ug, many=True).data
-                    pg = Graduates.objects.filter(
-                        Q(under_campus=cmp) & Q(under_institute=int)
-                        & Q(is_ug=False))
-                    pg_data = GraduatesSerializer(pg, many=True).data
-                    send_data[cmp.name][int.name].append(ug_data)
-                    send_data[cmp.name][int.name].append(pg_data)
-        except Exception as e:
-            return response.Response({
-                'status': 'error',
-                'result': str(e)
-            },
-                                     status=HTTP_500_INTERNAL_SERVER_ERROR)
+        # try:
+        cmps = Campus.objects.all()
+        for cmp in cmps:
+            send_data[cmp.name] = {}
+            ints = Campus.objects.get(name=cmp.name).institute_set.all()
+            for int in ints:
+                send_data[cmp.name][int.name] = []
+                ug = Graduates.objects.filter(
+                    Q(under_campus=cmp) & Q(under_institute=int)
+                    & Q(is_ug=True))
+                ug_data = GraduatesSerializer(ug, many=True).data
+                pg = Graduates.objects.filter(
+                    Q(under_campus=cmp) & Q(under_institute=int)
+                    & Q(is_ug=False))
+                pg_data = GraduatesSerializer(pg, many=True).data
+                send_data[cmp.name][int.name].append(ug_data)
+                send_data[cmp.name][int.name].append(pg_data)
+        # except Exception as e:
+            # return response.Response({
+                # 'status': 'error',
+                # 'result': str(e)
+            # },
+                                     # status=HTTP_500_INTERNAL_SERVER_ERROR)
         return response.Response({'status': 'OK', 'result': send_data})
 
 
@@ -77,9 +77,16 @@ class InstituteGradList(generics.ListAPIView):
                 'result': str(e)
             },
                                      status=HTTP_400_BAD_REQUEST)
-        grds = Graduates.objects.filter(under_institute=inst)
-        send_data = InstituteGradListSeralizer(grds, many=True).data
-
+        send_data = []
+        
+        ug = Graduates.objects.filter(under_institute=inst,is_ug=True)
+        ug = InstituteGradListSeralizer(ug, many=True).data
+        send_data.append(ug[0])
+        
+        pg = Graduates.objects.filter(under_institute=inst,is_ug=False)
+        pg = InstituteGradListSeralizer(pg, many=True).data
+        send_data.append(pg[0])
+        
         # [
         #     # students detalis[student_details,placement_details,salary] ,
         #     #
@@ -215,16 +222,22 @@ class UpdateGraduates(generics.UpdateAPIView):
         day = str(datetime.datetime.now().day)
         data_time = timer+", "+day+" "+calendar.month_name[month]+" "+year
         f = open('DBLog.txt','a')
-        f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n")
+        # f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n")
+        
+        filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
+        
+        f.write(filecontent)
+
         f.close()
 
         return response.Response(
             {
                 'status': 'OK',
                 'message': "send data succefully",
-                'data': serializer.data
+                'result': serializer.data
             },
             status=HTTP_201_CREATED)
+    
 
     def put(self, request, eid, pk, *args, **kwargs):
         try:
@@ -285,13 +298,16 @@ class UpdateGraduates(generics.UpdateAPIView):
         day = str(datetime.datetime.now().day)
         data_time = timer+", "+day+" "+calendar.month_name[month]+" "+year
         f = open('DBLog.txt','a')
-        f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n")
+        # f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n")
+        filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
+        
+        f.write(filecontent)
         f.close()
         return response.Response(
             {
                 'status': 'OK',
                 'message': "send data succefully",
-                "updated-data": serializer.data
+                'result': serializer.data
             },
             status=HTTP_201_CREATED)
 
