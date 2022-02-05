@@ -19,6 +19,8 @@ from rest_framework.status import *
 from account.models import *
 import datetime
 import calendar
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
 logging.basicConfig(
     filename='debug.log',
@@ -29,6 +31,7 @@ logging.basicConfig(
 
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         send_data = {}
@@ -67,6 +70,7 @@ class GraduateList(generics.ListAPIView):
 
 class InstituteGradList(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, institute):
         try:
@@ -99,6 +103,7 @@ class InstituteGradList(generics.ListAPIView):
 
 class Overall(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, stream):
         send_data = {}
@@ -130,6 +135,7 @@ class Overall(generics.ListAPIView):
 
 class Gbstats(generics.ListAPIView):
     serializer_class = GBstatsSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         send_data = {'UG': {}, 'PG': {}}
@@ -144,6 +150,7 @@ class Gbstats(generics.ListAPIView):
 class SelectGraduates(generics.ListAPIView):
     queryset = Graduates.objects.all()
     serializer_class = GraduatesSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, institute, grad):
         inst = Institute.objects.filter(name=institute)
@@ -164,6 +171,7 @@ class SelectGraduates(generics.ListAPIView):
 class UpdateGraduates(generics.UpdateAPIView):
     queryset = Graduates.objects.all()
     serializer_class = UpdateGraduatesSerializer
+    permission_classes = (IsAuthenticated,)
 
     def patch(self, request, eid, pk, *args, **kwargs):
         try:

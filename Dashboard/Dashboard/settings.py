@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_crontab',
     'import_export',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -185,7 +186,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
     ],
     # 'DEFAULT_PARSER_CLASSES': [
@@ -194,3 +196,5 @@ REST_FRAMEWORK = {
 }
 
 #django_heroku.settings(locals())
+
+AUTH_USER_MODEL = 'account.User'
