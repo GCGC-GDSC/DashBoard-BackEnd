@@ -19,7 +19,7 @@ class Authenticate(views.APIView):
             return response.Response(
                 {
                     'status': 'error',
-                    'result': 'email not verified'
+                    'result': 'Email is not verified'
                 },
                 status=HTTP_423_LOCKED)
 
@@ -32,7 +32,7 @@ class Authenticate(views.APIView):
                 'result': str(e)
             },
                                      status=HTTP_500_INTERNAL_SERVER_ERROR)
-        return response.Response({'status': 'OK', "result": send_data})
+        return response.Response({'Status': 'OK', "Result": send_data})
 
 class GetTokenOfUser(views.APIView):
 
