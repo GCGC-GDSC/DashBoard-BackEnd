@@ -4,7 +4,6 @@ from organization.serializers import *
 from organization.models import *
 from rest_framework.authtoken.models import Token
 
-
 class UserSerialize(serializers.ModelSerializer):
     can_edit = serializers.SerializerMethodField('_can_edit')
     campus = serializers.SerializerMethodField('_campus_name')

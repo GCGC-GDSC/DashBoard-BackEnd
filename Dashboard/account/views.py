@@ -27,7 +27,7 @@ class Authenticate(views.APIView):
             send_data = UserSerialize(qs).data
         except Exception as e:
             return response.Response({
-                'status': 'error',
+                'status': 'Error',
                 'result': str(e)
             },
                                      status=HTTP_500_INTERNAL_SERVER_ERROR)
