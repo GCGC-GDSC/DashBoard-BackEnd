@@ -14,6 +14,7 @@ class Authenticate(views.APIView):
     def post(self, request, email, format=None):
         try:
             qs = User.objects.get(email=email)
+            print(qs)
         except:
             return response.Response(
                 {
