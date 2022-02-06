@@ -3,6 +3,10 @@ from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from organization.models import Campus, Institute
 from rest_framework.authtoken.models import Token
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+from django.conf import settings
+from django.db.models.signals import post_save
 
 ACCESS = [('view', 'VIEW'), ('edit_all', 'EDIT ALL'),
           ('edit_some', 'EDIT SOME')]
@@ -68,3 +72,8 @@ class EditorInstitutes(models.Model):
 
     def __str__(self):
         return str(self.account) + " " + str(self.institute)
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
