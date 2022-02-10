@@ -20,20 +20,20 @@ class UserSerialize(serializers.ModelSerializer):
         qs = Campus.objects.filter(name=obj.university)
         return CampusSerializeParse(qs, many=True).data
 
-    # def _institute(self, obj):
-    #     if obj.university != "univ":
-    #         campus = Campus.objects.filter(name=obj.university)
-    #     else:
-    #         return InstituteSerializeParse(Institute.objects.all(),
-    #                                        many=True).data
+    def _institute(self, obj):
+        if obj.university != "univ":
+            campus = Campus.objects.filter(name=obj.university)
+        else:
+            return InstituteSerializeParse(Institute.objects.all(),
+                                           many=True).data
 
-        # return InstituteSerializeParse(
-        #     Institute.objects.filter(under_campus__in=campus), many=True).data
+        return InstituteSerializeParse(
+            Institute.objects.filter(under_campus__in=campus), many=True).data
 
     class Meta:
         model = User
         fields = [
-            'id', 'eid', 'name', 'designation', 'can_edit', 'campus',
+            'id', 'eid', 'name', 'designation', 'can_edit', 'campus','institute',
         ]
 
 class TokenSerialiazer(serializers.ModelSerializer):

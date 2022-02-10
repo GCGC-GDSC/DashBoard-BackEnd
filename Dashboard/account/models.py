@@ -43,9 +43,6 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255, unique=True, db_index=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
-    # is_verified = models.BooleanField(default=False)
-    # is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
     eid = models.CharField(max_length=10, unique=True)
     designation = models.CharField(max_length=100, default="")
     university = models.CharField(max_length=15,
@@ -58,8 +55,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+    @property
+    def is_staff(self):
+        return self.designation
+
     def __str__(self):
-        return self.email
+        return self.eid+" "+self.name+" "+self.university
 
 class EditorInstitutes(models.Model):
     account = models.ForeignKey(User,
