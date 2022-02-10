@@ -6,6 +6,8 @@ from organization.models import (Institute, Campus)
 class Graduates(models.Model):
     under_campus = models.ForeignKey(Campus, on_delete=models.CASCADE)
     under_institute = models.ForeignKey(Institute, on_delete=models.CASCADE)
+    is_ug = models.BooleanField(default=True)
+
     total_students = models.IntegerField(default=0)
     total_final_years = models.IntegerField(default=0)
     total_higher_study_and_pay_crt = models.IntegerField(default=0)
@@ -29,7 +31,7 @@ class Graduates(models.Model):
     lowest_salary = models.DecimalField(max_digits=5,
                                         decimal_places=2,
                                         default=0.0)
-    is_ug = models.BooleanField(default=True)
+
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -70,6 +72,8 @@ class Graduates(models.Model):
         else:
             return 'PG ' + institute + " " + campus
 
+    class Meta:
+        unique_together = ("under_campus","under_institute","is_ug") 
 
-class ExcelData(models.Model):
-    uploadedFile = models.FileField(upload_to="UploadedFiles/")
+'''class ExcelData(models.Model):
+    uploadedFile = models.FileField(upload_to="UploadedFiles/")'''

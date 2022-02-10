@@ -34,6 +34,7 @@ class GraduateList(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
+        # print("User Name ====>",request.user)
         send_data = {}
         try:
             cmps = Campus.objects.all()
