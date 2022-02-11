@@ -16,7 +16,7 @@ CAMPUS = [('univ', 'UNIVERSITY'), ('vskp', 'VISAKHAPATNAM'),
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, name, email, eid, password=None):
+    def create_user(self, name, email, eid,designation,university,access, password=None):
         if name is None:
             raise TypeError('Users should have a name')
         if email is None:
@@ -24,7 +24,7 @@ class UserManager(BaseUserManager):
         if eid is None:
             raise TypeError('Users should have a eid')
 
-        user = self.model(name=name, eid=eid, email=self.normalize_email(email))
+        user = self.model(name=name, eid=eid,designation=designation,university=university,access=access, email=self.normalize_email(email))
         user.set_password(password)
         user.save()
         return user
@@ -33,9 +33,11 @@ class UserManager(BaseUserManager):
         if password is None:
             raise TypeError('Password should not be none')
 
-        user = self.create_user(name, email, eid, password)
+        designation = "admin"
+        university = "univ"
+        access = "edit_all"
+        user = self.create_user(name, email, eid,designation,university,access, password)
         user.is_superuser = True
-        user.is_staff = True
         user.save()
         return user
 
