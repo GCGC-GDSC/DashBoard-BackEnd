@@ -21,9 +21,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EditorInstitutes',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('account', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('institute', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='organization.institute')),
+                ('id',
+                 models.BigAutoField(auto_created=True,
+                                     primary_key=True,
+                                     serialize=False,
+                                     verbose_name='ID')),
+                ('account',
+                 models.ForeignKey(default=None,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   to=settings.AUTH_USER_MODEL)),
+                ('institute',
+                 models.ForeignKey(default=None,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   to='organization.institute')),
             ],
         ),
     ]

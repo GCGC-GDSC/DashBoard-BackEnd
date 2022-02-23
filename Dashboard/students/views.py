@@ -14,7 +14,6 @@ import calendar
 import traceback
 import logging
 
-
 logging.basicConfig(
     filename='debug.log',
     filemode='a',
@@ -22,9 +21,10 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
+
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         # print("User Name ====>",request.user)
@@ -51,7 +51,7 @@ class GraduateList(generics.ListAPIView):
                 'status': 'error',
                 'result': str(e)
             },
-                         status=HTTP_500_INTERNAL_SERVER_ERROR)
+                                     status=HTTP_500_INTERNAL_SERVER_ERROR)
         return response.Response({'status': 'OK', 'result': send_data})
 
 
@@ -64,7 +64,7 @@ class GraduateList(generics.ListAPIView):
 
 class InstituteGradList(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, institute):
         try:
@@ -76,15 +76,15 @@ class InstituteGradList(generics.ListAPIView):
             },
                                      status=HTTP_400_BAD_REQUEST)
         send_data = []
-        
-        ug = Graduates.objects.filter(under_institute=inst,is_ug=True)
+
+        ug = Graduates.objects.filter(under_institute=inst, is_ug=True)
         ug = InstituteGradListSeralizer(ug, many=True).data
         send_data.append(ug[0])
-        
-        pg = Graduates.objects.filter(under_institute=inst,is_ug=False)
+
+        pg = Graduates.objects.filter(under_institute=inst, is_ug=False)
         pg = InstituteGradListSeralizer(pg, many=True).data
         send_data.append(pg[0])
-        
+
         # [
         #     # students detalis[student_details,placement_details,salary] ,
         #     #
@@ -97,7 +97,7 @@ class InstituteGradList(generics.ListAPIView):
 
 class Overall(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, stream):
         send_data = {}
@@ -129,7 +129,7 @@ class Overall(generics.ListAPIView):
 
 class Gbstats(generics.ListAPIView):
     serializer_class = GBstatsSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         send_data = {'UG': {}, 'PG': {}}
@@ -144,7 +144,7 @@ class Gbstats(generics.ListAPIView):
 class SelectGraduates(generics.ListAPIView):
     queryset = Graduates.objects.all()
     serializer_class = GraduatesSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, institute, grad):
         inst = Institute.objects.filter(name=institute)
@@ -165,7 +165,7 @@ class SelectGraduates(generics.ListAPIView):
 class UpdateGraduates(generics.UpdateAPIView):
     queryset = Graduates.objects.all()
     serializer_class = UpdateGraduatesSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, )
 
     def patch(self, request, pk, *args, **kwargs):
         user = request.user
@@ -179,7 +179,7 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_400_BAD_REQUEST)
 
-        if user.access=='view':
+        if user.access == 'view':
             return response.Response(
                 {
                     'status': 'error',
@@ -187,20 +187,21 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_423_LOCKED)
 
-        if user.access=="edit_all" and user.university!="univ" and qs.under_campus!=user.university:
+        if user.access == "edit_all" and user.university != "univ" and qs.under_campus != user.university:
             return response.Response(
                 {
                     'status': 'error',
                     'result': 'permission denied'
                 },
                 status=HTTP_423_LOCKED)
-        
-        check_editor_list = EditorInstitutes.objects.filter(Q(account=user)&Q(institute=qs.under_institute)).exists()
-        if user.access=="edit_some" and not check_editor_list:
+
+        check_editor_list = EditorInstitutes.objects.filter(
+            Q(account=user) & Q(institute=qs.under_institute)).exists()
+        if user.access == "edit_some" and not check_editor_list:
             return response.Response(
                 {
-                'status':'error',
-                'result':'PermissionDenied'
+                    'status': 'error',
+                    'result': 'PermissionDenied'
                 },
                 status=HTTP_423_LOCKED)
 
@@ -216,17 +217,20 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_205_RESET_CONTENT)
 
         serializer.save()
-        ug_pg = 'UG' if qs.is_ug==True else 'PG'
+        ug_pg = 'UG' if qs.is_ug == True else 'PG'
         timer = str(datetime.datetime.today().strftime("%I:%M %p"))
         month = datetime.datetime.now().month
         year = str(datetime.datetime.now().year)
         day = str(datetime.datetime.now().day)
-        data_time = timer+", "+day+" "+calendar.month_name[month]+" "+year
-        f = open('DBLog.txt','a')
-        f.write(f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n")
-        
+        data_time = timer + ", " + day + " " + calendar.month_name[
+            month] + " " + year
+        f = open('DBLog.txt', 'a')
+        f.write(
+            f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n"
+        )
+
         # filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
-        
+
         # f.write(filecontent)
 
         f.close()
@@ -238,7 +242,6 @@ class UpdateGraduates(generics.UpdateAPIView):
                 'result': serializer.data
             },
             status=HTTP_201_CREATED)
-    
 
     def put(self, request, pk, *args, **kwargs):
         user = request.user
@@ -252,7 +255,7 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_400_BAD_REQUEST)
 
-        if user.access=='view':
+        if user.access == 'view':
             return response.Response(
                 {
                     'status': 'error',
@@ -260,20 +263,21 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_423_LOCKED)
 
-        if user.access=="edit_all" and user.university!="univ" and qs.under_campus!=user.university:
+        if user.access == "edit_all" and user.university != "univ" and qs.under_campus != user.university:
             return response.Response(
                 {
                     'status': 'error',
                     'result': 'permission denied'
                 },
                 status=HTTP_423_LOCKED)
-        
-        check_editor_list = EditorInstitutes.objects.filter(Q(account=user)&Q(institute=qs.under_institute)).exists()
-        if user.access=="edit_some" and not check_editor_list:
+
+        check_editor_list = EditorInstitutes.objects.filter(
+            Q(account=user) & Q(institute=qs.under_institute)).exists()
+        if user.access == "edit_some" and not check_editor_list:
             return response.Response(
                 {
-                'status':'error',
-                'result':'PermissionDenied'
+                    'status': 'error',
+                    'result': 'PermissionDenied'
                 },
                 status=HTTP_423_LOCKED)
 
@@ -291,17 +295,20 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_205_RESET_CONTENT)
 
         serializer.save()
-        ug_pg = 'UG' if qs.is_ug==True else 'PG'
-        
+        ug_pg = 'UG' if qs.is_ug == True else 'PG'
+
         timer = str(datetime.datetime.today().strftime("%I:%M %p"))
         month = datetime.datetime.now().month
         year = str(datetime.datetime.now().year)
         day = str(datetime.datetime.now().day)
-        data_time = timer+", "+day+" "+calendar.month_name[month]+" "+year
-        f = open('DBLog.txt','a')
-        f.write(f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n")
+        data_time = timer + ", " + day + " " + calendar.month_name[
+            month] + " " + year
+        f = open('DBLog.txt', 'a')
+        f.write(
+            f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n"
+        )
         # filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
-        
+
         # f.write(filecontent)
         f.close()
         return response.Response(

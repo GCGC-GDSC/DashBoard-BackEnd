@@ -4,6 +4,7 @@ from organization.serializers import *
 from organization.models import *
 from rest_framework.authtoken.models import Token
 
+
 class UserSerialize(serializers.ModelSerializer):
     can_edit = serializers.SerializerMethodField('_can_edit')
     campus = serializers.SerializerMethodField('_campus_name')
@@ -33,10 +34,18 @@ class UserSerialize(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'eid', 'name', 'designation', 'can_edit', 'campus','institute',
+            'id',
+            'eid',
+            'name',
+            'designation',
+            'can_edit',
+            'campus',
+            'institute',
         ]
 
+
 class TokenSerialiazer(serializers.ModelSerializer):
+
     class Meta:
         model = Token
         fields = '__all__'

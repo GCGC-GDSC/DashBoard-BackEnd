@@ -22,14 +22,22 @@ map = {
     'gsbb': 'GSBB',
 }
 
+
 class GraduatesSerializer(serializers.ModelSerializer):
 
-    Percentage_of_students_opted_HS_to_the_total_number = serializers.SerializerMethodField('_Percentage_of_students_opted_HS_to_the_total_number')
-    Percentage_of_students_having_backlogs_to_the_total_number_of_students  = serializers.SerializerMethodField('_Percentage_of_students_having_backlogs_to_the_total_number_of_students')
-    Percentage_of_students_eligible_for_and_requiring_placement = serializers.SerializerMethodField('_Percentage_of_students_eligible_for_and_requiring_placement')
-    Percentage_of_students_placed_out_of_eligible_students = serializers.SerializerMethodField('_Percentage_of_students_placed_out_of_eligible_students')
-    Percentage_of_students_yet_to_be_placed_out_of_eligible_students = serializers.SerializerMethodField('_Percentage_of_students_yet_to_be_placed_out_of_eligible_students')
-    under_institute_name = serializers.SerializerMethodField('_under_institute_name')
+    Percentage_of_students_opted_HS_to_the_total_number = serializers.SerializerMethodField(
+        '_Percentage_of_students_opted_HS_to_the_total_number')
+    Percentage_of_students_having_backlogs_to_the_total_number_of_students = serializers.SerializerMethodField(
+        '_Percentage_of_students_having_backlogs_to_the_total_number_of_students'
+    )
+    Percentage_of_students_eligible_for_and_requiring_placement = serializers.SerializerMethodField(
+        '_Percentage_of_students_eligible_for_and_requiring_placement')
+    Percentage_of_students_placed_out_of_eligible_students = serializers.SerializerMethodField(
+        '_Percentage_of_students_placed_out_of_eligible_students')
+    Percentage_of_students_yet_to_be_placed_out_of_eligible_students = serializers.SerializerMethodField(
+        '_Percentage_of_students_yet_to_be_placed_out_of_eligible_students')
+    under_institute_name = serializers.SerializerMethodField(
+        '_under_institute_name')
 
     def _under_institute_name(self, i):
         try:
@@ -37,98 +45,115 @@ class GraduatesSerializer(serializers.ModelSerializer):
         except:
             return "instutenot found"
 
-    def _Percentage_of_students_opted_HS_to_the_total_number(self,i):
+    def _Percentage_of_students_opted_HS_to_the_total_number(self, i):
         try:
-            return round(((i.total_opted_for_higher_studies_only/i.total_final_years)*100), 2)
+            return round((
+                (i.total_opted_for_higher_studies_only / i.total_final_years) *
+                100), 2)
         except:
             return 0
 
-    def _Percentage_of_students_having_backlogs_to_the_total_number_of_students(self,i):
+    def _Percentage_of_students_having_backlogs_to_the_total_number_of_students(
+            self, i):
         try:
-            return round(((i.total_backlogs/i.total_final_years)*100), 2)
+            return round(((i.total_backlogs / i.total_final_years) * 100), 2)
         except:
             return 0
 
-    def _Percentage_of_students_eligible_for_and_requiring_placement(self,i):
+    def _Percentage_of_students_eligible_for_and_requiring_placement(self, i):
         try:
-            return round(((i.total_students_eligible/i.total_final_years)*100), 2)
+            return round(
+                ((i.total_students_eligible / i.total_final_years) * 100), 2)
         except:
             return 0
 
-    def _Percentage_of_students_placed_out_of_eligible_students(self,i):
+    def _Percentage_of_students_placed_out_of_eligible_students(self, i):
         try:
-            return round(((i.total_placed/i.total_students_eligible)*100), 2)
+            return round(((i.total_placed / i.total_students_eligible) * 100),
+                         2)
         except:
             return 0
 
-    def _Percentage_of_students_yet_to_be_placed_out_of_eligible_students(self,i):
+    def _Percentage_of_students_yet_to_be_placed_out_of_eligible_students(
+            self, i):
         try:
-            return round(((i.total_yet_to_place/i.total_students_eligible)*100), 2)
+            return round(
+                ((i.total_yet_to_place / i.total_students_eligible) * 100), 2)
         except:
             return 0
 
     class Meta:
         model = Graduates
-        fields = ('id', 'under_institute_name', 'under_campus_name',
-                  'total_students', 'total_final_years',
-                  'total_higher_study_and_pay_crt',
-                  'total_opted_for_higher_studies_only',
-                  'total_not_intrested_in_placments',
-                  'total_backlogs_opted_for_placements',
-                  'total_backlogs_opted_for_higherstudies',
-                  'total_backlogs_opted_for_other_career_options',
-                  'total_backlogs', 'total_students_eligible', 'total_offers',
-                  'total_multiple_offers', 'total_placed',
-                  'total_yet_to_place', 'highest_salary', 'average_salary',
-                  'lowest_salary', 
-                  
-                  'Percentage_of_students_opted_HS_to_the_total_number',
-                  'Percentage_of_students_having_backlogs_to_the_total_number_of_students',
-                  'Percentage_of_students_eligible_for_and_requiring_placement',
-                  'Percentage_of_students_placed_out_of_eligible_students',
-                  'Percentage_of_students_yet_to_be_placed_out_of_eligible_students',
-
-                  'is_ug')
+        fields = (
+            'id', 'under_institute_name', 'under_campus_name',
+            'total_students', 'total_final_years',
+            'total_higher_study_and_pay_crt',
+            'total_opted_for_higher_studies_only',
+            'total_not_intrested_in_placments',
+            'total_backlogs_opted_for_placements',
+            'total_backlogs_opted_for_higherstudies',
+            'total_backlogs_opted_for_other_career_options', 'total_backlogs',
+            'total_students_eligible', 'total_offers', 'total_multiple_offers',
+            'total_placed', 'total_yet_to_place', 'highest_salary',
+            'average_salary', 'lowest_salary',
+            'Percentage_of_students_opted_HS_to_the_total_number',
+            'Percentage_of_students_having_backlogs_to_the_total_number_of_students',
+            'Percentage_of_students_eligible_for_and_requiring_placement',
+            'Percentage_of_students_placed_out_of_eligible_students',
+            'Percentage_of_students_yet_to_be_placed_out_of_eligible_students',
+            'is_ug')
 
 
 class UpdateGraduatesSerializer(serializers.ModelSerializer):
 
-    Percentage_of_students_opted_HS_to_the_total_number = serializers.SerializerMethodField('_Percentage_of_students_opted_HS_to_the_total_number')
-    Percentage_of_students_having_backlogs_to_the_total_number_of_students  = serializers.SerializerMethodField('_Percentage_of_students_having_backlogs_to_the_total_number_of_students')
-    Percentage_of_students_eligible_for_and_requiring_placement = serializers.SerializerMethodField('_Percentage_of_students_eligible_for_and_requiring_placement')
-    Percentage_of_students_placed_out_of_eligible_students = serializers.SerializerMethodField('_Percentage_of_students_placed_out_of_eligible_students')
-    Percentage_of_students_yet_to_be_placed_out_of_eligible_students = serializers.SerializerMethodField('_Percentage_of_students_yet_to_be_placed_out_of_eligible_students')
+    Percentage_of_students_opted_HS_to_the_total_number = serializers.SerializerMethodField(
+        '_Percentage_of_students_opted_HS_to_the_total_number')
+    Percentage_of_students_having_backlogs_to_the_total_number_of_students = serializers.SerializerMethodField(
+        '_Percentage_of_students_having_backlogs_to_the_total_number_of_students'
+    )
+    Percentage_of_students_eligible_for_and_requiring_placement = serializers.SerializerMethodField(
+        '_Percentage_of_students_eligible_for_and_requiring_placement')
+    Percentage_of_students_placed_out_of_eligible_students = serializers.SerializerMethodField(
+        '_Percentage_of_students_placed_out_of_eligible_students')
+    Percentage_of_students_yet_to_be_placed_out_of_eligible_students = serializers.SerializerMethodField(
+        '_Percentage_of_students_yet_to_be_placed_out_of_eligible_students')
 
-    def _Percentage_of_students_opted_HS_to_the_total_number(self,i):
+    def _Percentage_of_students_opted_HS_to_the_total_number(self, i):
         try:
-            return round(((i.total_opted_for_higher_studies_only/i.total_final_years)*100), 2)
+            return round((
+                (i.total_opted_for_higher_studies_only / i.total_final_years) *
+                100), 2)
         except:
             return 0
 
-    def _Percentage_of_students_having_backlogs_to_the_total_number_of_students(self,i):
+    def _Percentage_of_students_having_backlogs_to_the_total_number_of_students(
+            self, i):
         try:
-            return round(((i.total_backlogs/i.total_final_years)*100), 2)
+            return round(((i.total_backlogs / i.total_final_years) * 100), 2)
         except:
             return 0
 
-    def _Percentage_of_students_eligible_for_and_requiring_placement(self,i):
+    def _Percentage_of_students_eligible_for_and_requiring_placement(self, i):
         try:
-            return round(((i.total_students_eligible/i.total_final_years)*100), 2)
+            return round(
+                ((i.total_students_eligible / i.total_final_years) * 100), 2)
         except:
             return 0
 
-    def _Percentage_of_students_placed_out_of_eligible_students(self,i):
+    def _Percentage_of_students_placed_out_of_eligible_students(self, i):
         try:
-            return round(((i.total_placed/i.total_students_eligible)*100), 2)
+            return round(((i.total_placed / i.total_students_eligible) * 100),
+                         2)
         except:
             return 0
 
-    def _Percentage_of_students_yet_to_be_placed_out_of_eligible_students(self,i):
+    def _Percentage_of_students_yet_to_be_placed_out_of_eligible_students(
+            self, i):
         try:
-            return round(((i.total_yet_to_place/i.total_students_eligible)*100), 2)
+            return round(
+                ((i.total_yet_to_place / i.total_students_eligible) * 100), 2)
         except:
             return 0
-
 
     class Meta:
         model = Graduates
@@ -150,7 +175,6 @@ class UpdateGraduatesSerializer(serializers.ModelSerializer):
             'highest_salary',
             'average_salary',
             'lowest_salary',
-
             'Percentage_of_students_opted_HS_to_the_total_number',
             'Percentage_of_students_having_backlogs_to_the_total_number_of_students',
             'Percentage_of_students_eligible_for_and_requiring_placement',
@@ -170,12 +194,16 @@ class InstituteGradListSeralizer(serializers.ModelSerializer):
 
     def _student_details(self, obj):
         return {
-            "total_students": obj.total_students,
-            "total_final_years": obj.total_final_years,
-            "total_backlogs": obj.total_backlogs,
+            "total_students":
+            obj.total_students,
+            "total_final_years":
+            obj.total_final_years,
+            "total_backlogs":
+            obj.total_backlogs,
             "total_higher_study_and_pay_crt":
             obj.total_higher_study_and_pay_crt,
-            "total_opted_for_higher_studies_only":obj.total_opted_for_higher_studies_only,
+            "total_opted_for_higher_studies_only":
+            obj.total_opted_for_higher_studies_only,
         }
 
     def _placement_details(self, obj):

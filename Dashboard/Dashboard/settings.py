@@ -195,7 +195,6 @@ REST_FRAMEWORK = {
     # ]
 }
 
-
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'api_key': {
@@ -208,6 +207,4 @@ SWAGGER_SETTINGS = {
 
 AUTH_USER_MODEL = 'account.User'
 
-
 django_heroku.settings(locals())
-

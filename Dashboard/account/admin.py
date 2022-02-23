@@ -3,11 +3,14 @@ from .models import *
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email','designation','is_superuser', 'eid']
+    list_display = ['name', 'email', 'designation', 'is_superuser', 'eid']
+
 
 admin.site.register(User, UserAdmin)
 
 
 class EditorInstitutesAdmin(admin.ModelAdmin):
-    list_display = ['account','institute']
-admin.site.register(EditorInstitutes,EditorInstitutesAdmin)
+    list_display = ['account', 'institute']
+
+
+admin.site.register(EditorInstitutes, EditorInstitutesAdmin)

@@ -73,7 +73,8 @@ class Graduates(models.Model):
             return 'PG ' + institute + " " + campus
 
     class Meta:
-        unique_together = ("under_campus","under_institute","is_ug") 
+        unique_together = ("under_campus", "under_institute", "is_ug")
+
 
 '''class ExcelData(models.Model):
     uploadedFile = models.FileField(upload_to="UploadedFiles/")'''

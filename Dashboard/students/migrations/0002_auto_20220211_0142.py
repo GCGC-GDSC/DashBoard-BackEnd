@@ -11,9 +11,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='ExcelData',
-        ),
+        migrations.DeleteModel(name='ExcelData', ),
         migrations.AlterUniqueTogether(
             name='graduates',
             unique_together={('under_campus', 'under_institute', 'is_ug')},

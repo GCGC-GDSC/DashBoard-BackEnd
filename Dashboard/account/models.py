@@ -16,7 +16,14 @@ CAMPUS = [('univ', 'UNIVERSITY'), ('vskp', 'VISAKHAPATNAM'),
 
 class UserManager(BaseUserManager):
 
-    def create_user(self, name, email, eid,designation,university,access, password=None):
+    def create_user(self,
+                    name,
+                    email,
+                    eid,
+                    designation,
+                    university,
+                    access,
+                    password=None):
         if name is None:
             raise TypeError('Users should have a name')
         if email is None:
@@ -24,7 +31,12 @@ class UserManager(BaseUserManager):
         if eid is None:
             raise TypeError('Users should have a eid')
 
-        user = self.model(name=name, eid=eid,designation=designation,university=university,access=access, email=self.normalize_email(email))
+        user = self.model(name=name,
+                          eid=eid,
+                          designation=designation,
+                          university=university,
+                          access=access,
+                          email=self.normalize_email(email))
         user.set_password(password)
         user.save()
         return user
@@ -36,7 +48,8 @@ class UserManager(BaseUserManager):
         designation = "admin"
         university = "univ"
         access = "edit_all"
-        user = self.create_user(name, email, eid,designation,university,access, password)
+        user = self.create_user(name, email, eid, designation, university,
+                                access, password)
         user.is_superuser = True
         user.save()
         return user
@@ -62,12 +75,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.designation
 
     def __str__(self):
-        return self.eid+" "+self.name+" "+self.university
+        return self.eid + " " + self.name + " " + self.university
+
 
 class EditorInstitutes(models.Model):
-    account = models.ForeignKey(User,
-                                on_delete=models.CASCADE,
-                                default=None)
+    account = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
 
     institute = models.ForeignKey(Institute,
                                   on_delete=models.CASCADE,
@@ -75,6 +87,7 @@ class EditorInstitutes(models.Model):
 
     def __str__(self):
         return str(self.account) + " " + str(self.institute)
+
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):

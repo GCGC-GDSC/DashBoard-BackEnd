@@ -6,7 +6,6 @@ from rest_framework.status import *
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 
-
 User = get_user_model()
 
 
@@ -40,9 +39,10 @@ class Authenticate(views.APIView):
                                      status=HTTP_500_INTERNAL_SERVER_ERROR)
         return response.Response({'status': 'OK', "result": send_data})
 
+
 class GetTokenOfUser(views.APIView):
 
-    def post(self,request, eid, format=None):
+    def post(self, request, eid, format=None):
         send_data = {}
         try:
             account_obj = User.objects.get(eid=eid)
@@ -50,8 +50,9 @@ class GetTokenOfUser(views.APIView):
             send_data = TokenSerialiazer(account_token).data
         except:
             return response.Response({
-                'status':'Error',result:str(e)
-                },status=HTTP_500_INTERNAL_SERVER_ERROR)
+                'status': 'Error',
+                result: str(e)
+            },
+                                     status=HTTP_500_INTERNAL_SERVER_ERROR)
 
         return response.Response({'status': 'OK', "result": send_data})
-
