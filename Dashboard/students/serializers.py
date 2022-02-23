@@ -202,10 +202,12 @@ class InstituteGradListSeralizer(serializers.ModelSerializer):
             obj.total_backlogs,
             "total_higher_study_and_pay_crt":
             obj.total_higher_study_and_pay_crt,
-            "total_opted_for_higher_studies_only":obj.total_opted_for_higher_studies_only,
-            "total_students_eligible": obj.total_students_eligible,
+            "total_opted_for_higher_studies_only":
+            obj.total_opted_for_higher_studies_only,
+            "total_students_eligible":
+            obj.total_students_eligible,
             "total_not_intrested_in_placments":
-                obj.total_not_intrested_in_placments,
+            obj.total_not_intrested_in_placments,
         }
 
     def _placement_details(self, obj):

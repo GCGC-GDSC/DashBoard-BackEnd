@@ -39,6 +39,7 @@ map = {
     'gsbb': 'GSBB',
 }
 
+
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerializer
     permission_classes = (IsAuthenticated, )
