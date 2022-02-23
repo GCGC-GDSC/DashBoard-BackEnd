@@ -21,6 +21,23 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
+map = {
+    'git': 'GIT',
+    'gim': 'GIM',
+    'gis': 'GIS',
+    'gsoa': 'GSoA',
+    'gin': 'GIN',
+    'gip': 'GIP',
+    'gsol': 'GSoL',
+    'gsgs': 'GSGS',
+    'soth': 'SoTH',
+    'hbs': 'HBS',
+    'soph': 'SoPH',
+    'sosh': 'SoSH',
+    'sotb': 'SoTB',
+    'sosp': 'SoSP',
+    'gsbb': 'GSBB',
+}
 
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerializer
@@ -113,16 +130,16 @@ class Overall(generics.ListAPIView):
 
         inst_data = Institute.objects.filter(stream=stream_data[0].id)
         for inst in inst_data:
-            send_data[inst.name] = []
+            send_data[map[inst.name]] = []
             graduates = Graduates.objects.filter(under_institute=inst.id,
                                                  is_ug=True)
             data = InstituteGradListSeralizer(graduates, many=True).data
-            send_data[inst.name].append(data)
+            send_data[map[inst.name]].append(data)
 
             graduates = Graduates.objects.filter(under_institute=inst.id,
                                                  is_ug=False)
             data = InstituteGradListSeralizer(graduates, many=True).data
-            send_data[inst.name].append(data)
+            send_data[map[inst.name]].append(data)
 
         return response.Response({'status': 'OK', 'result': send_data})
 
