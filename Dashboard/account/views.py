@@ -38,7 +38,7 @@ class Authenticate(views.APIView):
                 'result': str(e)
             },
                                      status=HTTP_500_INTERNAL_SERVER_ERROR)
-        return response.Response({'Status': 'OK', "Result": send_data})
+        return response.Response({'status': 'OK', "result": send_data})
 
 class GetTokenOfUser(views.APIView):
 

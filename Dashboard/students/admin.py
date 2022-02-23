@@ -25,7 +25,7 @@ class ExcelImportForm(forms.Form):
 
 
 class GraduatesAdmin(admin.ModelAdmin):
-    list_display = ['under_campus','under_institute','is_ug']
+    list_display = ['under_institute','under_campus','is_ug']
 
     def get_urls(self):
         urls = super().get_urls()
@@ -87,7 +87,7 @@ class GraduatesAdmin(admin.ModelAdmin):
 
             serializer.save()
 
-            messages.info(request, 'Updated Data')
+            messages.info(request, f"Updated Data `{data['under_campus']} > {data['under_institute']} > {'UG' if data['is_ug']==True else 'PG'}`")
             HttpResponseRedirect(request.path_info)
 
         form = ExcelImportForm()
