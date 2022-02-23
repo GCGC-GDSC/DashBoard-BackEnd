@@ -1,24 +1,18 @@
 from rest_framework import generics, status, views, response
 from organization.models import Institute, Campus, Stream
-from django.db.models import Q, Count, Max, Sum, Min, Avg
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 from organization.serializers import CampusSerialize, InstituteSerialize
-from rest_framework.decorators import api_view
-from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.response import Response
-from django.contrib import messages
-from django.http import HttpResponse
+from django.db.models import Q
 from .serializers import *
 from .models import *
-from rest_framework import viewsets
-from rest_framework.views import APIView
-from rest_framework.parsers import FileUploadParser
-from tablib import Dataset
-import traceback
-import logging
 from rest_framework.status import *
 from account.models import *
 import datetime
 import calendar
+import traceback
+import logging
 
 logging.basicConfig(
     filename='debug.log',
@@ -45,10 +39,13 @@ map = {
     'gsbb': 'GSBB',
 }
 
+
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerializer
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
+        # print("User Name ====>",request.user)
         send_data = {}
         try:
             cmps = Campus.objects.all()
@@ -72,7 +69,7 @@ class GraduateList(generics.ListAPIView):
                 'status': 'error',
                 'result': str(e)
             },
-                         status=HTTP_500_INTERNAL_SERVER_ERROR)
+                                     status=HTTP_500_INTERNAL_SERVER_ERROR)
         return response.Response({'status': 'OK', 'result': send_data})
 
 
@@ -85,6 +82,7 @@ class GraduateList(generics.ListAPIView):
 
 class InstituteGradList(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, institute):
         try:
@@ -96,15 +94,15 @@ class InstituteGradList(generics.ListAPIView):
             },
                                      status=HTTP_400_BAD_REQUEST)
         send_data = []
-        
-        ug = Graduates.objects.filter(under_institute=inst,is_ug=True)
+
+        ug = Graduates.objects.filter(under_institute=inst, is_ug=True)
         ug = InstituteGradListSeralizer(ug, many=True).data
         send_data.append(ug[0])
-        
-        pg = Graduates.objects.filter(under_institute=inst,is_ug=False)
+
+        pg = Graduates.objects.filter(under_institute=inst, is_ug=False)
         pg = InstituteGradListSeralizer(pg, many=True).data
         send_data.append(pg[0])
-        
+
         # [
         #     # students detalis[student_details,placement_details,salary] ,
         #     #
@@ -117,6 +115,7 @@ class InstituteGradList(generics.ListAPIView):
 
 class Overall(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, stream):
         send_data = {}
@@ -148,6 +147,7 @@ class Overall(generics.ListAPIView):
 
 class Gbstats(generics.ListAPIView):
     serializer_class = GBstatsSerializer
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request):
         send_data = {'UG': {}, 'PG': {}}
@@ -162,6 +162,7 @@ class Gbstats(generics.ListAPIView):
 class SelectGraduates(generics.ListAPIView):
     queryset = Graduates.objects.all()
     serializer_class = GraduatesSerializer
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, institute, grad):
         inst = Institute.objects.filter(name=institute)
@@ -182,18 +183,10 @@ class SelectGraduates(generics.ListAPIView):
 class UpdateGraduates(generics.UpdateAPIView):
     queryset = Graduates.objects.all()
     serializer_class = UpdateGraduatesSerializer
+    permission_classes = (IsAuthenticated, )
 
-    def patch(self, request, eid, pk, *args, **kwargs):
-        try:
-            user = Accounts.objects.get(eid=eid)
-        except:
-            return response.Response(
-                {
-                    'status': 'error',
-                    'result': 'email is not authenticated'
-                },
-                status=HTTP_423_LOCKED)
-
+    def patch(self, request, pk, *args, **kwargs):
+        user = request.user
         try:
             qs = Graduates.objects.get(id=pk)
         except:
@@ -204,7 +197,7 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_400_BAD_REQUEST)
 
-        if user.access=='view':
+        if user.access == 'view':
             return response.Response(
                 {
                     'status': 'error',
@@ -212,14 +205,23 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_423_LOCKED)
 
-        try:
-            grad = Graduates.objects.get(id=pk)
-        except Exception as e:
+        if user.access == "edit_all" and user.university != "univ" and qs.under_campus != user.university:
             return response.Response(
                 {
                     'status': 'error',
-                    'result': 'Institute does not exits',
-                },status=HTTP_400_BAD_REQUEST)
+                    'result': 'permission denied'
+                },
+                status=HTTP_423_LOCKED)
+
+        check_editor_list = EditorInstitutes.objects.filter(
+            Q(account=user) & Q(institute=qs.under_institute)).exists()
+        if user.access == "edit_some" and not check_editor_list:
+            return response.Response(
+                {
+                    'status': 'error',
+                    'result': 'PermissionDenied'
+                },
+                status=HTTP_423_LOCKED)
 
         data = request.data
         serializer = UpdateGraduatesSerializer(qs, data=data, partial=True)
@@ -233,18 +235,21 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_205_RESET_CONTENT)
 
         serializer.save()
-        ug_pg = 'UG' if grad.is_ug==True else 'PG'
+        ug_pg = 'UG' if qs.is_ug == True else 'PG'
         timer = str(datetime.datetime.today().strftime("%I:%M %p"))
         month = datetime.datetime.now().month
         year = str(datetime.datetime.now().year)
         day = str(datetime.datetime.now().day)
-        data_time = timer+", "+day+" "+calendar.month_name[month]+" "+year
-        f = open('DBLog.txt','a')
-        # f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n")
-        
-        filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
-        
-        f.write(filecontent)
+        data_time = timer + ", " + day + " " + calendar.month_name[
+            month] + " " + year
+        f = open('DBLog.txt', 'a')
+        f.write(
+            f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n"
+        )
+
+        # filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
+
+        # f.write(filecontent)
 
         f.close()
 
@@ -255,19 +260,9 @@ class UpdateGraduates(generics.UpdateAPIView):
                 'result': serializer.data
             },
             status=HTTP_201_CREATED)
-    
 
-    def put(self, request, eid, pk, *args, **kwargs):
-        try:
-            user = Accounts.objects.get(eid=eid)
-        except:
-            return response.Response(
-                {
-                    'status': 'error',
-                    'result': 'email is not authenticated'
-                },
-                status=HTTP_423_LOCKED)
-
+    def put(self, request, pk, *args, **kwargs):
+        user = request.user
         try:
             qs = Graduates.objects.get(id=pk)
         except:
@@ -278,24 +273,34 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_400_BAD_REQUEST)
 
-        if user.access=='view':
+        if user.access == 'view':
             return response.Response(
                 {
                     'status': 'error',
                     'result': 'permission denied'
                 },
                 status=HTTP_423_LOCKED)
-        data = request.data
 
-        try:
-            grad = Graduates.objects.get(id=pk)
-        except Exception as e:
+        if user.access == "edit_all" and user.university != "univ" and qs.under_campus != user.university:
             return response.Response(
                 {
                     'status': 'error',
-                    'result': 'Institute does not exits',
-                },status=HTTP_400_BAD_REQUEST)
+                    'result': 'permission denied'
+                },
+                status=HTTP_423_LOCKED)
 
+        check_editor_list = EditorInstitutes.objects.filter(
+            Q(account=user) & Q(institute=qs.under_institute)).exists()
+        if user.access == "edit_some" and not check_editor_list:
+            return response.Response(
+                {
+                    'status': 'error',
+                    'result': 'PermissionDenied'
+                },
+                status=HTTP_423_LOCKED)
+
+        data = request.data
+        data = request.data
 
         serializer = UpdateGraduatesSerializer(qs, data=data)
 
@@ -308,18 +313,21 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_205_RESET_CONTENT)
 
         serializer.save()
-        ug_pg = 'UG' if grad.is_ug==True else 'PG'
-        
+        ug_pg = 'UG' if qs.is_ug == True else 'PG'
+
         timer = str(datetime.datetime.today().strftime("%I:%M %p"))
         month = datetime.datetime.now().month
         year = str(datetime.datetime.now().year)
         day = str(datetime.datetime.now().day)
-        data_time = timer+", "+day+" "+calendar.month_name[month]+" "+year
-        f = open('DBLog.txt','a')
-        # f.write(f"Data `{grad.under_campus}>{grad.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n")
-        filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
-        
-        f.write(filecontent)
+        data_time = timer + ", " + day + " " + calendar.month_name[
+            month] + " " + year
+        f = open('DBLog.txt', 'a')
+        f.write(
+            f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n"
+        )
+        # filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
+
+        # f.write(filecontent)
         f.close()
         return response.Response(
             {
@@ -328,81 +336,3 @@ class UpdateGraduates(generics.UpdateAPIView):
                 'result': serializer.data
             },
             status=HTTP_201_CREATED)
-
-
-'''class FileUploadView(views.APIView):
-    parser_classes = [FileUploadParser]
-
-    def put(self, request, format=None):
-        excel_file = request.data['file']
-        print(excel_file)
-        dataset = Dataset()
-        if not excel_file.name.endswith('.xlsx'):
-            return Response("File should be excel only", status=404)
-        imported_data = dataset.load(excel_file.read(),
-                                     headers=False,
-                                     format='xlsx')
-        print("imported_data: \n", imported_data)
-
-        data = {}
-        try:
-            under_campus = Campus.objects.get(name=imported_data[0][1])
-            under_institute = Institute.objects.get(name=imported_data[1][1])
-            is_ug = imported_data[-1][1]
-        except Campus.DoesNotExist:
-            return Response("Campus Invalid: " + str(imported_data))
-        except Institute.DoesNotExist:
-            return Response("Institute Invalid" + str(imported_data[1]))
-
-        for key_val in imported_data[2:-1]:
-            data[key_val[0]] = key_val[1]
-        qs, create = Graduates.objects.get_or_create(
-            under_campus=under_campus,
-            under_institute=under_institute,
-            is_ug=is_ug)
-        qs.total_students = data['total_students']
-        qs.total_final_years = data['total_final_years']
-        qs.total_higher_study_and_pay_crt = data[
-            'total_higher_study_and_pay_crt']
-        qs.total_not_intrested_in_placments = data[
-            'total_not_intrested_in_placments']
-        qs.total_backlogs_opted_for_placements = data[
-            'total_backlogs_opted_for_placements']
-        qs.total_backlogs_opted_for_higherstudies = data[
-            'total_backlogs_opted_for_higherstudies']
-        qs.total_backlogs_opted_for_other_career_options = data[
-            'total_backlogs_opted_for_other_career_options']
-        qs.total_offers = data['total_offers']
-        qs.total_multiple_offers = data['total_multiple_offers']
-        qs.highest_salary = data['highest_salary']
-        qs.lowest_salary = data['lowest_salary']
-        qs.average_salary = data['average_salary']
-        qs.save()
-
-        return Response("Data sent", status=204)
-
-    def post(self, request, format=None):
-        excel_file = request.data['file']
-        dataset = Dataset()
-        if not excel_file.name.endswith('.xlsx'):
-            return Response("File should be excel only", status=404)
-        imported_data = dataset.load(excel_file.read(),
-                                     headers=False,
-                                     format='xlsx')
-        data = {}
-        try:
-            under_campus = Campus.objects.get(name=imported_data[0][1])
-            under_institute = Institute.objects.get(name=imported_data[1][1])
-        except Campus.DoesNotExist:
-            return Response("Campus Invalid: " + str(imported_data))
-        except Institute.DoesNotExist:
-            return Response("Institute Invalid" + str(imported_data[1]))
-
-        for key_val in imported_data[2:]:
-            data[key_val[0]] = key_val[1]
-
-        qs = Graduates(under_campus=under_campus,
-                       under_institute=under_institute,
-                       **data)
-        qs.save()
-        return Response("Data sent", status=204)'''

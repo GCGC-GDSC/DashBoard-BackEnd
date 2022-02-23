@@ -2,9 +2,10 @@ from rest_framework import serializers, status
 from .models import *
 from organization.serializers import *
 from organization.models import *
+from rest_framework.authtoken.models import Token
 
 
-class AccountSerialize(serializers.ModelSerializer):
+class UserSerialize(serializers.ModelSerializer):
     can_edit = serializers.SerializerMethodField('_can_edit')
     campus = serializers.SerializerMethodField('_campus_name')
     institute = serializers.SerializerMethodField('_institute')
@@ -31,8 +32,20 @@ class AccountSerialize(serializers.ModelSerializer):
             Institute.objects.filter(under_campus__in=campus), many=True).data
 
     class Meta:
-        model = Accounts
+        model = User
         fields = [
-            'id', 'eid', 'name', 'designation', 'can_edit', 'campus',
-            'institute'
+            'id',
+            'eid',
+            'name',
+            'designation',
+            'can_edit',
+            'campus',
+            'institute',
         ]
+
+
+class TokenSerialiazer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Token
+        fields = '__all__'

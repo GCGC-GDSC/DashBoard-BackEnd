@@ -2,7 +2,40 @@
 {% load static %}
 {% block content %}
 
-<a href="upload-excel/">Upload a excel file</a>
+<style>
+#btn{
+    background-repeat: no-repeat;
+    background-position: right 7px center;
+    padding-right: 26px;
+    display: block;
+    float: left;
+    padding: 3px 12px;
+    background: green;
+    color: var(--object-tools-fg);
+    font-weight: 400;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 15px;
+}
+
+#btn:hover{
+	background: #4cd74c;
+	transform: scale(1.1);
+}
+
+</style>
+
+<a href="upload-excel/" onclick="sysCheck()" id="btn">Upload a excel file</a>
+
+
+<script>
+	function sysCheck () {
+		alert('Super Admin Can Add Data to Graduates table only if the Reference exists..!');
+	}
+</script>
 
 {{ block.super }}
 {% endblock %}
+
+<link href="" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">

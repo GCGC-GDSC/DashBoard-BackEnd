@@ -1,13 +1,42 @@
 {% extends 'admin/base.html' %}
 
 {% block content %}
-    <div><a href="/admin/students/graduates">Back</a></div>
+
+<style>
+    #id_excel_upload{
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 7px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        background: green;
+        cursor: pointer;
+    }
+    #upload_file{
+        appearance: none;
+        height: 1.75rem;
+        width: 15rem;
+        border-radius: 10px;
+        margin-left: 125px;
+        background-color: #ebce21;
+        border: 2px solid #f1b00b;
+        font: caption;
+    }
+    #upload_file:hover{
+        transform: scale(1.1);
+        background-color: #fff533;
+        border: 0px solid red;
+
+    }
+</style>
+
+    <div><a href="/admin/students/graduates"><b> 🡰 Back</b></a></div>
 
     <div>
         <form action="." method="POST" enctype="multipart/form-data">
-            {{ form.as_p }}
+            <h1><b>{{ form.as_p }}</b></h1>
             {% csrf_token %}
-            <button type="submit">Upload File</button>
+            <button type="submit" id="upload_file">Update Table Content</button>
         </form>
     </div>
 {% endblock %}

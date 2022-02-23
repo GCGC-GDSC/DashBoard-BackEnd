@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-#import django_heroku
+import django_heroku
 from django.core.exceptions import ImproperlyConfigured
 import logging
 
@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_crontab',
     'import_export',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -185,7 +186,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
     ],
     # 'DEFAULT_PARSER_CLASSES': [
@@ -193,4 +195,16 @@ REST_FRAMEWORK = {
     # ]
 }
 
-#django_heroku.settings(locals())
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+}
+
+AUTH_USER_MODEL = 'account.User'
+
+django_heroku.settings(locals())

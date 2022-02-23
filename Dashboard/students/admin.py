@@ -25,6 +25,7 @@ class ExcelImportForm(forms.Form):
 
 
 class GraduatesAdmin(admin.ModelAdmin):
+    list_display = ['under_institute', 'under_campus', 'is_ug']
 
     def get_urls(self):
         urls = super().get_urls()
@@ -44,15 +45,19 @@ class GraduatesAdmin(admin.ModelAdmin):
                 messages.warning(request, 'The wrong file type was uploaded')
                 return HttpResponseRedirect(request.path_info)
 
-            imported_data = dataset.load(excel_file.read(),
-                                         headers=False,
-                                         format='xlsx')
-            print("imported_data: \n", imported_data)
+            try:
+                imported_data = dataset.load(excel_file.read(),
+                                             headers=False,
+                                             format='xlsx')
+            except Exception as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.path_info)
+            # print("imported_data: \n", imported_data)
 
             data = {}
             for key_val in imported_data:
                 data[key_val[0]] = key_val[1]
-            print(data)
+            # print(data)
 
             try:
                 qs = Graduates.objects.get(
@@ -62,11 +67,16 @@ class GraduatesAdmin(admin.ModelAdmin):
                         name=data['under_institute']))
                     & Q(is_ug=data['is_ug']))
             except KeyError as e:
-                messages.warning(request, 'The wrong file format')
+                messages.warning(request, 'The wrong file format ' + str(e))
                 return HttpResponseRedirect(request.path_info)
-            except Graduates.DoesNotExist:
-                messages.warning(request,
-                                 'Invalid Data Graduated Data does not exist')
+            except Campus.DoesNotExist as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.path_info)
+            except Graduates.DoesNotExist as e:
+                messages.warning(request, str(e))
+                return HttpResponseRedirect(request.path_info)
+            except Exception as e:
+                messages.warning(request, str(e))
                 return HttpResponseRedirect(request.path_info)
 
             serializer = GraduatesSerializer(qs, data=data)
@@ -77,7 +87,10 @@ class GraduatesAdmin(admin.ModelAdmin):
 
             serializer.save()
 
-            messages.info(request, 'Updated Data')
+            messages.info(
+                request,
+                f"Updated Data `{data['under_campus']} > {data['under_institute']} > {'UG' if data['is_ug']==True else 'PG'}`"
+            )
             HttpResponseRedirect(request.path_info)
 
         form = ExcelImportForm()
