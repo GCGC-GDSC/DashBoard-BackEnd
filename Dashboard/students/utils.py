@@ -230,46 +230,54 @@ class FileDownloadListAPIView(generics.ListAPIView):
     serializer_class = GraduatesSerializer
 
     def get(self, request, name, format=None):
-        filename = f"{str(name).upper()} Career Fulfillment Statistics - 2022 Batch"
+        db_logger = logging.getLogger('db')
         try:
-            export_data_to_excel(request, name)
-        except Exception as e:
-            return Response({
-                'status': 'error',
-                'result': str(e)
-            },
-                            status=status.HTTP_501_NOT_IMPLEMENTED)
+            filename = f"{str(name).upper()} Career Fulfillment Statistics - 2022 Batch"
+            try:
+                export_data_to_excel(request, name)
+            except Exception as e:
+                return Response({
+                    'status': 'error',
+                    'result': str(e)
+                },
+                                status=status.HTTP_501_NOT_IMPLEMENTED)
 
-        document = open('media/out.xlsx', 'rb')
-        filename = filename + '.xlsx'
-        response = HttpResponse(FileWrapper(document),
-                                content_type='application/msexcel')
-        response[
-            'Content-Disposition'] = 'attachment; filename="%s"' % filename
-        return response
+            document = open('media/out.xlsx', 'rb')
+            filename = filename + '.xlsx'
+            response = HttpResponse(FileWrapper(document),
+                                    content_type='application/msexcel')
+            response[
+                'Content-Disposition'] = 'attachment; filename="%s"' % filename
+            return response
+        except Exception as e:
+            db_logger.exception(e)
 
 
 class LogsDataListAPIView(generics.ListAPIView):
     serializer_class = GraduatesSerializer
 
     def get(self, request):
+        db_logger = logging.getLogger('db')
+        try:
 
-        with open("DBLog.txt", "r") as file:
-            i = 0
-            lines_size = 10
-            last_lines = []
-            for line in file:
-                if i < lines_size:
-                    last_lines.append(line)
-                else:
-                    last_lines[i % lines_size] = line
-                i = i + 1
+            with open("DBLog.txt", "r") as file:
+                i = 0
+                lines_size = 10
+                last_lines = []
+                for line in file:
+                    if i < lines_size:
+                        last_lines.append(line)
+                    else:
+                        last_lines[i % lines_size] = line
+                    i = i + 1
 
-        last_lines = last_lines[(i % lines_size):] + last_lines[:(i %
-                                                                  lines_size)]
+            last_lines = last_lines[(i % lines_size):] + last_lines[:(i %
+                                                                      lines_size)]
 
-        send_data = []
-        for line in last_lines:
-            send_data.append(line)
+            send_data = []
+            for line in last_lines:
+                send_data.append(line)
 
-        return Response({'status': 'ok', 'result': send_data[::-1]})
+            return Response({'status': 'ok', 'result': send_data[::-1]})
+        except Exception as e:
+            db_logger.exception(e)
