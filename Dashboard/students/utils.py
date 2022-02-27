@@ -271,8 +271,8 @@ class LogsDataListAPIView(generics.ListAPIView):
                         last_lines[i % lines_size] = line
                     i = i + 1
 
-            last_lines = last_lines[(i % lines_size):] + last_lines[:(i %
-                                                                      lines_size)]
+            last_lines = last_lines[
+                (i % lines_size):] + last_lines[:(i % lines_size)]
 
             send_data = []
             for line in last_lines:

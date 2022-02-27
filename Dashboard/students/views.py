@@ -57,7 +57,8 @@ class GraduateList(generics.ListAPIView):
                 cmps = Campus.objects.all()
                 for cmp in cmps:
                     send_data[cmp.name] = {}
-                    ints = Campus.objects.get(name=cmp.name).institute_set.all()
+                    ints = Campus.objects.get(
+                        name=cmp.name).institute_set.all()
                     for int in ints:
                         send_data[cmp.name][int.name] = []
                         ug = Graduates.objects.filter(
@@ -75,11 +76,10 @@ class GraduateList(generics.ListAPIView):
                     'status': 'error',
                     'result': str(e)
                 },
-                    status=HTTP_500_INTERNAL_SERVER_ERROR)
+                                         status=HTTP_500_INTERNAL_SERVER_ERROR)
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
             db_logger.exception(e)
-
 
 
 # --
@@ -103,7 +103,7 @@ class InstituteGradList(generics.ListAPIView):
                     'status': 'error',
                     'result': str(e)
                 },
-                    status=HTTP_400_BAD_REQUEST)
+                                         status=HTTP_400_BAD_REQUEST)
             send_data = []
 
             ug = Graduates.objects.filter(under_institute=inst, is_ug=True)
@@ -152,14 +152,14 @@ class Overall(generics.ListAPIView):
                 data = InstituteGradListSeralizer(graduates, many=True).data
                 send_data[map[inst.name]].append(data)
 
-                graduates = Graduates.objects.filter(under_institute=inst.id, is_ug=False)
+                graduates = Graduates.objects.filter(under_institute=inst.id,
+                                                     is_ug=False)
                 data = InstituteGradListSeralizer(graduates, many=True).data
                 send_data[map[inst.name]].append(data)
 
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
             db_logger.exception(e)
-
 
 
 class Gbstats(generics.ListAPIView):
@@ -191,7 +191,10 @@ class SelectGraduates(generics.ListAPIView):
             inst = Institute.objects.filter(name=institute)
             # print("===============================", inst, len(inst))
             if len(inst) == 0:
-                return response.Response({'status': 'OK', 'result': 'No such institute'})
+                return response.Response({
+                    'status': 'OK',
+                    'result': 'No such institute'
+                })
             if grad == 'ug':
                 grads = Graduates.objects.filter(under_institute=inst[0].id,
                                                  is_ug=True)
@@ -206,6 +209,7 @@ class SelectGraduates(generics.ListAPIView):
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
             db_logger.exception(e)
+
 
 class UpdateGraduates(generics.UpdateAPIView):
     queryset = Graduates.objects.all()
