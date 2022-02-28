@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_db_logger',
     'dbbackup',
-    'django_crontab',
+    # 'django_crontab',
 ]
 
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
