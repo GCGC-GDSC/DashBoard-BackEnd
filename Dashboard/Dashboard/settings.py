@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-#import django_heroku
+import django_heroku
 from django.core.exceptions import ImproperlyConfigured
 import logging
 
@@ -57,7 +57,6 @@ INSTALLED_APPS = [
     #'company',
 
     #Third Party
-    # 'django_db_logger',
     'rest_framework',
     'corsheaders',
     'drf_yasg',
@@ -73,7 +72,7 @@ DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR/'backup'}
 
 # CRONJOBS = [
-#     ('* * */1 * *', 'students.cron.my_scheduled_job')
+#     ('*/1 * * * *', 'students.cron.my_scheduled_job')
 # ]
 
 MIDDLEWARE = [
@@ -247,4 +246,4 @@ SWAGGER_SETTINGS = {
 
 AUTH_USER_MODEL = 'account.User'
 
-#django_heroku.settings(locals())
+django_heroku.settings(locals())

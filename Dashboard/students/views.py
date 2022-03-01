@@ -45,42 +45,35 @@ class GraduateList(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request):
-        # print("User Name ====>",request.user)
         db_logger = logging.getLogger('db')
-
-        # db_logger.info('info message')
-        # db_logger.warning('warning message')
 
         try:
             send_data = {}
-            try:
-                cmps = Campus.objects.all()
-                for cmp in cmps:
-                    send_data[cmp.name] = {}
-                    ints = Campus.objects.get(
-                        name=cmp.name).institute_set.all()
-                    for int in ints:
-                        send_data[cmp.name][int.name] = []
-                        ug = Graduates.objects.filter(
-                            Q(under_campus=cmp) & Q(under_institute=int)
-                            & Q(is_ug=True))
-                        ug_data = GraduatesSerializer(ug, many=True).data
-                        pg = Graduates.objects.filter(
-                            Q(under_campus=cmp) & Q(under_institute=int)
-                            & Q(is_ug=False))
-                        pg_data = GraduatesSerializer(pg, many=True).data
-                        send_data[cmp.name][int.name].append(ug_data)
-                        send_data[cmp.name][int.name].append(pg_data)
-            except Exception as e:
-                return response.Response({
-                    'status': 'error',
-                    'result': str(e)
-                },
-                                         status=HTTP_500_INTERNAL_SERVER_ERROR)
-            return response.Response({'status': 'OK', 'result': send_data})
+            cmps = Campus.objects.all()
+            for cmp in cmps:
+                send_data[cmp.name] = {}
+                ints = Campus.objects.get(
+                    name=cmp.name).institute_set.all()
+                for int in ints:
+                    send_data[cmp.name][int.name] = []
+                    ug = Graduates.objects.filter(
+                        Q(under_campus=cmp) & Q(under_institute=int)
+                        & Q(is_ug=True))
+                    ug_data = GraduatesSerializer(ug, many=True).data
+                    pg = Graduates.objects.filter(
+                        Q(under_campus=cmp) & Q(under_institute=int)
+                        & Q(is_ug=False))
+                    pg_data = GraduatesSerializer(pg, many=True).data
+                    send_data[cmp.name][int.name].append(ug_data)
+                    send_data[cmp.name][int.name].append(pg_data)
         except Exception as e:
             db_logger.exception(e)
-
+            return response.Response({
+                    'status': 'error',
+                    'result': str(e)
+            },
+            status=HTTP_500_INTERNAL_SERVER_ERROR)
+        return response.Response({'status': 'OK', 'result': send_data})
 
 # --
 #
