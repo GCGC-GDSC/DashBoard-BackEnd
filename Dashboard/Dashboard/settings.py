@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku
+#import django_heroku
 from django.core.exceptions import ImproperlyConfigured
 import logging
 
@@ -63,8 +63,18 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_crontab',
     'import_export',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'django_db_logger',
+    'dbbackup',
+    # 'django_crontab',
 ]
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR/'backup'}
+
+# CRONJOBS = [
+#     ('* * */1 * *', 'students.cron.my_scheduled_job')
+# ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -102,6 +112,36 @@ CORS_ALLOW_HEADERS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(message)s'
+        },
+    },
+    'handlers': {
+        'db_log': {
+            'level': 'DEBUG',
+            'class': 'django_db_logger.db_log_handler.DatabaseLogHandler'
+        },
+    },
+    'loggers': {
+        'db': {
+            'handlers': ['db_log'],
+            'level': 'DEBUG'
+        },
+        'django.request': { # logging 500 errors to database
+            'handlers': ['db_log'],
+            'level': 'ERROR',
+            'propagate': False,
+        }
+    }
+}
 
 ROOT_URLCONF = 'Dashboard.urls'
 
@@ -207,4 +247,4 @@ SWAGGER_SETTINGS = {
 
 AUTH_USER_MODEL = 'account.User'
 
-django_heroku.settings(locals())
+#django_heroku.settings(locals())
