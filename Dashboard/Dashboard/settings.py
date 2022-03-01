@@ -66,15 +66,15 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_db_logger',
     'dbbackup',
-    'django_crontab',
+    # 'django_crontab',
 ]
 
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR/'backup'}
 
-CRONJOBS = [
-    ('* * */1 * *', 'students.cron.my_scheduled_job')
-]
+# CRONJOBS = [
+#     ('* * */1 * *', 'students.cron.my_scheduled_job')
+# ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
