@@ -288,8 +288,8 @@ class GBstatsSerializer(serializers.ModelSerializer):
             'total_not_intrested_in_placments':(Graduates.objects.filter(id__in=obj).aggregate(
             total_not_intrested_in_placments=Sum(
                 total_not_intrested_in_placments)
-            ))['total_not_intrested_in_placments']
-
+            ))['total_not_intrested_in_placments'],
+             "total_opted_for_higher_studies_only": total_opted_for_higher_studies_only,
         })
         return serializer
 
