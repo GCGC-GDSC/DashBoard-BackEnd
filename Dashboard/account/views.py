@@ -12,10 +12,9 @@ User = get_user_model()
 class Authenticate(views.APIView):
     serializer_class = UserSerialize
 
-    def post(self, request, email, format=None):
+    def post(self, request, email, format=None):     
         try:
             qs = User.objects.get(email=email)
-            print(qs)
         except:
             return response.Response(
                 {
@@ -25,7 +24,6 @@ class Authenticate(views.APIView):
                 status=HTTP_423_LOCKED)
 
         send_data = []
-        print(qs)
         try:
             send_data = UserSerialize(qs).data
             account_obj = User.objects.get(eid=qs.eid)

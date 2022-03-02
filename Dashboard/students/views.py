@@ -14,13 +14,6 @@ import calendar
 import traceback
 import logging
 
-logging.basicConfig(
-    filename='debug.log',
-    filemode='a',
-    format='%(asctime)s %(levelname)s-%(message)s',
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-
 map = {
     'git': 'GIT',
     'gim': 'GIM',
@@ -46,7 +39,6 @@ class GraduateList(generics.ListAPIView):
 
     def get(self, request):
         db_logger = logging.getLogger('db')
-
         try:
             send_data = {}
             cmps = Campus.objects.all()
@@ -67,7 +59,7 @@ class GraduateList(generics.ListAPIView):
                     send_data[cmp.name][int.name].append(ug_data)
                     send_data[cmp.name][int.name].append(pg_data)
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(str(e))
             return response.Response({
                     'status': 'error',
                     'result': str(e)
@@ -130,6 +122,7 @@ class Overall(generics.ListAPIView):
             stream_data = Stream.objects.filter(name=stream)
 
             if len(stream_data) == 0:
+                db_logger.warning('Stream Does not Exists with'+str(stream))
                 return response.Response(
                     {
                         'status': 'error',
@@ -171,6 +164,8 @@ class Gbstats(generics.ListAPIView):
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
             db_logger.exception(e)
+            return response.Response({'status': 'Error', 'result': str(e)},status=HTTP_400_BAD_REQUEST)
+
 
 
 class SelectGraduates(generics.ListAPIView):
@@ -182,7 +177,6 @@ class SelectGraduates(generics.ListAPIView):
         db_logger = logging.getLogger('db')
         try:
             inst = Institute.objects.filter(name=institute)
-            # print("===============================", inst, len(inst))
             if len(inst) == 0:
                 return response.Response({
                     'status': 'OK',
@@ -202,6 +196,8 @@ class SelectGraduates(generics.ListAPIView):
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
             db_logger.exception(e)
+            return response.Response({'status': 'Error', 'result': str(e)},status=HTTP_400_BAD_REQUEST)
+
 
 
 class UpdateGraduates(generics.UpdateAPIView):
@@ -279,6 +275,7 @@ class UpdateGraduates(generics.UpdateAPIView):
 
             f.close()
 
+            db_logger.info("Data Instance Updated Succefully by "+str(user))
             return response.Response(
                 {
                     'status': 'OK',
@@ -288,6 +285,8 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_201_CREATED)
         except Exception as e:
             db_logger.exception(e)
+            return response.Response({'status': 'Error', 'result': str(e)},status=HTTP_400_BAD_REQUEST)
+
 
     def put(self, request, pk, *args, **kwargs):
         db_logger = logging.getLogger('db')
@@ -359,6 +358,7 @@ class UpdateGraduates(generics.UpdateAPIView):
 
             # f.write(filecontent)
             f.close()
+            db_logger.info("Data Instance Created Succefully by"+str(user))
             return response.Response(
                 {
                     'status': 'OK',
@@ -368,3 +368,4 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_201_CREATED)
         except Exception as e:
             db_logger.exception(e)
+            return response.Response({'status': 'Error', 'result': str(e)},status=HTTP_400_BAD_REQUEST)

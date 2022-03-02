@@ -1,0 +1,937 @@
+[
+  {
+    "model": "organization.stream",
+    "pk": 1,
+    "fields": {
+      "name": "Engineering"
+    }
+  },
+  {
+    "model": "organization.stream",
+    "pk": 2,
+    "fields": {
+      "name": "Architecture"
+    }
+  },
+  {
+    "model": "organization.stream",
+    "pk": 3,
+    "fields": {
+      "name": "Humanities"
+    }
+  },
+  {
+    "model": "organization.stream",
+    "pk": 4,
+    "fields": {
+      "name": "Law"
+    }
+  },
+  {
+    "model": "organization.stream",
+    "pk": 5,
+    "fields": {
+      "name": "Management"
+    }
+  },
+  {
+    "model": "organization.stream",
+    "pk": 6,
+    "fields": {
+      "name": "Nursing"
+    }
+  },
+  {
+    "model": "organization.stream",
+    "pk": 7,
+    "fields": {
+      "name": "Pharmacy"
+    }
+  },
+  {
+    "model": "organization.stream",
+    "pk": 8,
+    "fields": {
+      "name": "Science"
+    }
+  },
+  {
+    "model": "organization.campus",
+    "pk": 1,
+    "fields": {
+      "name": "vskp",
+      "inst_count": 8
+    }
+  },
+  {
+    "model": "organization.campus",
+    "pk": 2,
+    "fields": {
+      "name": "hyd",
+      "inst_count": 4
+    }
+  },
+  {
+    "model": "organization.campus",
+    "pk": 3,
+    "fields": {
+      "name": "blr",
+      "inst_count": 3
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 1,
+    "fields": {
+      "name": "git",
+      "under_campus": 1,
+      "stream": 1
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 2,
+    "fields": {
+      "name": "gim",
+      "under_campus": 1,
+      "stream": 5
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 3,
+    "fields": {
+      "name": "gis",
+      "under_campus": 1,
+      "stream": 8
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 4,
+    "fields": {
+      "name": "gsoa",
+      "under_campus": 1,
+      "stream": 2
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 5,
+    "fields": {
+      "name": "gin",
+      "under_campus": 1,
+      "stream": 6
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 6,
+    "fields": {
+      "name": "gip",
+      "under_campus": 1,
+      "stream": 7
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 7,
+    "fields": {
+      "name": "gsol",
+      "under_campus": 1,
+      "stream": 4
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 8,
+    "fields": {
+      "name": "gsgs",
+      "under_campus": 1,
+      "stream": 3
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 9,
+    "fields": {
+      "name": "soth",
+      "under_campus": 2,
+      "stream": 1
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 10,
+    "fields": {
+      "name": "hbs",
+      "under_campus": 2,
+      "stream": 5
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 11,
+    "fields": {
+      "name": "soph",
+      "under_campus": 2,
+      "stream": 7
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 12,
+    "fields": {
+      "name": "sosh",
+      "under_campus": 2,
+      "stream": 8
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 13,
+    "fields": {
+      "name": "sotb",
+      "under_campus": 3,
+      "stream": 1
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 14,
+    "fields": {
+      "name": "sosb",
+      "under_campus": 3,
+      "stream": 8
+    }
+  },
+  {
+    "model": "organization.institute",
+    "pk": 15,
+    "fields": {
+      "name": "gsbb",
+      "under_campus": 3,
+      "stream": 5
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 1,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "is_ug": true,
+      "total_students": 1470,
+      "total_final_years": 1468,
+      "total_higher_study_and_pay_crt": 5,
+      "total_opted_for_higher_studies_only": 257,
+      "total_not_intrested_in_placments": 22,
+      "total_backlogs_opted_for_placements": 47,
+      "total_backlogs_opted_for_higherstudies": 33,
+      "total_backlogs_opted_for_other_career_options": 13,
+      "total_offers": 1410,
+      "total_multiple_offers": 515,
+      "highest_salary": "42.00",
+      "average_salary": "4.45",
+      "lowest_salary": "3.00",
+      "created": "2022-02-11T11:57:46.720Z",
+      "updated": "2022-02-11T11:57:46.720Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 2,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "is_ug": false,
+      "total_students": 82,
+      "total_final_years": 90,
+      "total_higher_study_and_pay_crt": 1,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 40,
+      "total_backlogs_opted_for_placements": 4,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 14,
+      "total_offers": 10,
+      "total_multiple_offers": 2,
+      "highest_salary": "8.00",
+      "average_salary": "3.36",
+      "lowest_salary": "5.25",
+      "created": "2022-02-11T11:58:22.004Z",
+      "updated": "2022-02-11T11:58:22.004Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 3,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "is_ug": true,
+      "total_students": 299,
+      "total_final_years": 281,
+      "total_higher_study_and_pay_crt": 123,
+      "total_opted_for_higher_studies_only": 9,
+      "total_not_intrested_in_placments": 119,
+      "total_backlogs_opted_for_placements": 27,
+      "total_backlogs_opted_for_higherstudies": 12,
+      "total_backlogs_opted_for_other_career_options": 46,
+      "total_offers": 289,
+      "total_multiple_offers": 0,
+      "highest_salary": "3.25",
+      "average_salary": "3.25",
+      "lowest_salary": "3.25",
+      "created": "2022-02-11T12:03:34.158Z",
+      "updated": "2022-02-11T12:03:34.158Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 4,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "is_ug": false,
+      "total_students": 6967,
+      "total_final_years": 0,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 10,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "32.20",
+      "average_salary": "12.20",
+      "lowest_salary": "3.00",
+      "created": "2022-02-11T12:03:59.379Z",
+      "updated": "2022-02-11T12:03:59.379Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 5,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "is_ug": true,
+      "total_students": 6968,
+      "total_final_years": 0,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:04:21.919Z",
+      "updated": "2022-02-11T12:04:21.919Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 6,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "is_ug": false,
+      "total_students": 384,
+      "total_final_years": 378,
+      "total_higher_study_and_pay_crt": 135,
+      "total_opted_for_higher_studies_only": 6,
+      "total_not_intrested_in_placments": 74,
+      "total_backlogs_opted_for_placements": 5,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 70,
+      "total_multiple_offers": 3,
+      "highest_salary": "4.50",
+      "average_salary": "1.65",
+      "lowest_salary": "3.50",
+      "created": "2022-02-11T12:04:38.870Z",
+      "updated": "2022-02-11T12:04:38.870Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 7,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 4,
+      "is_ug": true,
+      "total_students": 0,
+      "total_final_years": 56,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 56,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 12,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:04:47.244Z",
+      "updated": "2022-02-11T12:04:47.244Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 8,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 4,
+      "is_ug": false,
+      "total_students": 0,
+      "total_final_years": 14,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 14,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:04:57.681Z",
+      "updated": "2022-02-11T12:04:57.681Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 9,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 5,
+      "is_ug": true,
+      "total_students": 9,
+      "total_final_years": 9,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 8,
+      "total_not_intrested_in_placments": 8,
+      "total_backlogs_opted_for_placements": 8,
+      "total_backlogs_opted_for_higherstudies": 8,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 8,
+      "total_multiple_offers": 8,
+      "highest_salary": "9.00",
+      "average_salary": "98.00",
+      "lowest_salary": "798.00",
+      "created": "2022-02-11T12:05:06.418Z",
+      "updated": "2022-02-11T12:05:06.418Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 10,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 5,
+      "is_ug": false,
+      "total_students": 0,
+      "total_final_years": 0,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:05:35.566Z",
+      "updated": "2022-02-11T12:05:35.566Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 11,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 6,
+      "is_ug": true,
+      "total_students": 99,
+      "total_final_years": 93,
+      "total_higher_study_and_pay_crt": 2,
+      "total_opted_for_higher_studies_only": 26,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 6,
+      "total_backlogs_opted_for_higherstudies": 1,
+      "total_backlogs_opted_for_other_career_options": 3,
+      "total_offers": 14,
+      "total_multiple_offers": 0,
+      "highest_salary": "4.50",
+      "average_salary": "3.00",
+      "lowest_salary": "3.75",
+      "created": "2022-02-11T12:05:44.149Z",
+      "updated": "2022-02-11T12:05:44.149Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 12,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 6,
+      "is_ug": false,
+      "total_students": 99,
+      "total_final_years": 93,
+      "total_higher_study_and_pay_crt": 2,
+      "total_opted_for_higher_studies_only": 26,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 6,
+      "total_backlogs_opted_for_higherstudies": 1,
+      "total_backlogs_opted_for_other_career_options": 3,
+      "total_offers": 14,
+      "total_multiple_offers": 0,
+      "highest_salary": "4.50",
+      "average_salary": "3.00",
+      "lowest_salary": "3.75",
+      "created": "2022-02-11T12:05:52.561Z",
+      "updated": "2022-02-11T12:05:52.561Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 13,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 7,
+      "is_ug": true,
+      "total_students": 16,
+      "total_final_years": 14,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 4,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 1,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:06:01.117Z",
+      "updated": "2022-02-11T12:06:01.117Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 14,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 7,
+      "is_ug": false,
+      "total_students": 0,
+      "total_final_years": 0,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:06:12.376Z",
+      "updated": "2022-02-11T12:06:12.376Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 15,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 8,
+      "is_ug": true,
+      "total_students": 99,
+      "total_final_years": 0,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:06:23.174Z",
+      "updated": "2022-02-11T12:06:23.174Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 16,
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 8,
+      "is_ug": false,
+      "total_students": 0,
+      "total_final_years": 0,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:06:33.553Z",
+      "updated": "2022-02-11T12:06:33.553Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 17,
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "is_ug": true,
+      "total_students": 892,
+      "total_final_years": 862,
+      "total_higher_study_and_pay_crt": 36,
+      "total_opted_for_higher_studies_only": 116,
+      "total_not_intrested_in_placments": 106,
+      "total_backlogs_opted_for_placements": 34,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 51,
+      "total_offers": 697,
+      "total_multiple_offers": 229,
+      "highest_salary": "32.00",
+      "average_salary": "3.36",
+      "lowest_salary": "5.10",
+      "created": "2022-02-11T12:06:40.975Z",
+      "updated": "2022-02-11T12:06:40.975Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 18,
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "is_ug": false,
+      "total_students": 26,
+      "total_final_years": 23,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 2,
+      "total_backlogs_opted_for_placements": 2,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 10,
+      "total_multiple_offers": 0,
+      "highest_salary": "5.20",
+      "average_salary": "3.50",
+      "lowest_salary": "5.00",
+      "created": "2022-02-11T12:06:49.103Z",
+      "updated": "2022-02-11T12:06:49.103Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 19,
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 10,
+      "is_ug": true,
+      "total_students": 323,
+      "total_final_years": 315,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 41,
+      "total_not_intrested_in_placments": 159,
+      "total_backlogs_opted_for_placements": 9,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 46,
+      "total_offers": 11,
+      "total_multiple_offers": 1,
+      "highest_salary": "9.00",
+      "average_salary": "4.50",
+      "lowest_salary": "6.83",
+      "created": "2022-02-11T12:06:58.485Z",
+      "updated": "2022-02-11T12:06:58.485Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 20,
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 10,
+      "is_ug": false,
+      "total_students": 78,
+      "total_final_years": 77,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 11,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 36,
+      "total_multiple_offers": 2,
+      "highest_salary": "10.00",
+      "average_salary": "4.00",
+      "lowest_salary": "6.55",
+      "created": "2022-02-11T12:07:08.237Z",
+      "updated": "2022-02-11T12:07:08.237Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 21,
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 11,
+      "is_ug": true,
+      "total_students": 36,
+      "total_final_years": 33,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 14,
+      "total_not_intrested_in_placments": 1,
+      "total_backlogs_opted_for_placements": 5,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 5,
+      "total_offers": 6,
+      "total_multiple_offers": 0,
+      "highest_salary": "2.18",
+      "average_salary": "2.18",
+      "lowest_salary": "2.18",
+      "created": "2022-02-11T12:07:34.532Z",
+      "updated": "2022-02-11T12:07:34.532Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 22,
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 11,
+      "is_ug": false,
+      "total_students": 0,
+      "total_final_years": 0,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:07:44.121Z",
+      "updated": "2022-02-11T12:07:44.121Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 23,
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 12,
+      "is_ug": true,
+      "total_students": 196,
+      "total_final_years": 191,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 78,
+      "total_not_intrested_in_placments": 74,
+      "total_backlogs_opted_for_placements": 7,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 62,
+      "total_offers": 16,
+      "total_multiple_offers": 1,
+      "highest_salary": "3.82",
+      "average_salary": "3.82",
+      "lowest_salary": "3.82",
+      "created": "2022-02-11T12:07:51.585Z",
+      "updated": "2022-02-11T12:07:51.585Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 24,
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 12,
+      "is_ug": false,
+      "total_students": 77,
+      "total_final_years": 71,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 36,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 28,
+      "total_multiple_offers": 1,
+      "highest_salary": "9.00",
+      "average_salary": "3.53",
+      "lowest_salary": "3.53",
+      "created": "2022-02-11T12:07:59.576Z",
+      "updated": "2022-02-11T12:07:59.576Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 25,
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 13,
+      "is_ug": true,
+      "total_students": 0,
+      "total_final_years": 0,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:08:05.981Z",
+      "updated": "2022-02-11T12:08:05.981Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 26,
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 13,
+      "is_ug": false,
+      "total_students": 5,
+      "total_final_years": 3,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:08:28.706Z",
+      "updated": "2022-02-11T12:08:28.706Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 27,
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 14,
+      "is_ug": true,
+      "total_students": 0,
+      "total_final_years": 0,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 0,
+      "total_multiple_offers": 0,
+      "highest_salary": "0.00",
+      "average_salary": "0.00",
+      "lowest_salary": "0.00",
+      "created": "2022-02-11T12:08:36.006Z",
+      "updated": "2022-02-11T12:08:36.006Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 28,
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 14,
+      "is_ug": false,
+      "total_students": 10,
+      "total_final_years": 10,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 9,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 0,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 1,
+      "total_multiple_offers": 0,
+      "highest_salary": "9.00",
+      "average_salary": "9.00",
+      "lowest_salary": "9.00",
+      "created": "2022-02-11T12:08:56.764Z",
+      "updated": "2022-02-11T12:08:56.764Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 29,
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 15,
+      "is_ug": true,
+      "total_students": 712,
+      "total_final_years": 540,
+      "total_higher_study_and_pay_crt": 16,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 27,
+      "total_backlogs_opted_for_placements": 60,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 641,
+      "total_multiple_offers": 258,
+      "highest_salary": "8.50",
+      "average_salary": "3.20",
+      "lowest_salary": "4.20",
+      "created": "2022-02-11T12:09:15.408Z",
+      "updated": "2022-02-11T12:09:15.408Z"
+    }
+  },
+  {
+    "model": "students.graduates",
+    "pk": 30,
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 15,
+      "is_ug": false,
+      "total_students": 33,
+      "total_final_years": 28,
+      "total_higher_study_and_pay_crt": 0,
+      "total_opted_for_higher_studies_only": 0,
+      "total_not_intrested_in_placments": 0,
+      "total_backlogs_opted_for_placements": 5,
+      "total_backlogs_opted_for_higherstudies": 0,
+      "total_backlogs_opted_for_other_career_options": 0,
+      "total_offers": 34,
+      "total_multiple_offers": 16,
+      "highest_salary": "10.00",
+      "average_salary": "4.00",
+      "lowest_salary": "6.58",
+      "created": "2022-02-11T12:13:40.927Z",
+      "updated": "2022-02-11T12:13:40.927Z"
+    }
+  }
+]

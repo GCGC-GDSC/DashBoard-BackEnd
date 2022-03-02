@@ -168,6 +168,7 @@ class UpdateGraduatesSerializer(serializers.ModelSerializer):
             'total_backlogs_opted_for_higherstudies',
             'total_backlogs_opted_for_other_career_options',
             'total_students_eligible',
+            'total_backlogs',
             'total_offers',
             'total_multiple_offers',
             'total_placed',
@@ -239,6 +240,27 @@ class GBstatsSerializer(serializers.ModelSerializer):
     salary = serializers.SerializerMethodField('_salary')
 
     def _student_details(self, obj):
+
+        total_final_years = Graduates.objects.filter(id__in=obj).aggregate(
+            Sum('total_final_years'))['total_final_years__sum']
+        total_higher_study_and_pay_crt = Graduates.objects.filter(
+            id__in=obj).aggregate(Sum('total_higher_study_and_pay_crt')
+                                  )['total_higher_study_and_pay_crt__sum']
+        total_opted_for_higher_studies_only = Graduates.objects.filter(
+            id__in=obj).aggregate(Sum('total_opted_for_higher_studies_only')
+                                  )['total_opted_for_higher_studies_only__sum']
+        total_not_intrested_in_placments = Graduates.objects.filter(
+            id__in=obj).aggregate(Sum('total_not_intrested_in_placments')
+                                  )['total_not_intrested_in_placments__sum']
+        total_backlogs_opted_for_placements = Graduates.objects.filter(
+            id__in=obj).aggregate(Sum('total_backlogs_opted_for_placements')
+                                  )['total_backlogs_opted_for_placements__sum']
+
+        total_not_intrested_in_placments = Graduates.objects.filter(
+            id__in=obj).aggregate(Sum('total_not_intrested_in_placments')
+                                  )['total_not_intrested_in_placments__sum']
+
+
         total_backlogs_opted_for_higherstudies = Graduates.objects.filter(
             id__in=obj).aggregate(
                 sum=Sum('total_backlogs_opted_for_higherstudies')).get('sum')
@@ -257,10 +279,20 @@ class GBstatsSerializer(serializers.ModelSerializer):
         serializer.update({
             'total_backlogs': (total_backlogs_opted_for_higherstudies +
                                total_backlogs_opted_for_other_career_options +
-                               total_backlogs_opted_for_placements)
-        })
+                               total_backlogs_opted_for_placements),
+            'total_students_eligible': (total_final_years -
+                                   total_higher_study_and_pay_crt -
+                                   total_opted_for_higher_studies_only -
+                                   total_not_intrested_in_placments -
+                                   total_backlogs_opted_for_placements),
+            'total_not_intrested_in_placments':(Graduates.objects.filter(id__in=obj).aggregate(
+            total_not_intrested_in_placments=Sum(
+                total_not_intrested_in_placments)
+            ))['total_not_intrested_in_placments']
 
+        })
         return serializer
+
 
     def _placement_details(self, obj):
         total_final_years = Graduates.objects.filter(id__in=obj).aggregate(
@@ -309,7 +341,8 @@ class GBstatsSerializer(serializers.ModelSerializer):
             "yet_to_place":
             (total_students_eligible - (total_offers - total_multiple_offers)),
             "total_students_eligible":
-            total_students_eligible
+            total_students_eligible,
+            "total_opted_for_higher_studies_only": total_opted_for_higher_studies_only,
         })
 
         return serializer
