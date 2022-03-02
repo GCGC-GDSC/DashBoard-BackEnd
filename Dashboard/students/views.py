@@ -9,7 +9,7 @@ from .serializers import *
 from .models import *
 from rest_framework.status import *
 from account.models import *
-import datetime
+# import datetime
 import calendar
 import traceback
 import logging
@@ -256,22 +256,32 @@ class UpdateGraduates(generics.UpdateAPIView):
                     },
                     status=HTTP_205_RESET_CONTENT)
 
-            serializer.save()
-            ug_pg = 'UG' if qs.is_ug == True else 'PG'
-            timer = str(datetime.datetime.today().strftime("%I:%M %p"))
-            month = datetime.datetime.now().month
-            year = str(datetime.datetime.now().year)
-            day = str(datetime.datetime.now().day)
+            from dateutil.tz import gettz
+            from datetime import datetime
+
+            dtobj = datetime.now(tz=gettz('Asia/Kolkata'))
+            timer = dtobj.strftime("%I:%M %p")
+
+
+            month = datetime.now().month
+            year = str(datetime.now().year)
+            day = str(datetime.now().day)
             data_time = timer + ", " + day + " " + calendar.month_name[
                 month] + " " + year
+
             f = open('DBLog.txt', 'a')
-            f.write(
-                f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n"
-            )
+            # f.write(
+            #     f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n"
+            # )
 
-            # filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
 
-            # f.write(filecontent)
+
+
+            filecontent = f'''<p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>{qs.under_campus.name.upper()}>{qs.under_institute.name.upper()}>{ug_pg}</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>{user.name}({user.designation})</b></span> at <span style="color:#555;">{data_time}</span></p>\n'''
+
+            # filecontent = f"""<p> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
+
+            f.write(filecontent)
 
             f.close()
 
@@ -283,9 +293,11 @@ class UpdateGraduates(generics.UpdateAPIView):
                     'result': serializer.data
                 },
                 status=HTTP_201_CREATED)
+
         except Exception as e:
             db_logger.exception(e)
             return response.Response({'status': 'Error', 'result': str(e)},status=HTTP_400_BAD_REQUEST)
+    
 
 
     def put(self, request, pk, *args, **kwargs):
@@ -344,19 +356,31 @@ class UpdateGraduates(generics.UpdateAPIView):
             serializer.save()
             ug_pg = 'UG' if qs.is_ug == True else 'PG'
 
-            timer = str(datetime.datetime.today().strftime("%I:%M %p"))
-            month = datetime.datetime.now().month
-            year = str(datetime.datetime.now().year)
-            day = str(datetime.datetime.now().day)
+            from dateutil.tz import gettz
+            from datetime import datetime
+
+            dtobj = datetime.now(tz=gettz('Asia/Kolkata'))
+            timer = dtobj.strftime("%I:%M %p")
+
+
+            month = datetime.now().month
+            year = str(datetime.now().year)
+            day = str(datetime.now().day)
             data_time = timer + ", " + day + " " + calendar.month_name[
                 month] + " " + year
+
+
             f = open('DBLog.txt', 'a')
-            f.write(
-                f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n"
-            )
+
+            # f.write(
+            #     f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n"
+            # )
+
             # filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
 
-            # f.write(filecontent)
+            filecontent = f'''<p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>{qs.under_campus.name.upper()}>{qs.under_institute.name.upper()}>{ug_pg}</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>{user.name}({user.designation})</b></span> at <span style="color:#555;">{data_time}</span></p>\n'''
+
+            f.write(filecontent)
             f.close()
             db_logger.info("Data Instance Created Succefully by"+str(user))
             return response.Response(
@@ -367,5 +391,6 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_201_CREATED)
         except Exception as e:
+            print(e)
             db_logger.exception(e)
             return response.Response({'status': 'Error', 'result': str(e)},status=HTTP_400_BAD_REQUEST)
