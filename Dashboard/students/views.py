@@ -9,7 +9,8 @@ from .serializers import *
 from .models import *
 from rest_framework.status import *
 from account.models import *
-# import datetime
+from dateutil.tz import gettz
+from datetime import datetime
 import calendar
 import traceback
 import logging
@@ -256,13 +257,12 @@ class UpdateGraduates(generics.UpdateAPIView):
                     },
                     status=HTTP_205_RESET_CONTENT)
 
-            from dateutil.tz import gettz
-            from datetime import datetime
+            
 
             dtobj = datetime.now(tz=gettz('Asia/Kolkata'))
             timer = dtobj.strftime("%I:%M %p")
 
-
+            ug_pg = 'UG' if qs.is_ug == True else 'PG'
             month = datetime.now().month
             year = str(datetime.now().year)
             day = str(datetime.now().day)
@@ -355,9 +355,6 @@ class UpdateGraduates(generics.UpdateAPIView):
 
             serializer.save()
             ug_pg = 'UG' if qs.is_ug == True else 'PG'
-
-            from dateutil.tz import gettz
-            from datetime import datetime
 
             dtobj = datetime.now(tz=gettz('Asia/Kolkata'))
             timer = dtobj.strftime("%I:%M %p")
