@@ -31,6 +31,7 @@ map = {
     'sotb': 'SoTB',
     'sosp': 'SoSP',
     'gsbb': 'GSBB',
+    'sosb':'SoSB',
 }
 
 

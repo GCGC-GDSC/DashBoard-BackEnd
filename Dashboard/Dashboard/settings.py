@@ -108,9 +108,16 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
+
+CORS_ALLOW_ALL_ORIGINS = True  
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://gcgc-cfs-dashboard.netlify.app",
+    #"/*",
 ]
+
 
 LOGGING = {
     'version': 1,
