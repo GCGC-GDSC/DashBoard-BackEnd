@@ -14,3 +14,4 @@ Data `vskp>git>UG` was Updated by Jyothi Prakash(admin) at 03:08 PM, 11 February
 Data `vskp>git>UG` was Updated by admin(admin) at 10:38 PM, 2 March 2022
 Data `vskp>git>UG` was Updated by admin(admin) at 12:56 AM, 3 March 2022
 <p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>VSKP>GIT>UG</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>admin(admin)</b></span> at <span style="color:#555;">01:24 AM, 3 March 2022</span></p>
+<p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>BLR>SOSB>UG</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>Jyothiprakash_Patnaikuni Patnaikuni(Tester)</b></span> at <span style="color:#555;">10:48 AM, 1 April 2022</span></p>
