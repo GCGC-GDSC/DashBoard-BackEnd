@@ -20,5 +20,6 @@ urlpatterns = [
     path('download/<str:name>',
          utils.FileDownloadListAPIView.as_view(),
          name='download-api'),
-    path('logs', utils.LogsDataListAPIView.as_view(), name='logs-api')
+    path('logs', utils.LogsDataListAPIView.as_view(), name='logs-api'),
+    path('courses',CourseGraduates.as_view(), name='courses')
 ]

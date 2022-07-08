@@ -27,19 +27,18 @@ class InstituteSerialize(serializers.ModelSerializer):
 
 
 class CoursesSeralizer(serializers.ModelSerializer):
-    campus_name = serializers.SerializerMethodField('_course_name')
-    institute_name = serializers.SerializerMethodField('_institute_name')
+    # campus_name = serializers.SerializerMethodField('_course_name')
+    # institute_name = serializers.SerializerMethodField('_institute_name')
 
-    def _course_name(self, obj):
-        return obj.campus.name
+    # def _course_name(self, obj):
+    #     return obj.campus.name
 
-    def _institute_name(self, obj):
-        return obj.institute.name
+    # def _institute_name(self, obj):
+    #     return obj.institute.name
 
     class Meta:
         model = Courses
-        fields = ['id', 'course', 'is_ug', 'campus_name', 'institute_name']
-
+        fields = '__all__'
 
 class StreamsSeralizer(serializers.ModelSerializer):
 

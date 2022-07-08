@@ -24,6 +24,7 @@ class CoursesList(generics.ListAPIView):
 
     def get(self, requst):
         send_data = CoursesSeralizer(Courses.objects.all(), many=True).data
+        print(send_data)
         return response.Response({'status': 'OK', 'result': send_data})
 
 

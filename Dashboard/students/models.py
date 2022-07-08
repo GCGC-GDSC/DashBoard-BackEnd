@@ -1,7 +1,14 @@
 from django.db import models
 from datetime import date
-from organization.models import (Institute, Campus)
+from organization.models import (Institute, Campus, Programs)
 
+PASSING_YEAR = (
+    ('2021','2021'),
+    ('2022','2022'),
+    ('2023','2023'),
+    ('2024','2024'),
+    ('2025','2025'),
+)
 
 class Graduates(models.Model):
     under_campus = models.ForeignKey(Campus, on_delete=models.CASCADE)
@@ -32,8 +39,7 @@ class Graduates(models.Model):
                                         decimal_places=2,
                                         default=0.0)
 
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    passing_year = models.CharField(choices=PASSING_YEAR, default='2022', max_length=4)
 
     @property
     def total_students_eligible(self):
@@ -64,6 +70,10 @@ class Graduates(models.Model):
                 self.total_backlogs_opted_for_placements +
                 self.total_backlogs_opted_for_other_career_options)
 
+    @property
+    def grad_type(self):
+        return "UG" if self.is_ug else "PG"
+
     def __str__(self):
         institute = str(self.under_institute)
         campus = str(self.under_campus)
@@ -74,6 +84,11 @@ class Graduates(models.Model):
 
     class Meta:
         unique_together = ("under_campus", "under_institute", "is_ug")
+        ordering = ("-is_ug", "under_campus", "under_institute")
+
+
+class GraduatesWithPrograms(Graduates):
+    program = models.ForeignKey(Programs, on_delete=models.CASCADE)
 
 
 '''class ExcelData(models.Model):
