@@ -25,7 +25,7 @@ class ExcelImportForm(forms.Form):
 
 
 class GraduatesAdmin(admin.ModelAdmin):
-    list_display = ['under_institute', 'under_campus', 'grad_type', 'is_ug']
+    list_display = ['display_name',"passing_year",'under_institute', 'under_campus', 'grad_type', 'is_ug']
 
     def get_urls(self):
         urls = super().get_urls()
@@ -101,4 +101,7 @@ class GraduatesAdmin(admin.ModelAdmin):
 
 admin.site.register(Graduates, GraduatesAdmin)
 
-admin.site.register(GraduatesWithPrograms)
+class GraduatesWithProgramsAdmin(admin.ModelAdmin):
+    list_display = ['display_name',"passing_year",'under_institute', 'under_campus', 'grad_type', 'is_ug']
+
+admin.site.register(GraduatesWithPrograms,GraduatesWithProgramsAdmin)
