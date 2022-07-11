@@ -186,8 +186,8 @@ class GraduatesWithPrograms(models.Model):
 
     class Meta:
         unique_together = ("under_campus", "under_institute", "is_ug",
-                           "passing_year")
-        ordering = ("passing_year", "-is_ug", "under_campus",
+                           "passing_year","program")
+        ordering = ("-passing_year", "-is_ug", "under_campus",
                     "under_institute")
 
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers, status
 from organization.models import Institute
-from .models import Graduates
+from .models import Graduates, GraduatesWithPrograms
 from django.db.models import Q, Count, Max, Sum, Min, Avg
 from math import *
 
@@ -232,6 +232,25 @@ class InstituteGradListSeralizer(serializers.ModelSerializer):
     class Meta:
         model = Graduates
         fields = ['student_details', 'placement_details', 'salary', 'is_ug']
+
+
+class ProgramGraduatesSerializer(serializers.ModelSerializer):
+    under_institute_name = serializers.SerializerMethodField('_under_institute_name')
+    under_campus_name = serializers.SerializerMethodField('_under_campus_name')
+    program_name = serializers.SerializerMethodField('_program_name')
+
+    def _under_institute_name(self, obj):
+        return obj.under_institute_name
+
+    def _under_campus_name(self,obj):
+        return obj.under_campus_name
+    
+    def _program_name(self,obj):
+        return obj.program.name
+
+    class Meta:
+        model = GraduatesWithPrograms
+        fields = '__all__'
 
 
 class GBstatsSerializer(serializers.ModelSerializer):

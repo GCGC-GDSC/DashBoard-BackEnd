@@ -15,25 +15,6 @@ import calendar
 import traceback
 import logging
 
-map = {
-    'git': 'GIT',
-    'gim': 'GIM',
-    'gis': 'GIS',
-    'gsoa': 'GSoA',
-    'gin': 'GIN',
-    'gip': 'GIP',
-    'gsol': 'GSoL',
-    'gsgs': 'GSGS',
-    'soth': 'SoTH',
-    'hbs': 'HBS',
-    'soph': 'SoPH',
-    'sosh': 'SoSH',
-    'sotb': 'SoTB',
-    'sosp': 'SoSP',
-    'gsbb': 'GSBB',
-    'sosb':'SoSB',
-}
-
 
 class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerializer
@@ -134,16 +115,16 @@ class Overall(generics.ListAPIView):
 
             inst_data = Institute.objects.filter(stream=stream_data[0].id)
             for inst in inst_data:
-                send_data[map[inst.name]] = []
+                send_data[inst.name] = []
                 graduates = Graduates.objects.filter(under_institute=inst.id,
                                                      is_ug=True)
                 data = InstituteGradListSeralizer(graduates, many=True).data
-                send_data[map[inst.name]].append(data)
+                send_data[inst.name].append(data)
 
                 graduates = Graduates.objects.filter(under_institute=inst.id,
                                                      is_ug=False)
                 data = InstituteGradListSeralizer(graduates, many=True).data
-                send_data[map[inst.name]].append(data)
+                send_data[inst.name].append(data)
 
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
@@ -391,205 +372,12 @@ class UpdateGraduates(generics.UpdateAPIView):
             db_logger.exception(e)
             return response.Response({'status': 'Error', 'result': str(e)},status=HTTP_400_BAD_REQUEST)
 
-class CourseGraduates(generics.ListAPIView):
-    serializer_class = InstituteGradListSeralizer
+class ProgramsGraduates(generics.ListAPIView):
+    serializer_class = ProgramGraduatesSerializer
     permission_classes = (IsAuthenticated, )
-
-    def get(self,request):
-        true = True
-        false = False
-
-        return response.Response(
-
-{
-    "status": "OK",
-    "result": {
-        "vskp": {
-            "git": [
-                {
-                    "id": 1,
-                    "course": "CSE",
-                    "under_institute_name": "GIT",
-                    "under_campus_name": "vskp",
-                    "total_students": 0,
-                    "total_final_years": 0,
-                    "total_higher_study_and_pay_crt": 0,
-                    "total_opted_for_higher_studies_only": 0,
-                    "total_not_intrested_in_placments": 0,
-                    "total_backlogs_opted_for_placements": 0,
-                    "total_backlogs_opted_for_higherstudies": 0,
-                    "total_backlogs_opted_for_other_career_options": 0,
-                    "total_backlogs": 0,
-                    "total_students_eligible": 0,
-                    "total_offers": 0,
-                    "total_multiple_offers": 0,
-                    "total_placed": 0,
-                    "total_yet_to_place": 0,
-                    "highest_salary": "3.00",
-                    "average_salary": "1.20",
-                    "lowest_salary": "20.10",
-                    "Percentage_of_students_opted_HS_to_the_total_number": 0,
-                    "Percentage_of_students_having_backlogs_to_the_total_number_of_students": 0,
-                    "Percentage_of_students_eligible_for_and_requiring_placement": 0,
-                    "Percentage_of_students_placed_out_of_eligible_students": 0,
-                    "Percentage_of_students_yet_to_be_placed_out_of_eligible_students": 0,
-                    "is_ug": true
-                },
-                {
-                    "id": 2,
-                    "course": "CSE",
-                    "under_institute_name": "GIT",
-                    "under_campus_name": "vskp",
-                    "total_students": 0,
-                    "total_final_years": 0,
-                    "total_higher_study_and_pay_crt": 0,
-                    "total_opted_for_higher_studies_only": 0,
-                    "total_not_intrested_in_placments": 0,
-                    "total_backlogs_opted_for_placements": 0,
-                    "total_backlogs_opted_for_higherstudies": 0,
-                    "total_backlogs_opted_for_other_career_options": 0,
-                    "total_backlogs": 0,
-                    "total_students_eligible": 0,
-                    "total_offers": 0,
-                    "total_multiple_offers": 0,
-                    "total_placed": 0,
-                    "total_yet_to_place": 0,
-                    "highest_salary": "3.00",
-                    "average_salary": "1.20",
-                    "lowest_salary": "20.10",
-                    "Percentage_of_students_opted_HS_to_the_total_number": 0,
-                    "Percentage_of_students_having_backlogs_to_the_total_number_of_students": 0,
-                    "Percentage_of_students_eligible_for_and_requiring_placement": 0,
-                    "Percentage_of_students_placed_out_of_eligible_students": 0,
-                    "Percentage_of_students_yet_to_be_placed_out_of_eligible_students": 0,
-                    "is_ug": false
-                },
-                {
-                    "id": 3,
-                    "course": "EECE",
-                    "under_institute_name": "GIT",
-                    "under_campus_name": "vskp",
-                    "total_students": 0,
-                    "total_final_years": 0,
-                    "total_higher_study_and_pay_crt": 0,
-                    "total_opted_for_higher_studies_only": 0,
-                    "total_not_intrested_in_placments": 0,
-                    "total_backlogs_opted_for_placements": 0,
-                    "total_backlogs_opted_for_higherstudies": 0,
-                    "total_backlogs_opted_for_other_career_options": 0,
-                    "total_backlogs": 0,
-                    "total_students_eligible": 0,
-                    "total_offers": 0,
-                    "total_multiple_offers": 0,
-                    "total_placed": 0,
-                    "total_yet_to_place": 0,
-                    "highest_salary": "3.00",
-                    "average_salary": "1.20",
-                    "lowest_salary": "20.10",
-                    "Percentage_of_students_opted_HS_to_the_total_number": 0,
-                    "Percentage_of_students_having_backlogs_to_the_total_number_of_students": 0,
-                    "Percentage_of_students_eligible_for_and_requiring_placement": 0,
-                    "Percentage_of_students_placed_out_of_eligible_students": 0,
-                    "Percentage_of_students_yet_to_be_placed_out_of_eligible_students": 0,
-                    "is_ug": true
-                },
-                {
-                    "id": 4,
-                    "course": "EECE",
-                    "under_institute_name": "GIT",
-                    "under_campus_name": "vskp",
-                    "total_students": 0,
-                    "total_final_years": 0,
-                    "total_higher_study_and_pay_crt": 0,
-                    "total_opted_for_higher_studies_only": 0,
-                    "total_not_intrested_in_placments": 0,
-                    "total_backlogs_opted_for_placements": 0,
-                    "total_backlogs_opted_for_higherstudies": 0,
-                    "total_backlogs_opted_for_other_career_options": 0,
-                    "total_backlogs": 0,
-                    "total_students_eligible": 0,
-                    "total_offers": 0,
-                    "total_multiple_offers": 0,
-                    "total_placed": 0,
-                    "total_yet_to_place": 0,
-                    "highest_salary": "3.00",
-                    "average_salary": "1.20",
-                    "lowest_salary": "20.10",
-                    "Percentage_of_students_opted_HS_to_the_total_number": 0,
-                    "Percentage_of_students_having_backlogs_to_the_total_number_of_students": 0,
-                    "Percentage_of_students_eligible_for_and_requiring_placement": 0,
-                    "Percentage_of_students_placed_out_of_eligible_students": 0,
-                    "Percentage_of_students_yet_to_be_placed_out_of_eligible_students": 0,
-                    "is_ug": false
-                },
-                {
-                    "id": 5,
-                    "course": "CIVIL",
-                    "under_institute_name": "GIT",
-                    "under_campus_name": "vskp",
-                    "total_students": 0,
-                    "total_final_years": 0,
-                    "total_higher_study_and_pay_crt": 0,
-                    "total_opted_for_higher_studies_only": 0,
-                    "total_not_intrested_in_placments": 0,
-                    "total_backlogs_opted_for_placements": 0,
-                    "total_backlogs_opted_for_higherstudies": 0,
-                    "total_backlogs_opted_for_other_career_options": 0,
-                    "total_backlogs": 0,
-                    "total_students_eligible": 0,
-                    "total_offers": 0,
-                    "total_multiple_offers": 0,
-                    "total_placed": 0,
-                    "total_yet_to_place": 0,
-                    "highest_salary": "3.00",
-                    "average_salary": "1.20",
-                    "lowest_salary": "20.10",
-                    "Percentage_of_students_opted_HS_to_the_total_number": 0,
-                    "Percentage_of_students_having_backlogs_to_the_total_number_of_students": 0,
-                    "Percentage_of_students_eligible_for_and_requiring_placement": 0,
-                    "Percentage_of_students_placed_out_of_eligible_students": 0,
-                    "Percentage_of_students_yet_to_be_placed_out_of_eligible_students": 0,
-                    "is_ug": true
-                },
-                {
-                    "id": 6,
-                    "course": "CIVIL",
-                    "under_institute_name": "GIT",
-                    "under_campus_name": "vskp",
-                    "total_students": 0,
-                    "total_final_years": 0,
-                    "total_higher_study_and_pay_crt": 0,
-                    "total_opted_for_higher_studies_only": 0,
-                    "total_not_intrested_in_placments": 0,
-                    "total_backlogs_opted_for_placements": 0,
-                    "total_backlogs_opted_for_higherstudies": 0,
-                    "total_backlogs_opted_for_other_career_options": 0,
-                    "total_backlogs": 0,
-                    "total_students_eligible": 0,
-                    "total_offers": 0,
-                    "total_multiple_offers": 0,
-                    "total_placed": 0,
-                    "total_yet_to_place": 0,
-                    "highest_salary": "3.00",
-                    "average_salary": "1.20",
-                    "lowest_salary": "20.10",
-                    "Percentage_of_students_opted_HS_to_the_total_number": 0,
-                    "Percentage_of_students_having_backlogs_to_the_total_number_of_students": 0,
-                    "Percentage_of_students_eligible_for_and_requiring_placement": 0,
-                    "Percentage_of_students_placed_out_of_eligible_students": 0,
-                    "Percentage_of_students_yet_to_be_placed_out_of_eligible_students": 0,
-                    "is_ug": false
-                }
-            ]
-        },
-        "hyd": {
-            "ug": {},
-            "pg": {}
-        },
-        "blr": {
-            "ug": {},
-            "pg": {}
-        }
-    }
-}
-)
+    
+    def get(self, request, year):
+        queryset = GraduatesWithPrograms.objects.filter(passing_year=year)
+        send_data = ProgramGraduatesSerializer(queryset,many=True).data
+        
+        return response.Response({'status': 'OK', 'result': send_data})

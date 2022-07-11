@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.db.models.signals import post_save
 
 class Stream(models.Model):
     name = models.CharField(max_length=20, default=None, unique=True)
@@ -78,3 +78,16 @@ class Programs(models.Model):
 
     def __str__(self):
         return f"{self.name} ( {self.under_institute} {self.under_course} {self.grad_type} )"
+
+
+def create_gradsWithProgram(sender, instance, created, **kwargs):
+    if created: 
+        from students.models import GraduatesWithPrograms
+        GraduatesWithPrograms.objects.create(under_campus=instance.under_campus,
+            under_institute=instance.under_institute,
+            passing_year='2022',
+            program=instance,
+            is_ug=instance.is_ug)
+        print(f"GraduatesWithPrograms created for {instance}")
+
+post_save.connect(create_gradsWithProgram, sender=Programs)
