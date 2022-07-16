@@ -1,5 +1,5 @@
 from rest_framework import generics, status, views, response
-from organization.models import Institute, Campus, Stream
+from organization.models import Institute, Campus, Stream, Programs, Courses
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from organization.serializers import CampusSerialize, InstituteSerialize
@@ -381,3 +381,71 @@ class ProgramsGraduates(generics.ListAPIView):
         send_data = ProgramGraduatesSerializer(queryset,many=True).data
         
         return response.Response({'status': 'OK', 'result': send_data})
+
+class CompareYearsData(generics.ListAPIView):
+    serializer_class = CompareSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, year1, year2, coursename):
+        send_data = {}
+        course = Courses.objects.get(course=coursename)
+        programs = Programs.objects.filter(under_course=course)
+
+        send_data[year1] = []
+
+        total_offers_aggri = 0
+        total_multiple_offers_aggri = 0
+        highest_salary_max = 0
+        average_salary_avg = 0
+        count = 0
+
+        for i in programs:
+            data = GraduatesWithPrograms.objects.filter(program=i, passing_year=year1)
+            if data.exists():
+                count+=1
+                serializedData = CompareSerializer(data, many=True).data
+                serializedData = serializedData[0]
+                total_offers_aggri += serializedData['total_offers']
+                total_multiple_offers_aggri += serializedData['total_multiple_offers']
+                highest_salary_max = max(highest_salary_max, int(float(serializedData['highest_salary'])))
+                average_salary_avg += int(float(serializedData['average_salary']))
+                # send_data[year1].append(serializedData)
+
+        send_data[year1].append({
+            'total_offers': total_offers_aggri,
+            'total_multiple_offers': total_multiple_offers_aggri,
+            'highest_salary': highest_salary_max,
+            'average_salary': average_salary_avg/count
+        })
+
+        send_data[year2] = []
+
+        total_offers_aggri = 0
+        total_multiple_offers_aggri = 0
+        highest_salary_max = 0
+        average_salary_avg = 0
+        count = 0
+
+        for i in programs:
+            data = GraduatesWithPrograms.objects.filter(program=i, passing_year=year2)
+            if data.exists():
+                count += 1
+                serializedData = CompareSerializer(data, many=True).data
+                serializedData = serializedData[0]
+                total_offers_aggri += serializedData['total_offers']
+                total_multiple_offers_aggri += serializedData['total_multiple_offers']
+                highest_salary_max = max(highest_salary_max, int(float(serializedData['highest_salary'])))
+                average_salary_avg += int(float(serializedData['average_salary']))
+                # send_data[year2].append(serializedData)
+
+        send_data[year2].append({
+            'total_offers': total_offers_aggri,
+            'total_multiple_offers': total_multiple_offers_aggri,
+            'highest_salary': highest_salary_max,
+            'average_salary': average_salary_avg / count
+        })
+
+        # ['total_offers', 'total_multiple_offers', 'highest_salary', 'average_salary']
+
+        return response.Response({'status': 'OK', 'result': send_data})
+

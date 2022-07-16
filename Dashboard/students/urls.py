@@ -21,5 +21,6 @@ urlpatterns = [
          utils.FileDownloadListAPIView.as_view(),
          name='download-api'),
     path('logs', utils.LogsDataListAPIView.as_view(), name='logs-api'),
-    path('<str:year>/programs',ProgramsGraduates.as_view(), name='courses')
+    path('<str:year>/programs', ProgramsGraduates.as_view(), name='courses'),
+    path('compare/<str:year1>/<str:year2>/<str:coursename>', CompareYearsData.as_view(), name='compare')
 ]
