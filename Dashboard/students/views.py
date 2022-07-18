@@ -250,16 +250,10 @@ class UpdateGraduates(generics.UpdateAPIView):
                 month] + " " + year
 
             f = open('DBLog.txt', 'a')
-            # f.write(
-            #     f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Updated by {user.name}({user.designation}) at {data_time}\n"
-            # )
-
 
 
 
             filecontent = f'''<p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>{qs.under_campus.name.upper()}>{qs.under_institute.name.upper()}>{ug_pg}</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>{user.name}({user.designation})</b></span> at <span style="color:#555;">{data_time}</span></p>\n'''
-
-            # filecontent = f"""<p> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
 
             f.write(filecontent)
 
@@ -349,12 +343,6 @@ class UpdateGraduates(generics.UpdateAPIView):
 
             f = open('DBLog.txt', 'a')
 
-            # f.write(
-            #     f"Data `{qs.under_campus}>{qs.under_institute}>{ug_pg}` was Added by {user.name}({user.designation}) at {data_time}\n"
-            # )
-
-            # filecontent = f"""<p className="log_line"> Data <span className="campus_path">`{grad.under_campus.name.upper()}>{grad.under_institute.name.upper()}>{ug_pg}`</span> was <span className="action_name updated"> Updated</span> by <span className="author_name">{user.name}({user.designation})</span> at <span className="time">{data_time}</span></p>\n"""
-
             filecontent = f'''<p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>{qs.under_campus.name.upper()}>{qs.under_institute.name.upper()}>{ug_pg}</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>{user.name}({user.designation})</b></span> at <span style="color:#555;">{data_time}</span></p>\n'''
 
             f.write(filecontent)
@@ -377,9 +365,25 @@ class ProgramsGraduates(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
     
     def get(self, request, year):
-        queryset = GraduatesWithPrograms.objects.filter(passing_year=year)
-        send_data = ProgramGraduatesSerializer(queryset,many=True).data
-        
+        qs_wp = GraduatesWithPrograms.objects.filter(passing_year=year)
+        qs_g = Graduates.objects.filter(passing_year=year)
+
+        send_data = dict()
+
+        campuses = Campus.objects.all()
+        institutes = Institute.objects.filter().all()
+
+        for campus in campuses:
+            send_data[campus.name] = dict()
+            for institute in institutes.filter(under_campus=campus):
+                send_data[campus.name][institute.name] = dict()
+                if institute.name=="gst":
+                    queryset = qs_wp.filter(under_campus=campus, under_institute=institute)
+                    send_data[campus.name][institute.name] = ProgramGraduatesSerializer(queryset,many=True).data
+                else:
+                    queryset = qs_g.filter(under_campus=campus, under_institute=institute)
+                    send_data[campus.name][institute.name] = GraduatesSerializer(queryset, many=True).data
+
         return response.Response({'status': 'OK', 'result': send_data})
 
 class CompareYearsData(generics.ListAPIView):
