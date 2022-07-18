@@ -80,14 +80,14 @@ class Programs(models.Model):
         return f"{self.name} ( {self.under_institute} {self.under_course} {self.grad_type} )"
 
 
-def create_gradsWithProgram(sender, instance, created, **kwargs):
-    if created: 
-        from students.models import GraduatesWithPrograms
-        GraduatesWithPrograms.objects.create(under_campus=instance.under_campus,
-            under_institute=instance.under_institute,
-            passing_year='2022',
-            program=instance,
-            is_ug=instance.is_ug)
-        print(f"GraduatesWithPrograms created for {instance}")
+# def create_gradsWithProgram(sender, instance, created, **kwargs):
+#     if created: 
+#         from students.models import GraduatesWithPrograms
+#         GraduatesWithPrograms.objects.create(under_campus=instance.under_campus,
+#             under_institute=instance.under_institute,
+#             passing_year='2022',
+#             program=instance,
+#             is_ug=instance.is_ug)
+#         print(f"GraduatesWithPrograms created for {instance}")
 
-post_save.connect(create_gradsWithProgram, sender=Programs)
+# post_save.connect(create_gradsWithProgram, sender=Programs)
