@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku
+# import django_heroku
 from django.core.exceptions import ImproperlyConfigured
 import logging
 
@@ -253,4 +253,4 @@ SWAGGER_SETTINGS = {
 
 AUTH_USER_MODEL = 'account.User'
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())

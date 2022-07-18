@@ -375,3 +375,10 @@ class GBstatsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Graduates
         fields = ['student_details', 'placement_details', 'salary', 'is_ug']
+
+class CompareSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Graduates
+        fields = ['total_offers', 'total_multiple_offers', 'highest_salary', 'average_salary']
+
