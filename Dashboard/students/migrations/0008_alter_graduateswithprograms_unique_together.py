@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterUniqueTogether(
             name='graduateswithprograms',
-            unique_together={('under_campus', 'under_institute', 'is_ug', 'passing_year', 'program')},
+            unique_together={('under_campus', 'under_institute', 'is_ug',
+                              'passing_year', 'program')},
         ),
     ]

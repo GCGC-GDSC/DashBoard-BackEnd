@@ -69,7 +69,7 @@ INSTALLED_APPS = [
 ]
 
 DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
-DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR/'backup'}
+DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR / 'backup'}
 
 # CRONJOBS = [
 #     ('*/1 * * * *', 'students.cron.my_scheduled_job')
@@ -108,8 +108,7 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
-
-CORS_ALLOW_ALL_ORIGINS = True  
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [

@@ -12,6 +12,9 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='graduateswithprograms',
-            options={'ordering': ('-passing_year', '-is_ug', 'under_campus', 'under_institute')},
+            options={
+                'ordering':
+                ('-passing_year', '-is_ug', 'under_campus', 'under_institute')
+            },
         ),
     ]

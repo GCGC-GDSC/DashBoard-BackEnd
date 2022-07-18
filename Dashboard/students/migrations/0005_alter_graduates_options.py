@@ -6,12 +6,15 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('students', '0004_merge_0002_auto_20220211_0142_0003_auto_20220206_1207'),
+        ('students',
+         '0004_merge_0002_auto_20220211_0142_0003_auto_20220206_1207'),
     ]
 
     operations = [
         migrations.AlterModelOptions(
             name='graduates',
-            options={'ordering': ('-is_ug', 'under_campus', 'under_institute')},
+            options={
+                'ordering': ('-is_ug', 'under_campus', 'under_institute')
+            },
         ),
     ]

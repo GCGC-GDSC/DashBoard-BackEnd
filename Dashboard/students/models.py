@@ -172,21 +172,29 @@ class GraduatesWithPrograms(models.Model):
         institute = str(self.under_institute)
         campus = str(self.under_campus)
         if self.is_ug:
-            return str(self.program) + '\tUG\t' + institute + "\t" + campus + "\t" + self.passing_year
+            return str(
+                self.program
+            ) + '\tUG\t' + institute + "\t" + campus + "\t" + self.passing_year
         else:
-            return str(self.program) + '\tPG\t' + institute + "\t" + campus + "\t" + self.passing_year
+            return str(
+                self.program
+            ) + '\tPG\t' + institute + "\t" + campus + "\t" + self.passing_year
 
     def __str__(self):
         institute = str(self.under_institute)
         campus = str(self.under_campus)
         if self.is_ug:
-            return str(self.program) + '\tUG\t' + institute + "\t" + campus + "\t" + self.passing_year
+            return str(
+                self.program
+            ) + '\tUG\t' + institute + "\t" + campus + "\t" + self.passing_year
         else:
-            return str(self.program) + '\tPG\t' + institute + "\t" + campus + "\t" + self.passing_year
+            return str(
+                self.program
+            ) + '\tPG\t' + institute + "\t" + campus + "\t" + self.passing_year
 
     class Meta:
         unique_together = ("under_campus", "under_institute", "is_ug",
-                           "passing_year","program")
+                           "passing_year", "program")
         ordering = ("-passing_year", "-is_ug", "under_campus",
                     "under_institute")
 

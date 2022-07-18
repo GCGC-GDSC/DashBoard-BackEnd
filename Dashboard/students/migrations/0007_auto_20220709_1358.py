@@ -14,17 +14,24 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='graduateswithprograms',
-            options={'ordering': ('passing_year', '-is_ug', 'under_campus', 'under_institute')},
+            options={
+                'ordering':
+                ('passing_year', '-is_ug', 'under_campus', 'under_institute')
+            },
         ),
         migrations.AddField(
             model_name='graduateswithprograms',
             name='average_salary',
-            field=models.DecimalField(decimal_places=2, default=0.0, max_digits=5),
+            field=models.DecimalField(decimal_places=2,
+                                      default=0.0,
+                                      max_digits=5),
         ),
         migrations.AddField(
             model_name='graduateswithprograms',
             name='highest_salary',
-            field=models.DecimalField(decimal_places=2, default=0.0, max_digits=5),
+            field=models.DecimalField(decimal_places=2,
+                                      default=0.0,
+                                      max_digits=5),
         ),
         migrations.AddField(
             model_name='graduateswithprograms',
@@ -34,12 +41,18 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='graduateswithprograms',
             name='lowest_salary',
-            field=models.DecimalField(decimal_places=2, default=0.0, max_digits=5),
+            field=models.DecimalField(decimal_places=2,
+                                      default=0.0,
+                                      max_digits=5),
         ),
         migrations.AddField(
             model_name='graduateswithprograms',
             name='passing_year',
-            field=models.CharField(choices=[('2021', '2021'), ('2022', '2022'), ('2023', '2023'), ('2024', '2024'), ('2025', '2025')], default='2022', max_length=4),
+            field=models.CharField(choices=[('2021', '2021'), ('2022', '2022'),
+                                            ('2023', '2023'), ('2024', '2024'),
+                                            ('2025', '2025')],
+                                   default='2022',
+                                   max_length=4),
         ),
         migrations.AddField(
             model_name='graduateswithprograms',
@@ -94,17 +107,24 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='graduateswithprograms',
             name='under_campus',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='organization.campus'),
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='organization.campus'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='graduateswithprograms',
             name='under_institute',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='organization.institute'),
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to='organization.institute'),
             preserve_default=False,
         ),
         migrations.AlterUniqueTogether(
             name='graduateswithprograms',
-            unique_together={('under_campus', 'under_institute', 'is_ug', 'passing_year')},
+            unique_together={('under_campus', 'under_institute', 'is_ug',
+                              'passing_year')},
         ),
     ]

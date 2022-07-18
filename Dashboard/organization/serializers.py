@@ -40,6 +40,7 @@ class CoursesSeralizer(serializers.ModelSerializer):
         model = Courses
         fields = '__all__'
 
+
 class StreamsSeralizer(serializers.ModelSerializer):
 
     class Meta:

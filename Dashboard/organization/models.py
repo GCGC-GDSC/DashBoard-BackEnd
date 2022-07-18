@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 
+
 class Stream(models.Model):
     name = models.CharField(max_length=20, default=None, unique=True)
 
@@ -61,7 +62,7 @@ class Programs(models.Model):
     @property
     def campus_name(self):
         return str(self.under_campus)
-    
+
     @property
     def institute_name(self):
         return str(self.under_institute)
@@ -69,10 +70,11 @@ class Programs(models.Model):
     @property
     def grad_type(self):
         return "UG" if self.is_ug else "PG"
-    
+
     @property
     def display_name(self):
         return f"{self.name} ( {self.under_institute} {self.under_course} {self.grad_type} )"
+
     class Meta:
         unique_together = ("under_campus", "under_institute", "name", "is_ug")
 
@@ -81,7 +83,7 @@ class Programs(models.Model):
 
 
 # def create_gradsWithProgram(sender, instance, created, **kwargs):
-#     if created: 
+#     if created:
 #         from students.models import GraduatesWithPrograms
 #         GraduatesWithPrograms.objects.create(under_campus=instance.under_campus,
 #             under_institute=instance.under_institute,

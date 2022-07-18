@@ -14,12 +14,19 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='graduates',
-            options={'ordering': ('passing_year', '-is_ug', 'under_campus', 'under_institute')},
+            options={
+                'ordering':
+                ('passing_year', '-is_ug', 'under_campus', 'under_institute')
+            },
         ),
         migrations.AddField(
             model_name='graduates',
             name='passing_year',
-            field=models.CharField(choices=[('2021', '2021'), ('2022', '2022'), ('2023', '2023'), ('2024', '2024'), ('2025', '2025')], default='2022', max_length=4),
+            field=models.CharField(choices=[('2021', '2021'), ('2022', '2022'),
+                                            ('2023', '2023'), ('2024', '2024'),
+                                            ('2025', '2025')],
+                                   default='2022',
+                                   max_length=4),
         ),
         migrations.AlterField(
             model_name='graduates',
@@ -28,13 +35,20 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='graduates',
-            unique_together={('under_campus', 'under_institute', 'is_ug', 'passing_year')},
+            unique_together={('under_campus', 'under_institute', 'is_ug',
+                              'passing_year')},
         ),
         migrations.CreateModel(
             name='GraduatesWithPrograms',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('program', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='organization.programs')),
+                ('id',
+                 models.BigAutoField(auto_created=True,
+                                     primary_key=True,
+                                     serialize=False,
+                                     verbose_name='ID')),
+                ('program',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                   to='organization.programs')),
             ],
         ),
         migrations.RemoveField(

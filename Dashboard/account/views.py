@@ -12,7 +12,7 @@ User = get_user_model()
 class Authenticate(views.APIView):
     serializer_class = UserSerialize
 
-    def get(self, request, email, format=None):     
+    def get(self, request, email, format=None):
         try:
             qs = User.objects.get(email=email)
         except:
