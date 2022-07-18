@@ -61,7 +61,7 @@ class InstituteGradList(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, institute, campus, year):
+    def get(self, request, year, institute, campus):
         campus = Campus.objects.get(name=campus)
         print("Campus==>", campus)
         db_logger = logging.getLogger('db')
@@ -103,7 +103,7 @@ class Overall(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, stream, year):
+    def get(self, request, year, stream):
         db_logger = logging.getLogger('db')
         try:
             send_data = {}
@@ -160,9 +160,10 @@ class SelectGraduates(generics.ListAPIView):
     serializer_class = GraduatesSerializer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, institute, grad, year):
+    def get(self, request, year, institute, grad, campus):
         db_logger = logging.getLogger('db')
         try:
+            campus = Campus.objects.get(name=campus)
             inst = Institute.objects.filter(name=institute)
             if len(inst) == 0:
                 return response.Response({
@@ -171,7 +172,7 @@ class SelectGraduates(generics.ListAPIView):
                 })
             if grad == 'ug':
                 grads = Graduates.objects.filter(under_institute=inst[0].id,
-                                                 is_ug=True, passing_year=year)
+                                                 is_ug=True, passing_year=year, under_campus=campus)
 
                 send_data = GraduatesSerializer(grads, many=True).data
             elif grad == 'pg':
@@ -192,7 +193,7 @@ class UpdateGraduates(generics.UpdateAPIView):
     serializer_class = UpdateGraduatesSerializer
     permission_classes = (IsAuthenticated, )
 
-    def patch(self, request, pk, year, *args, **kwargs):
+    def patch(self, request, year, pk, *args, **kwargs):
         db_logger = logging.getLogger('db')
         try:
             user = request.user
@@ -281,7 +282,7 @@ class UpdateGraduates(generics.UpdateAPIView):
     
 
 
-    def put(self, request, pk, year, *args, **kwargs):
+    def put(self, request, year, pk, *args, **kwargs):
         db_logger = logging.getLogger('db')
         try:
             user = request.user
@@ -402,7 +403,7 @@ class CompareYearsData(generics.ListAPIView):
     serializer_class = CompareSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, year1, year2, coursename, grad):
+    def get(self, request, year, year1, year2, coursename, grad):
         if grad == 'ug':
             grad = True
         else:
@@ -432,12 +433,15 @@ class CompareYearsData(generics.ListAPIView):
                 average_salary_avg += int(float(serializedData['average_salary']))
                 # send_data[year1].append(serializedData)
 
-        send_data[year1].append({
-            'total_offers': total_offers_aggri,
-            'total_multiple_offers': total_multiple_offers_aggri,
-            'highest_salary': highest_salary_max,
-            'average_salary': average_salary_avg/count
-        })
+        try:
+            send_data[year1] = dict({
+                'total_offers': total_offers_aggri,
+                'total_multiple_offers': total_multiple_offers_aggri,
+                'highest_salary': highest_salary_max,
+                'average_salary': average_salary_avg/count
+            })
+        except:
+            send_data[year1] = 'data not found'
 
         send_data[year2] = []
 
@@ -458,13 +462,16 @@ class CompareYearsData(generics.ListAPIView):
                 highest_salary_max = max(highest_salary_max, int(float(serializedData['highest_salary'])))
                 average_salary_avg += int(float(serializedData['average_salary']))
                 # send_data[year2].append(serializedData)
+        try:
+            send_data[year2] = dict({
+                'total_offers': total_offers_aggri,
+                'total_multiple_offers': total_multiple_offers_aggri,
+                'highest_salary': highest_salary_max,
+                'average_salary': average_salary_avg / count
+            })
+        except:
+            send_data[year2] = 'data not found'
 
-        send_data[year2].append({
-            'total_offers': total_offers_aggri,
-            'total_multiple_offers': total_multiple_offers_aggri,
-            'highest_salary': highest_salary_max,
-            'average_salary': average_salary_avg / count
-        })
 
         # ['total_offers', 'total_multiple_offers', 'highest_salary', 'average_salary']
 
