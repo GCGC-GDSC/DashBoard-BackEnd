@@ -441,7 +441,12 @@ class CompareYearsData(generics.ListAPIView):
                 'average_salary': average_salary_avg/count
             })
         except:
-            send_data[year1] = 'data not found'
+            send_data[year1] = dict({
+                'total_offers': 0,
+                'total_multiple_offers': 0,
+                'highest_salary': 0,
+                'average_salary': 0
+            })
 
         send_data[year2] = []
 
@@ -470,7 +475,12 @@ class CompareYearsData(generics.ListAPIView):
                 'average_salary': average_salary_avg / count
             })
         except:
-            send_data[year2] = 'data not found'
+            send_data[year2] = dict({
+                'total_offers': 0,
+                'total_multiple_offers': 0,
+                'highest_salary': 0,
+                'average_salary': 0,
+            })
 
 
         # ['total_offers', 'total_multiple_offers', 'highest_salary', 'average_salary']
