@@ -4,24 +4,6 @@ from .models import Graduates, GraduatesWithPrograms
 from django.db.models import Q, Count, Max, Sum, Min, Avg
 from math import *
 
-map = {
-    'git': 'GIT',
-    'gim': 'GIM',
-    'gis': 'GIS',
-    'gsoa': 'GSoA',
-    'gin': 'GIN',
-    'gip': 'GIP',
-    'gsol': 'GSoL',
-    'gsgs': 'GSGS',
-    'soth': 'SoTH',
-    'hbs': 'HBS',
-    'soph': 'SoPH',
-    'sosh': 'SoSH',
-    'sotb': 'SoTB',
-    'sosp': 'SoSP',
-    'gsbb': 'GSBB',
-}
-
 
 class GraduatesSerializer(serializers.ModelSerializer):
 
@@ -41,7 +23,7 @@ class GraduatesSerializer(serializers.ModelSerializer):
 
     def _under_institute_name(self, i):
         try:
-            return map[i.under_institute_name]
+            return i.under_institute_name
         except:
             return "instutenot found"
 
