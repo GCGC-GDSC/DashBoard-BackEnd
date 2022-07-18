@@ -365,27 +365,31 @@ class ProgramsGraduates(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
     
     def get(self, request, year):
-        qs_wp = GraduatesWithPrograms.objects.filter(passing_year=year)
-        qs_g = Graduates.objects.filter(passing_year=year)
+        try:
+            qs_wp = GraduatesWithPrograms.objects.filter(passing_year=year)
+            qs_g = Graduates.objects.filter(passing_year=year)
 
-        send_data = dict()
+            send_data = dict()
 
-        campuses = Campus.objects.all()
-        institutes = Institute.objects.filter().all()
+            campuses = Campus.objects.all()
+            institutes = Institute.objects.filter().all()
 
-        for campus in campuses:
-            send_data[campus.name] = dict()
-            for institute in institutes.filter(under_campus=campus):
-                send_data[campus.name][institute.name] = dict()
-                if institute.name=="gst":
-                    queryset = qs_wp.filter(under_campus=campus, under_institute=institute)
-                    send_data[campus.name][institute.name] = ProgramGraduatesSerializer(queryset,many=True).data
-                else:
-                    queryset = qs_g.filter(under_campus=campus, under_institute=institute)
-                    send_data[campus.name][institute.name] = GraduatesSerializer(queryset, many=True).data
+            for campus in campuses:
+                send_data[campus.name] = dict()
+                for institute in institutes.filter(under_campus=campus):
+                    send_data[campus.name][institute.name] = dict()
+                    if institute.name=="gst":
+                        queryset = qs_wp.filter(under_campus=campus, under_institute=institute)
+                        send_data[campus.name][institute.name] = ProgramGraduatesSerializer(queryset,many=True).data
+                    else:
+                        queryset = qs_g.filter(under_campus=campus, under_institute=institute)
+                        send_data[campus.name][institute.name] = GraduatesSerializer(queryset, many=True).data
 
-        return response.Response({'status': 'OK', 'result': send_data})
-
+            return response.Response({'status': 'OK', 'result': send_data})
+        except Exception as e:
+            print(e)
+            return response.Response({'status': 'Error', 'result': str(e)},status=HTTP_400_BAD_REQUEST)
+            
 class CompareYearsData(generics.ListAPIView):
     serializer_class = CompareSerializer
     permission_classes = (IsAuthenticated,)
