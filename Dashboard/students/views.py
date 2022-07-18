@@ -20,7 +20,7 @@ class GraduateList(generics.ListAPIView):
     serializer_class = GraduatesSerializer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request):
+    def get(self, request, year):
         db_logger = logging.getLogger('db')
         try:
             send_data = {}
@@ -33,11 +33,11 @@ class GraduateList(generics.ListAPIView):
                     send_data[cmp.name][int.name] = []
                     ug = Graduates.objects.filter(
                         Q(under_campus=cmp) & Q(under_institute=int)
-                        & Q(is_ug=True))
+                        & Q(is_ug=True) & Q(passing_year=year))
                     ug_data = GraduatesSerializer(ug, many=True).data
                     pg = Graduates.objects.filter(
                         Q(under_campus=cmp) & Q(under_institute=int)
-                        & Q(is_ug=False))
+                        & Q(is_ug=False) & Q(passing_year=year))
                     pg_data = GraduatesSerializer(pg, many=True).data
                     send_data[cmp.name][int.name].append(ug_data)
                     send_data[cmp.name][int.name].append(pg_data)
@@ -61,11 +61,13 @@ class InstituteGradList(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, institute):
+    def get(self, request, institute, campus, year):
+        campus = Campus.objects.get(name=campus)
+        print("Campus==>", campus)
         db_logger = logging.getLogger('db')
         try:
             try:
-                inst = Institute.objects.get(name=institute)
+                insts = Institute.objects.filter(name=institute)
             except Exception as e:
                 return response.Response({
                     'status': 'error',
@@ -73,14 +75,17 @@ class InstituteGradList(generics.ListAPIView):
                 },
                                          status=HTTP_400_BAD_REQUEST)
             send_data = []
+            for inst in insts:
+                ug = Graduates.objects.filter(under_institute=inst, is_ug=True, passing_year=year, under_campus=campus)
+                if ug.exists():
+                    ug = InstituteGradListSeralizer(ug, many=True).data
+                    print("UG ser: ", ug)
+                    send_data.append(ug[0])
 
-            ug = Graduates.objects.filter(under_institute=inst, is_ug=True)
-            ug = InstituteGradListSeralizer(ug, many=True).data
-            send_data.append(ug[0])
-
-            pg = Graduates.objects.filter(under_institute=inst, is_ug=False)
-            pg = InstituteGradListSeralizer(pg, many=True).data
-            send_data.append(pg[0])
+                pg = Graduates.objects.filter(under_institute=inst, is_ug=False, passing_year=year, under_campus=campus)
+                if pg.exists():
+                    pg = InstituteGradListSeralizer(pg, many=True).data
+                    send_data.append(pg[0])
 
             # [
             #     # students detalis[student_details,placement_details,salary] ,
@@ -98,7 +103,7 @@ class Overall(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, stream):
+    def get(self, request, stream, year):
         db_logger = logging.getLogger('db')
         try:
             send_data = {}
@@ -117,12 +122,12 @@ class Overall(generics.ListAPIView):
             for inst in inst_data:
                 send_data[inst.name] = []
                 graduates = Graduates.objects.filter(under_institute=inst.id,
-                                                     is_ug=True)
+                                                     is_ug=True, passing_year=year)
                 data = InstituteGradListSeralizer(graduates, many=True).data
                 send_data[inst.name].append(data)
 
                 graduates = Graduates.objects.filter(under_institute=inst.id,
-                                                     is_ug=False)
+                                                     is_ug=False, passing_year=year)
                 data = InstituteGradListSeralizer(graduates, many=True).data
                 send_data[inst.name].append(data)
 
@@ -135,12 +140,12 @@ class Gbstats(generics.ListAPIView):
     serializer_class = GBstatsSerializer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request):
+    def get(self, request, year):
         db_logger = logging.getLogger('db')
         try:
             send_data = {'UG': {}, 'PG': {}}
-            ug_grad = Graduates.objects.filter(is_ug=True)
-            pg_grad = Graduates.objects.filter(is_ug=False)
+            ug_grad = Graduates.objects.filter(is_ug=True, passing_year=year)
+            pg_grad = Graduates.objects.filter(is_ug=False, passing_year=year)
 
             send_data['UG'] = GBstatsSerializer(ug_grad).data
             send_data['PG'] = GBstatsSerializer(pg_grad).data
@@ -155,7 +160,7 @@ class SelectGraduates(generics.ListAPIView):
     serializer_class = GraduatesSerializer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, institute, grad):
+    def get(self, request, institute, grad, year):
         db_logger = logging.getLogger('db')
         try:
             inst = Institute.objects.filter(name=institute)
@@ -166,12 +171,13 @@ class SelectGraduates(generics.ListAPIView):
                 })
             if grad == 'ug':
                 grads = Graduates.objects.filter(under_institute=inst[0].id,
-                                                 is_ug=True)
+                                                 is_ug=True, passing_year=year)
+
                 send_data = GraduatesSerializer(grads, many=True).data
             elif grad == 'pg':
 
                 grads = Graduates.objects.filter(under_institute=inst[0].id,
-                                                 is_ug=False)
+                                                 is_ug=False, passing_year=year)
                 send_data = GraduatesSerializer(grads, many=True).data
             else:
                 send_data = []
@@ -186,12 +192,13 @@ class UpdateGraduates(generics.UpdateAPIView):
     serializer_class = UpdateGraduatesSerializer
     permission_classes = (IsAuthenticated, )
 
-    def patch(self, request, pk, *args, **kwargs):
+    def patch(self, request, pk, year, *args, **kwargs):
         db_logger = logging.getLogger('db')
         try:
             user = request.user
             try:
-                qs = Graduates.objects.get(id=pk)
+                qs = Graduates.objects.get(id=pk, passing_year=year)
+                print("======>", qs)
             except:
                 return response.Response(
                     {
@@ -280,12 +287,13 @@ class UpdateGraduates(generics.UpdateAPIView):
     
 
 
-    def put(self, request, pk, *args, **kwargs):
+    def put(self, request, pk, year, *args, **kwargs):
         db_logger = logging.getLogger('db')
         try:
             user = request.user
             try:
-                qs = Graduates.objects.get(id=pk)
+                qs = Graduates.objects.get(id=pk, passing_year=year)
+                print("==>", qs)
             except:
                 return response.Response(
                     {
@@ -386,7 +394,12 @@ class CompareYearsData(generics.ListAPIView):
     serializer_class = CompareSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, year1, year2, coursename):
+    def get(self, request, year1, year2, coursename, grad):
+        if grad == 'ug':
+            grad = True
+        else:
+            grad = False
+
         send_data = {}
         course = Courses.objects.get(course=coursename)
         programs = Programs.objects.filter(under_course=course)
@@ -400,7 +413,7 @@ class CompareYearsData(generics.ListAPIView):
         count = 0
 
         for i in programs:
-            data = GraduatesWithPrograms.objects.filter(program=i, passing_year=year1)
+            data = GraduatesWithPrograms.objects.filter(program=i, passing_year=year1, is_ug=grad)
             if data.exists():
                 count+=1
                 serializedData = CompareSerializer(data, many=True).data
@@ -427,7 +440,7 @@ class CompareYearsData(generics.ListAPIView):
         count = 0
 
         for i in programs:
-            data = GraduatesWithPrograms.objects.filter(program=i, passing_year=year2)
+            data = GraduatesWithPrograms.objects.filter(program=i, passing_year=year2, is_ug=grad)
             if data.exists():
                 count += 1
                 serializedData = CompareSerializer(data, many=True).data

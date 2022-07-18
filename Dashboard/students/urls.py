@@ -4,23 +4,23 @@ from . import utils
 from .views import *
 
 urlpatterns = [
-    path('', GraduateList.as_view(), name='graduates-list'),
-    path('inst/<str:institute>',
+    path('<str:year>/', GraduateList.as_view(), name='graduates-list'),
+    path('inst/<str:institute>/<str:campus>/<str:year>/',
          InstituteGradList.as_view(),
          name='institute-list'),
-    path('overall/<stream>/', Overall.as_view(), name='overall-view'),
-    path('select/<institute>/<grad>',
+    path('overall/<stream>/<str:year>/', Overall.as_view(), name='overall-view'),
+    path('select/<institute>/<grad>/<str:year>/',
          SelectGraduates.as_view(),
          name='data-select-view'),
-    path('update/<pk>', UpdateGraduates.as_view(), name='data-update-view'),
+    path('update/<pk>/<str:year>/', UpdateGraduates.as_view(), name='data-update-view'),
     #re_path(r'^upload/', utils.FileUploadView.as_view()),
     #re_path(r'^upload/', FileUploadView.as_view()),
-    path('gbstats/', Gbstats.as_view(), name='test-list'),
+    path('gbstats/<str:year>/', Gbstats.as_view(), name='test-list'),
     path('exportexcel/', utils.export_data_to_excel, name='export-excel'),
     path('download/<str:name>',
          utils.FileDownloadListAPIView.as_view(),
          name='download-api'),
     path('logs', utils.LogsDataListAPIView.as_view(), name='logs-api'),
     path('<str:year>/programs', ProgramsGraduates.as_view(), name='courses'),
-    path('compare/<str:year1>/<str:year2>/<str:coursename>', CompareYearsData.as_view(), name='compare')
+    path('compare/<str:year1>/<str:year2>/<str:coursename>/<str:grad>', CompareYearsData.as_view(), name='compare')
 ]
