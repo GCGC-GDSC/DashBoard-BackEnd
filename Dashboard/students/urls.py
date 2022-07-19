@@ -10,7 +10,7 @@ urlpatterns = [
          name='institute-list'),
     path('<str:year>/overall/<stream>', Overall.as_view(),
          name='overall-view'),
-    path('<str:year>/select/<str:institute>/<str:grad>/<str:campus>',
+    path('<str:year>/select/<str:coursename>/<str:institute>/<str:grad>/<str:campus>',
          SelectGraduates.as_view(),
          name='data-select-view'),
     path('<str:year>/update/<pk>',
