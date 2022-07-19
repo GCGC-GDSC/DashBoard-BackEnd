@@ -27,5 +27,6 @@ urlpatterns = [
     path('<str:year>/programs', ProgramsGraduates.as_view(), name='courses'),
     path('compare/<str:year1>/<str:year2>/<str:coursename>/<str:grad>',
          CompareYearsData.as_view(),
-         name='compare')
+         name='compare'),
+     path('<str:year>/updateprograms/<pk>', UpdateGraduatesWithPrograms.as_view(), name='data-update-view-with-programs'),
 ]

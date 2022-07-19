@@ -571,3 +571,99 @@ class LogsDataListAPIView(generics.ListAPIView):
             return Response({'status': 'ok', 'result': send_data[::-1]})
         except Exception as e:
             db_logger.exception(e)
+
+
+class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
+    queryset = GraduatesWithPrograms.objects.all()
+    serializer_class = UpdateGraduatesWithProgramsSerializer
+    permission_classes = (IsAuthenticated, )
+
+    def put(self, request, year, pk, *args, **kwargs):
+        db_logger = logging.getLogger('db')
+        try:
+            user = request.user
+            try:
+                qs = GraduatesWithPrograms.objects.get(id=pk, passing_year=year)
+                print("===>>>",qs)
+            except:
+                return response.Response(
+                    {
+                        'status': 'error',
+                        'result': 'institute does not exist'
+                    },
+                    status=HTTP_400_BAD_REQUEST)
+
+            if user.access == 'view':
+                return response.Response(
+                    {
+                        'status': 'error',
+                        'result': 'permission denied'
+                    },
+                    status=HTTP_423_LOCKED)
+
+            if user.access == "edit_all" and user.university != "univ" and qs.under_campus != user.university:
+                return response.Response(
+                    {
+                        'status': 'error',
+                        'result': 'permission denied'
+                    },
+                    status=HTTP_423_LOCKED)
+
+            check_editor_list = EditorInstitutes.objects.filter(
+                Q(account=user) & Q(institute=qs.under_institute)).exists()
+            if user.access == "edit_some" and not check_editor_list:
+                return response.Response(
+                    {
+                        'status': 'error',
+                        'result': 'PermissionDenied'
+                    },
+                    status=HTTP_423_LOCKED)
+
+            data = request.data
+            data = request.data
+
+            serializer = UpdateGraduatesWithProgramsSerializer(qs, data=data)
+            print("==>", serializer)
+
+            if not serializer.is_valid():
+                return response.Response(
+                    {
+                        'status': 'error',
+                        'result': 'Invalid data'
+                    },
+                    status=HTTP_205_RESET_CONTENT)
+
+            serializer.save()
+            ug_pg = 'UG' if qs.is_ug == True else 'PG'
+
+            dtobj = datetime.now(tz=gettz('Asia/Kolkata'))
+            timer = dtobj.strftime("%I:%M %p")
+
+            month = datetime.now().month
+            year = str(datetime.now().year)
+            day = str(datetime.now().day)
+            data_time = timer + ", " + day + " " + calendar.month_name[
+                month] + " " + year
+
+            f = open('DBLog.txt', 'a')
+
+            filecontent = f'''<p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>{qs.under_campus.name.upper()}>{qs.under_institute.name.upper()}>{ug_pg}</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>{user.name}({user.designation})</b></span> at <span style="color:#555;">{data_time}</span></p>\n'''
+
+            f.write(filecontent)
+            f.close()
+            db_logger.info("Data Instance Created Succefully by" + str(user))
+            return response.Response(
+                {
+                    'status': 'OK',
+                    'message': "send data succefully",
+                    'result': serializer.data
+                },
+                status=HTTP_201_CREATED)
+        except Exception as e:
+            print(e)
+            db_logger.exception(e)
+            return response.Response({
+                'status': 'Error',
+                'result': str(e)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
