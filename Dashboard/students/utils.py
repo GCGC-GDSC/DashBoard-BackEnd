@@ -233,7 +233,7 @@ def export_data_to_excel(request, name):
 class FileDownloadListAPIView(generics.ListAPIView):
     serializer_class = GraduatesSerializer
 
-    def get(self, request, name, format=None):
+    def get(self, request, year, name, format=None):
         db_logger = logging.getLogger('db')
         try:
             filename = f"{str(name).upper()} Career Fulfillment Statistics - 2022 Batch"
@@ -253,35 +253,5 @@ class FileDownloadListAPIView(generics.ListAPIView):
             response[
                 'Content-Disposition'] = 'attachment; filename="%s"' % filename
             return response
-        except Exception as e:
-            db_logger.exception(e)
-
-
-class LogsDataListAPIView(generics.ListAPIView):
-    serializer_class = GraduatesSerializer
-
-    def get(self, request):
-        db_logger = logging.getLogger('db')
-        try:
-
-            with open("DBLog.txt", "r") as file:
-                i = 0
-                lines_size = 10
-                last_lines = []
-                for line in file:
-                    if i < lines_size:
-                        last_lines.append(line)
-                    else:
-                        last_lines[i % lines_size] = line
-                    i = i + 1
-
-            last_lines = last_lines[
-                (i % lines_size):] + last_lines[:(i % lines_size)]
-
-            send_data = []
-            for line in last_lines:
-                send_data.append(line)
-
-            return Response({'status': 'ok', 'result': send_data[::-1]})
         except Exception as e:
             db_logger.exception(e)

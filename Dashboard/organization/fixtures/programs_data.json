@@ -1,0 +1,1278 @@
+[
+  {
+    "model": "organization.Programs",
+    "pk": "1",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 1,
+      "name": "cse",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "2",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 1,
+      "name": "ds",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "3",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 1,
+      "name": "cfis",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "4",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 2,
+      "name": "psa",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "5",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 2,
+      "name": "vlsi",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "6",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 3,
+      "name": "md",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "7",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 3,
+      "name": "mta",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "8",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 4,
+      "name": "struc",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "9",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 5,
+      "name": "fpt",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "10",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 1,
+      "name": "cse",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "11",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 1,
+      "name": "csbs",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "12",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 2,
+      "name": "ece",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "13",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 2,
+      "name": "eee",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "14",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 3,
+      "name": "mech",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "15",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 4,
+      "name": "civil",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "16",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 1,
+      "under_course": 5,
+      "name": "bio",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "17",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 6,
+      "name": "gen",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "18",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 6,
+      "name": "fm",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "19",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 6,
+      "name": "ba",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "20",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 6,
+      "name": "cima",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "21",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 6,
+      "name": "log",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "22",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 6,
+      "name": "fintech",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "23",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 7,
+      "name": "acca",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "24",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 7,
+      "name": "aat",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "25",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 8,
+      "name": "gen",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "26",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 8,
+      "name": "hhm",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "27",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 8,
+      "name": "ib",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "28",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 8,
+      "name": "lscm",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "29",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 8,
+      "name": "ba",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "30",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 2,
+      "under_course": 8,
+      "name": "imba",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "31",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 9,
+      "name": "mbfst",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "32",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 10,
+      "name": "biochem",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "33",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 11,
+      "name": "cs",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "34",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 12,
+      "name": "bt",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "35",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 13,
+      "name": "envsci",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "36",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 14,
+      "name": "maths",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "37",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 15,
+      "name": "chem",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "38",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 16,
+      "name": "phy",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "39",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 11,
+      "name": "bca",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "40",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 9,
+      "name": "mbfst",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "41",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 10,
+      "name": "biochem",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "42",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 11,
+      "name": "ds",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "43",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 12,
+      "name": "bt",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "44",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 13,
+      "name": "envsci",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "45",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 14,
+      "name": "maths",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "46",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 15,
+      "name": "chem",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "47",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 16,
+      "name": "phy",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "48",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 3,
+      "under_course": 11,
+      "name": "mca",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "49",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 4,
+      "under_course": 17,
+      "name": "barch",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "50",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 4,
+      "under_course": 18,
+      "name": "march",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "51",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 6,
+      "under_course": 19,
+      "name": "bpharm",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "52",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 6,
+      "under_course": 20,
+      "name": "pharmceu",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "53",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 6,
+      "under_course": 20,
+      "name": "pa",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "54",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 6,
+      "under_course": 20,
+      "name": "pharmaco",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "55",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 6,
+      "under_course": 20,
+      "name": "pc",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "56",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 6,
+      "under_course": 20,
+      "name": "pqa",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "57",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 5,
+      "under_course": 21,
+      "name": "nursing",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "58",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 5,
+      "under_course": 22,
+      "name": "npcc",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "59",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 7,
+      "under_course": 23,
+      "name": "bballb",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "60",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 7,
+      "under_course": 24,
+      "name": "ballb",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "61",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 7,
+      "under_course": 25,
+      "name": "iprcl",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "62",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 7,
+      "under_course": 26,
+      "name": "ccl",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "63",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 7,
+      "under_course": 27,
+      "name": "intl",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "64",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 8,
+      "under_course": 28,
+      "name": "ap",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "65",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 8,
+      "under_course": 29,
+      "name": "hss",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "66",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 8,
+      "under_course": 30,
+      "name": "eco",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "67",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 8,
+      "under_course": 28,
+      "name": "ap",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "68",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 8,
+      "under_course": 29,
+      "name": "hss",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "69",
+    "fields": {
+      "under_campus": 1,
+      "under_institute": 8,
+      "under_course": 30,
+      "name": "eco",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "70",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 1,
+      "name": "cse",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "71",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 1,
+      "name": "csbs",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "72",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 2,
+      "name": "ece",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "73",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 2,
+      "name": "eee",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "74",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 3,
+      "name": "mech",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "75",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 4,
+      "name": "civil",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "76",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 31,
+      "name": "aero",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "77",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 1,
+      "name": "cse",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "78",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 1,
+      "name": "ds",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "79",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 2,
+      "name": "edt",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "80",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 4,
+      "name": "casad",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "81",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 9,
+      "under_course": 3,
+      "name": "mdr",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "82",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 10,
+      "under_course": 6,
+      "name": "gen",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "83",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 10,
+      "under_course": 6,
+      "name": "fm",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "84",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 10,
+      "under_course": 6,
+      "name": "ba",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "85",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 10,
+      "under_course": 6,
+      "name": "cima",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "86",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 10,
+      "under_course": 7,
+      "name": "acca",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "87",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 10,
+      "under_course": 8,
+      "name": "mba",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "88",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 11,
+      "under_course": 19,
+      "name": "bpharm",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "89",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 12,
+      "under_course": 32,
+      "name": "fst",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "90",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 12,
+      "under_course": 11,
+      "name": "cs",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "91",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 12,
+      "under_course": 14,
+      "name": "maths",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "92",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 12,
+      "under_course": 15,
+      "name": "chem",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "93",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 12,
+      "under_course": 16,
+      "name": "phy",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "94",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 12,
+      "under_course": 11,
+      "name": "ds",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "95",
+    "fields": {
+      "under_campus": 2,
+      "under_institute": 12,
+      "under_course": 15,
+      "name": "chem",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "96",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 13,
+      "under_course": 1,
+      "name": "cse",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "97",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 13,
+      "under_course": 1,
+      "name": "csbs",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "98",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 13,
+      "under_course": 2,
+      "name": "ece",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "99",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 13,
+      "under_course": 2,
+      "name": "eee",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "100",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 13,
+      "under_course": 3,
+      "name": "mech",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "101",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 13,
+      "under_course": 4,
+      "name": "civil",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "102",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 13,
+      "under_course": 1,
+      "name": "ds",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "103",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 13,
+      "under_course": 2,
+      "name": "vlsi",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "104",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 15,
+      "under_course": 6,
+      "name": "gen",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "105",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 15,
+      "under_course": 6,
+      "name": "fm",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "106",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 15,
+      "under_course": 6,
+      "name": "ba",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "107",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 15,
+      "under_course": 7,
+      "name": "acca",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "108",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 15,
+      "under_course": 8,
+      "name": "mba",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "109",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 12,
+      "under_course": 11,
+      "name": "cs",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "110",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 12,
+      "under_course": 14,
+      "name": "maths",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "111",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 12,
+      "under_course": 15,
+      "name": "chem",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "112",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 12,
+      "under_course": 16,
+      "name": "phy",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "113",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 12,
+      "under_course": 11,
+      "name": "bca",
+      "is_ug": true
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "114",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 12,
+      "under_course": 14,
+      "name": "maths",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "115",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 12,
+      "under_course": 15,
+      "name": "chem",
+      "is_ug": false
+    }
+  },
+  {
+    "model": "organization.Programs",
+    "pk": "116",
+    "fields": {
+      "under_campus": 3,
+      "under_institute": 12,
+      "under_course": 16,
+      "name": "phy",
+      "is_ug": false
+    }
+  }
+]

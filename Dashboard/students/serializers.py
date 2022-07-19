@@ -1,26 +1,8 @@
 from rest_framework import serializers, status
 from organization.models import Institute
-from .models import Graduates
+from .models import Graduates, GraduatesWithPrograms
 from django.db.models import Q, Count, Max, Sum, Min, Avg
 from math import *
-
-map = {
-    'git': 'GIT',
-    'gim': 'GIM',
-    'gis': 'GIS',
-    'gsoa': 'GSoA',
-    'gin': 'GIN',
-    'gip': 'GIP',
-    'gsol': 'GSoL',
-    'gsgs': 'GSGS',
-    'soth': 'SoTH',
-    'hbs': 'HBS',
-    'soph': 'SoPH',
-    'sosh': 'SoSH',
-    'sotb': 'SoTB',
-    'sosp': 'SoSP',
-    'gsbb': 'GSBB',
-}
 
 
 class GraduatesSerializer(serializers.ModelSerializer):
@@ -41,7 +23,7 @@ class GraduatesSerializer(serializers.ModelSerializer):
 
     def _under_institute_name(self, i):
         try:
-            return map[i.under_institute_name]
+            return i.under_institute_name
         except:
             return "instutenot found"
 
@@ -234,6 +216,26 @@ class InstituteGradListSeralizer(serializers.ModelSerializer):
         fields = ['student_details', 'placement_details', 'salary', 'is_ug']
 
 
+class ProgramGraduatesSerializer(serializers.ModelSerializer):
+    under_institute_name = serializers.SerializerMethodField(
+        '_under_institute_name')
+    under_campus_name = serializers.SerializerMethodField('_under_campus_name')
+    program_name = serializers.SerializerMethodField('_program_name')
+
+    def _under_institute_name(self, obj):
+        return obj.under_institute_name
+
+    def _under_campus_name(self, obj):
+        return obj.under_campus_name
+
+    def _program_name(self, obj):
+        return obj.program.name
+
+    class Meta:
+        model = GraduatesWithPrograms
+        fields = '__all__'
+
+
 class GBstatsSerializer(serializers.ModelSerializer):
     student_details = serializers.SerializerMethodField('_student_details')
     placement_details = serializers.SerializerMethodField('_placement_details')
@@ -260,7 +262,6 @@ class GBstatsSerializer(serializers.ModelSerializer):
             id__in=obj).aggregate(Sum('total_not_intrested_in_placments')
                                   )['total_not_intrested_in_placments__sum']
 
-
         total_backlogs_opted_for_higherstudies = Graduates.objects.filter(
             id__in=obj).aggregate(
                 sum=Sum('total_backlogs_opted_for_higherstudies')).get('sum')
@@ -280,19 +281,20 @@ class GBstatsSerializer(serializers.ModelSerializer):
             'total_backlogs': (total_backlogs_opted_for_higherstudies +
                                total_backlogs_opted_for_other_career_options +
                                total_backlogs_opted_for_placements),
-            'total_students_eligible': (total_final_years -
-                                   total_higher_study_and_pay_crt -
-                                   total_opted_for_higher_studies_only -
-                                   total_not_intrested_in_placments -
-                                   total_backlogs_opted_for_placements),
-            'total_not_intrested_in_placments':(Graduates.objects.filter(id__in=obj).aggregate(
-            total_not_intrested_in_placments=Sum(
-                total_not_intrested_in_placments)
-            ))['total_not_intrested_in_placments'],
-             "total_opted_for_higher_studies_only": total_opted_for_higher_studies_only,
+            'total_students_eligible':
+            (total_final_years - total_higher_study_and_pay_crt -
+             total_opted_for_higher_studies_only -
+             total_not_intrested_in_placments -
+             total_backlogs_opted_for_placements),
+            'total_not_intrested_in_placments':
+            (Graduates.objects.filter(id__in=obj).aggregate(
+                total_not_intrested_in_placments=Sum(
+                    total_not_intrested_in_placments))
+             )['total_not_intrested_in_placments'],
+            "total_opted_for_higher_studies_only":
+            total_opted_for_higher_studies_only,
         })
         return serializer
-
 
     def _placement_details(self, obj):
         total_final_years = Graduates.objects.filter(id__in=obj).aggregate(
@@ -342,7 +344,8 @@ class GBstatsSerializer(serializers.ModelSerializer):
             (total_students_eligible - (total_offers - total_multiple_offers)),
             "total_students_eligible":
             total_students_eligible,
-            "total_opted_for_higher_studies_only": total_opted_for_higher_studies_only,
+            "total_opted_for_higher_studies_only":
+            total_opted_for_higher_studies_only,
         })
 
         return serializer
@@ -356,3 +359,13 @@ class GBstatsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Graduates
         fields = ['student_details', 'placement_details', 'salary', 'is_ug']
+
+
+class CompareSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Graduates
+        fields = [
+            'total_offers', 'total_multiple_offers', 'highest_salary',
+            'average_salary'
+        ]
