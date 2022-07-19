@@ -233,7 +233,7 @@ def export_data_to_excel(request, name):
 class FileDownloadListAPIView(generics.ListAPIView):
     serializer_class = GraduatesSerializer
 
-    def get(self, request,year, name, format=None):
+    def get(self, request, year, name, format=None):
         db_logger = logging.getLogger('db')
         try:
             filename = f"{str(name).upper()} Career Fulfillment Statistics - 2022 Batch"

@@ -204,7 +204,7 @@ class SelectGraduates(generics.ListAPIView):
                 'status': 'Error',
                 'result': str(e)
             },
-            status=HTTP_400_BAD_REQUEST)
+                                     status=HTTP_400_BAD_REQUEST)
 
 
 class UpdateGraduates(generics.UpdateAPIView):
