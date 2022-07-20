@@ -14,6 +14,9 @@ from datetime import datetime
 import calendar
 import traceback
 import logging
+import json
+
+from django.http import HttpResponse
 
 
 class GraduateList(generics.ListAPIView):
@@ -172,47 +175,41 @@ class SelectGraduates(generics.ListAPIView):
     serializer_class = GraduatesSerializer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, year, institute, grad, campus, program):
+    def get(self, request, year, institute, coursename, grad, campus):
         db_logger = logging.getLogger('db')
-        if program == 'null':
-            try:
-                campus = Campus.objects.get(name=campus)
-                inst = Institute.objects.filter(name=institute)
-                if len(inst) == 0:
-                    return response.Response({
-                        'status': 'OK',
-                        'result': 'No such institute'
-                    })
-                if grad == 'ug':
-                    grads = Graduates.objects.filter(under_institute=inst[0].id,
-                                                    is_ug=True,
-                                                    passing_year=year,
-                                                    under_campus=campus)
+        try:
+            campus = Campus.objects.get(name=campus)
+            inst = Institute.objects.get(name=institute, under_campus=campus)
+            if coursename=="null":
+                print(campus, inst)
+                grads = Graduates.objects.filter(under_institute=inst,
+                                                 is_ug=(True if grad=="ug" else False),
+                                                 passing_year=year)
+                send_data = GraduatesSerializer(grads, many=True).data
+                return response.Response({'status': 'OK', 'result': send_data}) 
 
-                    send_data = GraduatesSerializer(grads, many=True).data
-                elif grad == 'pg':
+            else:
+                program = Programs.objects.get(name=coursename, is_ug=(True if grad=="ug" else False), under_institute=inst)
+                
+                queryset = GraduatesWithPrograms.objects.filter(program=program).all()
+                grads = queryset.filter(is_ug=(True if grad=="ug" else False),
+                                                 passing_year=year)
+                send_data = ProgramGraduatesSerializer(grads, many=True).data
+                return response.Response({'status': 'OK', 'result': send_data}) 
 
-                    grads = Graduates.objects.filter(under_institute=inst[0].id,
-                                                    is_ug=False,
-                                                    passing_year=year)
-                    send_data = GraduatesSerializer(grads, many=True).data
-                else:
-                    send_data = []
-                return response.Response({'status': 'OK', 'result': send_data})
-            except Exception as e:
-                db_logger.exception(e)
-                return response.Response({
-                    'status': 'Error',
-                    'result': str(e)
-                },
-                                        status=HTTP_400_BAD_REQUEST)
-            
+        except Exception as e:
+            db_logger.exception(e)
+            return response.Response({
+                'status': 'Error',
+                'result': str(e)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
 
 
-    class UpdateGraduates(generics.UpdateAPIView):
-        queryset = Graduates.objects.all()
-        serializer_class = UpdateGraduatesSerializer
-        permission_classes = (IsAuthenticated, )
+class UpdateGraduates(generics.UpdateAPIView):
+    queryset = Graduates.objects.all()
+    serializer_class = UpdateGraduatesSerializer
+    permission_classes = (IsAuthenticated, )
 
     def patch(self, request, year, pk, *args, **kwargs):
         db_logger = logging.getLogger('db')
@@ -547,7 +544,7 @@ class CompareYearsData(generics.ListAPIView):
 
 
 class LogsDataListAPIView(generics.ListAPIView):
-
+    serializer_class = GraduatesSerializer
     def get(self, request):
         print("Hello")
         db_logger = logging.getLogger('db')
@@ -669,3 +666,29 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
                 'result': str(e)
             },
                                      status=HTTP_400_BAD_REQUEST)
+
+
+        def patch(self, request, year, pk, *args, **kwargs):
+            return response.Response({
+                "status": "Error",
+                "result": "This method is not Allowed."
+                }, status=HTTP_400_BAD_REQUEST)
+
+
+def CreateInstances(request, year):
+    try: 
+        val = Graduates.objects.all()
+        for i in val:
+            Graduates.objects.create(under_campus=i.under_campus, under_institute=i.under_institute, is_ug=i.is_ug, passing_year=year)
+        response_data = {}
+        response_data['result'] = 'success'
+        response_data['message'] = 'worked well'
+
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    except Exception as e:
+        print("==> ",e)
+        response_data = {}
+        response_data['result'] = 'error'
+        response_data['message'] = 'Some error message'
+
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
