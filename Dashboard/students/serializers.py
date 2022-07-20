@@ -371,6 +371,7 @@ class CompareSerializer(serializers.ModelSerializer):
             'average_salary'
         ]
 
+
 class GraduatesWithProgramsSerializer(serializers.ModelSerializer):
     Program = serializers.SerializerMethodField('_Program')
 
@@ -378,8 +379,8 @@ class GraduatesWithProgramsSerializer(serializers.ModelSerializer):
         return obj.program.name
 
     class Meta:
-        model=GraduatesWithPrograms
-        fields='__all__'
+        model = GraduatesWithPrograms
+        fields = '__all__'
 
 
 class UpdateGraduatesWithProgramsSerializer(serializers.ModelSerializer):
