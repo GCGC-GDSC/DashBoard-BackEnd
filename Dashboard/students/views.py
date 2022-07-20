@@ -671,3 +671,4 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
                 "result": "This method is not Allowed."
                 }, status=HTTP_400_BAD_REQUEST)
 
+

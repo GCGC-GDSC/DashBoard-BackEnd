@@ -29,4 +29,5 @@ urlpatterns = [
          CompareYearsData.as_view(),
          name='compare'),
      path('<str:year>/updateprograms/<pk>', UpdateGraduatesWithPrograms.as_view(), name='data-update-view-with-programs'),
+
 ]
