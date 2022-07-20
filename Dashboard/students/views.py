@@ -677,9 +677,13 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
 
 def CreateInstances(request, year):
     try: 
-        val = Graduates.objects.all()
+        val = Graduates.objects.filter(passing_year='2022')
         for i in val:
             Graduates.objects.create(under_campus=i.under_campus, under_institute=i.under_institute, is_ug=i.is_ug, passing_year=year)
+        
+        val = GraduatesWithPrograms.objects.filter(passing_year='2022')
+        for i in val:
+            GraduatesWithPrograms.objects.create(under_campus=i.under_campus, under_institute=i.under_institute, is_ug=i.is_ug, program=i.program, passing_year=year)
         response_data = {}
         response_data['result'] = 'success'
         response_data['message'] = 'worked well'
