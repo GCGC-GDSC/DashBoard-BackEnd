@@ -176,15 +176,10 @@ class SelectGraduates(generics.ListAPIView):
         db_logger = logging.getLogger('db')
         try:
             campus = Campus.objects.get(name=campus)
-            inst = Institute.objects.filter(name=institute)
-            if len(inst) == 0:
-                return response.Response({
-                    'status': 'OK',
-                    'result': 'No such institute'
-                })
-            queryset = None
+            inst = Institute.objects.get(name=institute, under_campus=campus)
             if coursename=="null":
-                grads = Graduates.objects.filter(under_institute=inst[0].id,
+                print(campus, inst)
+                grads = Graduates.objects.filter(under_institute=inst.id,
                                                  is_ug=(True if grad=="ug" else False),
                                                  passing_year=year,
                                                  under_campus=campus)
@@ -192,10 +187,10 @@ class SelectGraduates(generics.ListAPIView):
                 return response.Response({'status': 'OK', 'result': send_data}) 
 
             else:
-                program = Programs.objects.get(name=coursename,under_campus=campus, is_ug=(True if grad=="ug" else False),under_institute=inst[0].id)
+                program = Programs.objects.get(name=coursename,under_campus=campus, is_ug=(True if grad=="ug" else False), under_institute=inst.id)
                 
                 queryset = GraduatesWithPrograms.objects.filter(program=program).all()
-                grads = queryset.filter(under_institute=inst[0].id,
+                grads = queryset.filter(under_institute=inst.id,
                                                  is_ug=(True if grad=="ug" else False),
                                                  passing_year=year,
                                                  under_campus=campus)
