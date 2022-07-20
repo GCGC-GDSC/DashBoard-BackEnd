@@ -1,5 +1,5 @@
 from rest_framework import routers
-from django.urls import path, include, re_path
+from django.urls import path, include
 from . import utils
 from .views import *
 
@@ -10,7 +10,7 @@ urlpatterns = [
          name='institute-list'),
     path('<str:year>/overall/<stream>', Overall.as_view(),
          name='overall-view'),
-    path('<str:year>/select/<str:institute>/<str:grad>/<str:campus>',
+    path('<str:year>/select/<str:institute>/<str:grad>/<str:campus>/<str:program>',
          SelectGraduates.as_view(),
          name='data-select-view'),
     path('<str:year>/update/<pk>',
