@@ -14,6 +14,9 @@ from datetime import datetime
 import calendar
 import traceback
 import logging
+import json
+
+from django.http import HttpResponse
 
 
 class GraduateList(generics.ListAPIView):
@@ -172,32 +175,28 @@ class SelectGraduates(generics.ListAPIView):
     serializer_class = GraduatesSerializer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, year, institute, grad, campus):
+    def get(self, request, year, institute, coursename, grad, campus):
         db_logger = logging.getLogger('db')
         try:
             campus = Campus.objects.get(name=campus)
-            inst = Institute.objects.filter(name=institute)
-            if len(inst) == 0:
-                return response.Response({
-                    'status': 'OK',
-                    'result': 'No such institute'
-                })
-            if grad == 'ug':
-                grads = Graduates.objects.filter(under_institute=inst[0].id,
-                                                 is_ug=True,
-                                                 passing_year=year,
-                                                 under_campus=campus)
-
-                send_data = GraduatesSerializer(grads, many=True).data
-            elif grad == 'pg':
-
-                grads = Graduates.objects.filter(under_institute=inst[0].id,
-                                                 is_ug=False,
+            inst = Institute.objects.get(name=institute, under_campus=campus)
+            if coursename=="null":
+                print(campus, inst)
+                grads = Graduates.objects.filter(under_institute=inst,
+                                                 is_ug=(True if grad=="ug" else False),
                                                  passing_year=year)
                 send_data = GraduatesSerializer(grads, many=True).data
+                return response.Response({'status': 'OK', 'result': send_data}) 
+
             else:
-                send_data = []
-            return response.Response({'status': 'OK', 'result': send_data})
+                program = Programs.objects.get(name=coursename, is_ug=(True if grad=="ug" else False), under_institute=inst)
+                
+                queryset = GraduatesWithPrograms.objects.filter(program=program).all()
+                grads = queryset.filter(is_ug=(True if grad=="ug" else False),
+                                                 passing_year=year)
+                send_data = ProgramGraduatesSerializer(grads, many=True).data
+                return response.Response({'status': 'OK', 'result': send_data}) 
+
         except Exception as e:
             db_logger.exception(e)
             return response.Response({
@@ -545,7 +544,7 @@ class CompareYearsData(generics.ListAPIView):
 
 
 class LogsDataListAPIView(generics.ListAPIView):
-
+    serializer_class = GraduatesSerializer
     def get(self, request):
         print("Hello")
         db_logger = logging.getLogger('db')
@@ -571,3 +570,128 @@ class LogsDataListAPIView(generics.ListAPIView):
             return Response({'status': 'ok', 'result': send_data[::-1]})
         except Exception as e:
             db_logger.exception(e)
+
+
+class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
+    queryset = GraduatesWithPrograms.objects.all()
+    serializer_class = UpdateGraduatesWithProgramsSerializer
+    permission_classes = (IsAuthenticated, )
+
+    def put(self, request, year, pk, *args, **kwargs):
+        db_logger = logging.getLogger('db')
+        try:
+            user = request.user
+            try:
+                qs = GraduatesWithPrograms.objects.get(id=pk, passing_year=year)
+                print("===>>>",qs)
+            except:
+                return response.Response(
+                    {
+                        'status': 'error',
+                        'result': 'institute does not exist'
+                    },
+                    status=HTTP_400_BAD_REQUEST)
+
+            if user.access == 'view':
+                return response.Response(
+                    {
+                        'status': 'error',
+                        'result': 'permission denied'
+                    },
+                    status=HTTP_423_LOCKED)
+
+            if user.access == "edit_all" and user.university != "univ" and qs.under_campus != user.university:
+                return response.Response(
+                    {
+                        'status': 'error',
+                        'result': 'permission denied'
+                    },
+                    status=HTTP_423_LOCKED)
+
+            check_editor_list = EditorInstitutes.objects.filter(
+                Q(account=user) & Q(institute=qs.under_institute)).exists()
+            if user.access == "edit_some" and not check_editor_list:
+                return response.Response(
+                    {
+                        'status': 'error',
+                        'result': 'PermissionDenied'
+                    },
+                    status=HTTP_423_LOCKED)
+
+            data = request.data
+            data = request.data
+
+            serializer = UpdateGraduatesWithProgramsSerializer(qs, data=data)
+            print("==>", serializer)
+
+            if not serializer.is_valid():
+                return response.Response(
+                    {
+                        'status': 'error',
+                        'result': 'Invalid data'
+                    },
+                    status=HTTP_205_RESET_CONTENT)
+
+            serializer.save()
+            ug_pg = 'UG' if qs.is_ug == True else 'PG'
+
+            dtobj = datetime.now(tz=gettz('Asia/Kolkata'))
+            timer = dtobj.strftime("%I:%M %p")
+
+            month = datetime.now().month
+            year = str(datetime.now().year)
+            day = str(datetime.now().day)
+            data_time = timer + ", " + day + " " + calendar.month_name[
+                month] + " " + year
+
+            f = open('DBLog.txt', 'a')
+
+            filecontent = f'''<p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>{qs.under_campus.name.upper()}>{qs.under_institute.name.upper()}>{ug_pg}</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>{user.name}({user.designation})</b></span> at <span style="color:#555;">{data_time}</span></p>\n'''
+
+            f.write(filecontent)
+            f.close()
+            db_logger.info("Data Instance Created Succefully by" + str(user))
+            return response.Response(
+                {
+                    'status': 'OK',
+                    'message': "send data succefully",
+                    'result': serializer.data
+                },
+                status=HTTP_201_CREATED)
+        except Exception as e:
+            print(e)
+            db_logger.exception(e)
+            return response.Response({
+                'status': 'Error',
+                'result': str(e)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
+
+
+        def patch(self, request, year, pk, *args, **kwargs):
+            return response.Response({
+                "status": "Error",
+                "result": "This method is not Allowed."
+                }, status=HTTP_400_BAD_REQUEST)
+
+def CreateInstances(request, year):
+    try: 
+        val = Graduates.objects.filter(passing_year='2022')
+        for i in val:
+            Graduates.objects.create(under_campus=i.under_campus, under_institute=i.under_institute, is_ug=i.is_ug, passing_year=year)
+        
+        val = GraduatesWithPrograms.objects.filter(passing_year='2022')
+        for i in val:
+            GraduatesWithPrograms.objects.create(under_campus=i.under_campus, under_institute=i.under_institute, is_ug=i.is_ug, program=i.program, passing_year=year)
+        response_data = {}
+        response_data['result'] = 'success'
+        response_data['message'] = 'worked well'
+
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    except Exception as e:
+        print("==> ",e)
+        response_data = {}
+        response_data['result'] = 'error'
+        response_data['message'] = 'Some error message'
+
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
