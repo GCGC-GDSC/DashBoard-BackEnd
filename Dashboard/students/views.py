@@ -14,6 +14,9 @@ from datetime import datetime
 import calendar
 import traceback
 import logging
+import json
+
+from django.http import HttpResponse
 
 
 class GraduateList(generics.ListAPIView):
@@ -671,4 +674,24 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
                 "result": "This method is not Allowed."
                 }, status=HTTP_400_BAD_REQUEST)
 
+def CreateInstances(request, year):
+    try: 
+        val = Graduates.objects.filter(passing_year='2022')
+        for i in val:
+            Graduates.objects.create(under_campus=i.under_campus, under_institute=i.under_institute, is_ug=i.is_ug, passing_year=year)
+        
+        val = GraduatesWithPrograms.objects.filter(passing_year='2022')
+        for i in val:
+            GraduatesWithPrograms.objects.create(under_campus=i.under_campus, under_institute=i.under_institute, is_ug=i.is_ug, program=i.program, passing_year=year)
+        response_data = {}
+        response_data['result'] = 'success'
+        response_data['message'] = 'worked well'
 
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+    except Exception as e:
+        print("==> ",e)
+        response_data = {}
+        response_data['result'] = 'error'
+        response_data['message'] = 'Some error message'
+
+        return HttpResponse(json.dumps(response_data), content_type="application/json")

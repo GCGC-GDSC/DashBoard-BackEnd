@@ -1,5 +1,5 @@
 from rest_framework import routers
-from django.urls import path, include, re_path
+from django.urls import path, include
 from . import utils
 from .views import *
 
@@ -13,8 +13,7 @@ urlpatterns = [
     path('<str:year>/select/<str:coursename>/<str:institute>/<str:grad>/<str:campus>',
          SelectGraduates.as_view(),
          name='data-select-view'),
-    path('<str:year>/update/<pk>',
-         UpdateGraduates.as_view(),
+    path('<str:year>/update/<pk>', UpdateGraduates.as_view(),
          name='data-update-view'),
     #re_path(r'^upload/', utils.FileUploadView.as_view()),
     #re_path(r'^upload/', FileUploadView.as_view()),
@@ -29,5 +28,7 @@ urlpatterns = [
          CompareYearsData.as_view(),
          name='compare'),
      path('<str:year>/updateprograms/<pk>', UpdateGraduatesWithPrograms.as_view(), name='data-update-view-with-programs'),
-
+    
+     # Dont touch
+     path('createinstances/<str:year>/', CreateInstances, name='CreateInstances'),
 ]
