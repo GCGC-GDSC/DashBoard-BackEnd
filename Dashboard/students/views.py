@@ -180,22 +180,27 @@ class SelectGraduates(generics.ListAPIView):
         try:
             campus = Campus.objects.get(name=campus)
             inst = Institute.objects.get(name=institute, under_campus=campus)
-            if coursename=="null":
+            if coursename == "null":
                 print(campus, inst)
-                grads = Graduates.objects.filter(under_institute=inst,
-                                                 is_ug=(True if grad=="ug" else False),
-                                                 passing_year=year)
+                grads = Graduates.objects.filter(
+                    under_institute=inst,
+                    is_ug=(True if grad == "ug" else False),
+                    passing_year=year)
                 send_data = GraduatesSerializer(grads, many=True).data
-                return response.Response({'status': 'OK', 'result': send_data}) 
+                return response.Response({'status': 'OK', 'result': send_data})
 
             else:
-                program = Programs.objects.get(name=coursename, is_ug=(True if grad=="ug" else False), under_institute=inst)
-                
-                queryset = GraduatesWithPrograms.objects.filter(program=program).all()
-                grads = queryset.filter(is_ug=(True if grad=="ug" else False),
-                                                 passing_year=year)
+                program = Programs.objects.get(
+                    name=coursename,
+                    is_ug=(True if grad == "ug" else False),
+                    under_institute=inst)
+
+                queryset = GraduatesWithPrograms.objects.filter(
+                    program=program).all()
+                grads = queryset.filter(
+                    is_ug=(True if grad == "ug" else False), passing_year=year)
                 send_data = ProgramGraduatesSerializer(grads, many=True).data
-                return response.Response({'status': 'OK', 'result': send_data}) 
+                return response.Response({'status': 'OK', 'result': send_data})
 
         except Exception as e:
             db_logger.exception(e)
@@ -544,6 +549,7 @@ class CompareYearsData(generics.ListAPIView):
 
 class LogsDataListAPIView(generics.ListAPIView):
     serializer_class = GraduatesSerializer
+
     def get(self, request):
         print("Hello")
         db_logger = logging.getLogger('db')
@@ -581,8 +587,9 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
         try:
             user = request.user
             try:
-                qs = GraduatesWithPrograms.objects.get(id=pk, passing_year=year)
-                print("===>>>",qs)
+                qs = GraduatesWithPrograms.objects.get(id=pk,
+                                                       passing_year=year)
+                print("===>>>", qs)
             except:
                 return response.Response(
                     {
@@ -666,31 +673,43 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
             },
                                      status=HTTP_400_BAD_REQUEST)
 
-
         def patch(self, request, year, pk, *args, **kwargs):
-            return response.Response({
-                "status": "Error",
-                "result": "This method is not Allowed."
-                }, status=HTTP_400_BAD_REQUEST)
+            return response.Response(
+                {
+                    "status": "Error",
+                    "result": "This method is not Allowed."
+                },
+                status=HTTP_400_BAD_REQUEST)
+
 
 def CreateInstances(request, year):
-    try: 
+    try:
         val = Graduates.objects.filter(passing_year='2022')
         for i in val:
-            Graduates.objects.create(under_campus=i.under_campus, under_institute=i.under_institute, is_ug=i.is_ug, passing_year=year)
-        
+            Graduates.objects.create(under_campus=i.under_campus,
+                                     under_institute=i.under_institute,
+                                     is_ug=i.is_ug,
+                                     passing_year=year)
+
         val = GraduatesWithPrograms.objects.filter(passing_year='2022')
         for i in val:
-            GraduatesWithPrograms.objects.create(under_campus=i.under_campus, under_institute=i.under_institute, is_ug=i.is_ug, program=i.program, passing_year=year)
+            GraduatesWithPrograms.objects.create(
+                under_campus=i.under_campus,
+                under_institute=i.under_institute,
+                is_ug=i.is_ug,
+                program=i.program,
+                passing_year=year)
         response_data = {}
         response_data['result'] = 'success'
         response_data['message'] = 'worked well'
 
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps(response_data),
+                            content_type="application/json")
     except Exception as e:
-        print("==> ",e)
+        print("==> ", e)
         response_data = {}
         response_data['result'] = 'error'
         response_data['message'] = 'Some error message'
 
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        return HttpResponse(json.dumps(response_data),
+                            content_type="application/json")
