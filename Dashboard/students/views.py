@@ -477,7 +477,6 @@ class CompareYearsData(generics.ListAPIView):
                 average_salary_avg += int(
                     float(serializedData['average_salary']))
                 # send_data[year1].append(serializedData)
-
         try:
             send_data[year1] = dict({
                 'total_offers':

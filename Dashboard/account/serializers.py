@@ -31,6 +31,7 @@ class UserSerialize(serializers.ModelSerializer):
         return InstituteSerializeParse(
             Institute.objects.filter(under_campus__in=campus), many=True).data
 
+
     class Meta:
         model = User
         fields = [
