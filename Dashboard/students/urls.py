@@ -10,12 +10,10 @@ urlpatterns = [
          name='institute-list'),
     path('<str:year>/overall/<stream>', Overall.as_view(),
          name='overall-view'),
-    path(
-        '<str:year>/select/<str:coursename>/<str:institute>/<str:grad>/<str:campus>',
-        SelectGraduates.as_view(),
-        name='data-select-view'),
-    path('<str:year>/update/<pk>',
-         UpdateGraduates.as_view(),
+    path('<str:year>/select/<str:coursename>/<str:institute>/<str:grad>/<str:campus>',
+         SelectGraduates.as_view(),
+         name='data-select-view'),
+    path('<str:year>/update/<pk>', UpdateGraduates.as_view(),
          name='data-update-view'),
     #re_path(r'^upload/', utils.FileUploadView.as_view()),
     #re_path(r'^upload/', FileUploadView.as_view()),
@@ -29,12 +27,8 @@ urlpatterns = [
     path('compare/<str:year1>/<str:year2>/<str:coursename>/<str:grad>',
          CompareYearsData.as_view(),
          name='compare'),
-    path('<str:year>/updateprograms/<pk>',
-         UpdateGraduatesWithPrograms.as_view(),
-         name='data-update-view-with-programs'),
-
-    # Dont touch
-    path('createinstances/<str:year>/',
-         CreateInstances,
-         name='CreateInstances'),
+     path('<str:year>/updateprograms/<pk>', UpdateGraduatesWithPrograms.as_view(), name='data-update-view-with-programs'),
+    
+     # Dont touch
+     path('createinstances/<str:year>/', CreateInstances, name='CreateInstances'),
 ]

@@ -73,13 +73,13 @@ class Programs(models.Model):
 
     @property
     def display_name(self):
-        return f"{self.name} ( {self.under_institute} {self.under_course} {self.grad_type} )"
+        return f"{self.name} ( {self.under_campus} {self.under_institute} {self.under_course} {self.grad_type} )"
 
     class Meta:
         unique_together = ("under_campus", "under_institute", "name", "is_ug")
 
     def __str__(self):
-        return f"{self.name} ( {self.under_institute} {self.under_course} {self.grad_type} )"
+        return f"{self.name} ( {self.under_campus} {self.under_institute} {self.under_course} {self.grad_type} )"
 
 
 # def create_gradsWithProgram(sender, instance, created, **kwargs):

@@ -28,21 +28,21 @@ class GraduateList(generics.ListAPIView):
         try:
             send_data = {}
             cmps = Campus.objects.all()
-            for cmp in cmps:
-                send_data[cmp.name] = {}
-                ints = Campus.objects.get(name=cmp.name).institute_set.all()
-                for int in ints:
-                    send_data[cmp.name][int.name] = []
+            for cmp_ in cmps:
+                send_data[cmp_.name] = {}
+                ints = Campus.objects.get(name=cmp_.name).institute_set.all()
+                for int_ in ints:
+                    send_data[cmp_.name][int_.name] = []
                     ug = Graduates.objects.filter(
-                        Q(under_campus=cmp) & Q(under_institute=int)
+                        Q(under_campus=cmp_) & Q(under_institute=int_)
                         & Q(is_ug=True) & Q(passing_year=year))
                     ug_data = GraduatesSerializer(ug, many=True).data
                     pg = Graduates.objects.filter(
-                        Q(under_campus=cmp) & Q(under_institute=int)
+                        Q(under_campus=cmp_) & Q(under_institute=int_)
                         & Q(is_ug=False) & Q(passing_year=year))
                     pg_data = GraduatesSerializer(pg, many=True).data
-                    send_data[cmp.name][int.name].append(ug_data)
-                    send_data[cmp.name][int.name].append(pg_data)
+                    send_data[cmp_.name][int_.name].append(ug_data)
+                    send_data[cmp_.name][int_.name].append(pg_data)
         except Exception as e:
             db_logger.exception(str(e))
             return response.Response({
@@ -51,14 +51,6 @@ class GraduateList(generics.ListAPIView):
             },
                                      status=HTTP_500_INTERNAL_SERVER_ERROR)
         return response.Response({'status': 'OK', 'result': send_data})
-
-
-# --
-#
-# {  }
-#
-# --
-
 
 class InstituteGradList(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
@@ -166,8 +158,7 @@ class Gbstats(generics.ListAPIView):
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
-            },
-                                     status=HTTP_400_BAD_REQUEST)
+            },status=HTTP_400_BAD_REQUEST)
 
 
 class SelectGraduates(generics.ListAPIView):
@@ -180,23 +171,21 @@ class SelectGraduates(generics.ListAPIView):
         try:
             campus = Campus.objects.get(name=campus)
             inst = Institute.objects.get(name=institute, under_campus=campus)
+            print(inst)
             if coursename == "null":
-                print(campus, inst)
-                grads = Graduates.objects.filter(
+                grads = Graduates.objects.get(
                     under_institute=inst,
                     is_ug=(True if grad == "ug" else False),
-                    passing_year=year)
+                    passing_year=year, under_campus=campus)
                 send_data = GraduatesSerializer(grads, many=True).data
                 return response.Response({'status': 'OK', 'result': send_data})
-
             else:
                 program = Programs.objects.get(
                     name=coursename,
                     is_ug=(True if grad == "ug" else False),
-                    under_institute=inst)
-
+                    under_institute=inst, under_campus=campus)
                 queryset = GraduatesWithPrograms.objects.filter(
-                    program=program).all()
+                    program=program, under_campus=campus).all()
                 grads = queryset.filter(
                     is_ug=(True if grad == "ug" else False), passing_year=year)
                 send_data = ProgramGraduatesSerializer(grads, many=True).data

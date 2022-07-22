@@ -41,6 +41,7 @@ class CoursesSeralizer(serializers.ModelSerializer):
 
 
 class ProgramSeralizer(serializers.ModelSerializer):
+
     class Meta:
         model = Programs
         fields = ['name','is_ug']
@@ -67,7 +68,7 @@ class InstituteSerializeParse(serializers.ModelSerializer):
         return str(obj.under_campus)
 
     def _programs(self, obj):
-        return ProgramSeralizer(Programs.objects.filter(under_institute=obj).all(), many=True).data
+        return ProgramSeralizer(Programs.objects.filter(under_institute=obj, under_campus=obj.under_campus), many=True).data
 
     class Meta:
         model = Institute
