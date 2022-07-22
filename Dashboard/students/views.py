@@ -171,14 +171,13 @@ class SelectGraduates(generics.ListAPIView):
         try:
             campus = Campus.objects.get(name=campus)
             inst = Institute.objects.get(name=institute, under_campus=campus)
-            print(inst)
             if coursename == "null":
                 grads = Graduates.objects.get(
                     under_institute=inst,
                     is_ug=(True if grad == "ug" else False),
                     passing_year=year, under_campus=campus)
-                send_data = GraduatesSerializer(grads, many=True).data
-                return response.Response({'status': 'OK', 'result': send_data})
+                send_data = GraduatesSerializer(grads).data
+                return response.Response({'status': 'OK', 'result': [send_data]})
             else:
                 program = Programs.objects.get(
                     name=coursename,
