@@ -1,5 +1,5 @@
 from rest_framework import generics, status, views, response
-from organization.models import Institute, Campus, Stream
+from organization.models import Institute, Campus, Stream, Programs
 from organization.serializers import CampusSerialize, InstituteSerialize
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
@@ -98,14 +98,18 @@ class FileUploadView(views.APIView):
         return Response("Data sent", status=204)
 """
 
-
-def export_data_to_excel(request, name):
+def export_data_to_excel(request, name, year):
     ext = '.xlsx'
     searchfilename = name + ext
-    obj = Graduates.objects.all()
+    if name.lower()=='overall':
+        obj = Graduates.objects.filter(passing_year=year)
+    else:
+        camp = Campus.objects.get(name=name)
+        obj = Graduates.objects.filter(passing_year=year, under_campus=camp)
+    # print("All objects: ", obj)
     data = []
-    for i in obj:
 
+    for i in obj:
         if i.total_final_years == 0:
             Percentage_of_students_opted_HS_to_the_total_number = 0
             Percentage_of_students_having_backlogs_to_the_total_number_of_students = 0
@@ -119,13 +123,13 @@ def export_data_to_excel(request, name):
             Percentage_of_students_eligible_for_and_requiring_placement = round(
                 ((i.total_students_eligible / i.total_final_years) * 100), 2)
 
-        if i.total_placed == 0:
+        if i.total_students_eligible == 0:
             Percentage_of_students_placed_out_of_eligible_students = 0
         else:
             Percentage_of_students_placed_out_of_eligible_students = round(
                 ((i.total_placed / i.total_students_eligible) * 100), 2)
 
-        if i.total_yet_to_place == 0:
+        if i.total_students_eligible == 0:
             Percentage_of_students_yet_to_be_placed_out_of_eligible_students = 0
         else:
             Percentage_of_students_yet_to_be_placed_out_of_eligible_students = round(
@@ -189,6 +193,11 @@ def export_data_to_excel(request, name):
             "under_institute":
             i.under_institute,
         })
+
+    # print("============================================")
+    # print(data)
+    # print("data: ", len(data))
+    # print("============================================")
     searchpath = "media/" + searchfilename
     #print("=============================", searchpath, "============================")
     wb = openpyxl.load_workbook(searchpath)
@@ -197,12 +206,32 @@ def export_data_to_excel(request, name):
     sheet_obj = wb.active
 
     dic = {}
+    # camp_vals = []
+
+    # campus_id_values = {
+    #     'visakhapatnam campus': 'vskp',
+    #     'hyderabad campus': 'hyd', 
+    #     'bengaluru campus': 'blr',
+    # }
+
+    # for x in range(3, sheet_obj.max_column + 1):
+    #     val = (sheet_obj.cell(row=2, column=x).value)
+    #     if val == None:
+    #         continue
+    #     if val.lower() == 'total':
+    #         continue
+    #     camp_vals.append(campus_id_values[val.lower()])
+    
+    # print("campvals: ", camp_vals)
 
     for x in range(3, sheet_obj.max_column + 1):
         val = (sheet_obj.cell(row=3, column=x).value)
         if val == None:
             continue
         dic[val.lower()] = x
+
+    # print("this is the value: ",dic)
+    # print("te temp val: ", tempvar)
 
     for da in data:
         inst = da['under_institute_name']
@@ -238,7 +267,7 @@ class FileDownloadListAPIView(generics.ListAPIView):
         try:
             filename = f"{str(name).upper()} Career Fulfillment Statistics - 2022 Batch"
             try:
-                export_data_to_excel(request, name)
+                export_data_to_excel(request, name, year)
             except Exception as e:
                 return Response({
                     'status': 'error',

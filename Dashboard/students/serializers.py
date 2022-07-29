@@ -5,7 +5,6 @@ from .models import Graduates, GraduatesWithPrograms
 from django.db.models import Q, Count, Max, Sum, Min, Avg
 from math import *
 
-
 class GraduatesSerializer(serializers.ModelSerializer):
 
     Percentage_of_students_opted_HS_to_the_total_number = serializers.SerializerMethodField(
