@@ -536,37 +536,6 @@ class CompareYearsData(generics.ListAPIView):
         #     })
         return response.Response({'status': 'OK', 'result': send_data})
 
-
-class LogsDataListAPIView(generics.ListAPIView):
-    serializer_class = GraduatesSerializer
-
-    def get(self, request):
-        print("Hello")
-        db_logger = logging.getLogger('db')
-        try:
-            with open("DBLog.txt", "r") as file:
-                i = 0
-                lines_size = 10
-                last_lines = []
-                for line in file:
-                    if i < lines_size:
-                        last_lines.append(line)
-                    else:
-                        last_lines[i % lines_size] = line
-                    i = i + 1
-
-            last_lines = last_lines[
-                (i % lines_size):] + last_lines[:(i % lines_size)]
-
-            send_data = []
-            for line in last_lines:
-                send_data.append(line)
-            print("HI")
-            return Response({'status': 'ok', 'result': send_data[::-1]})
-        except Exception as e:
-            db_logger.exception(e)
-
-
 class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
     queryset = GraduatesWithPrograms.objects.all()
     serializer_class = UpdateGraduatesWithProgramsSerializer

@@ -8,6 +8,7 @@ from rest_framework import generics
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
 from tablib import Dataset
+from rest_framework.decorators import api_view
 from rest_framework.status import *
 from .serializers import *
 from .models import *
@@ -98,6 +99,32 @@ class FileUploadView(views.APIView):
         qs.save()
         return Response("Data sent", status=204)
 """
+
+
+@api_view(('GET',))
+def log_edit_info(request):
+    db_logger = logging.getLogger('db')
+    try:
+        with open("DBLog.txt", "r") as file:
+            i = 0
+            lines_size = 10
+            last_lines = []
+            for line in file:
+                if i < lines_size:
+                    last_lines.append(line)
+                else:
+                    last_lines[i % lines_size] = line
+                i = i + 1
+
+        last_lines = last_lines[
+            (i % lines_size):] + last_lines[:(i % lines_size)]
+
+        send_data = []
+        for line in last_lines:
+            send_data.append(line)
+        return Response({'status': 'ok', 'result': send_data[::-1]})
+    except Exception as e:
+        db_logger.exception(e)
 
 def export_data_to_excel(request, name, year):
     ext = '.xlsx'
