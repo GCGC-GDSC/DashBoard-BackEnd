@@ -427,6 +427,7 @@ class CompareYearsData(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request, year1, year2, coursename, grad):
+        compare_years = [year1, year2]
         if grad == 'ug':
             grad = True
         else:
@@ -445,93 +446,94 @@ class CompareYearsData(generics.ListAPIView):
 
         programs = Programs.objects.filter(under_course=course)
 
-        send_data[year1] = dict()
+        # send_data[year1] = dict()
 
         total_offers_aggri = 0
         total_multiple_offers_aggri = 0
         highest_salary_max = 0
         average_salary_avg = 0
         count = 0
-
-        for i in programs:
-            data = GraduatesWithPrograms.objects.filter(program=i,
-                                                        passing_year=year1,
-                                                        is_ug=grad)
-            if data.exists():
-                count += 1
-                serializedData = CompareSerializer(data, many=True).data
-                serializedData = serializedData[0]
-                total_offers_aggri += serializedData['total_offers']
-                total_multiple_offers_aggri += serializedData[
-                    'total_multiple_offers']
-                highest_salary_max = max(
+        for j in compare_years:
+            send_data[j] = dict()
+            for i in programs:
+                data = GraduatesWithPrograms.objects.filter(program=i,
+                                                            passing_year=j,
+                                                            is_ug=grad)
+                if data.exists():
+                    count += 1
+                    serializedData = CompareSerializer(data, many=True).data
+                    serializedData = serializedData[0]
+                    total_offers_aggri += serializedData['total_offers']
+                    total_multiple_offers_aggri += serializedData[
+                        'total_multiple_offers']
+                    highest_salary_max = max(
+                        highest_salary_max,
+                        int(float(serializedData['highest_salary'])))
+                    average_salary_avg += int(
+                        float(serializedData['average_salary']))
+                    # send_data[year1].append(serializedData)
+            try:
+                send_data[j] = dict({
+                    'total_offers':
+                    total_offers_aggri,
+                    'total_multiple_offers':
+                    total_multiple_offers_aggri,
+                    'highest_salary':
                     highest_salary_max,
-                    int(float(serializedData['highest_salary'])))
-                average_salary_avg += int(
-                    float(serializedData['average_salary']))
-                # send_data[year1].append(serializedData)
-        try:
-            send_data[year1] = dict({
-                'total_offers':
-                total_offers_aggri,
-                'total_multiple_offers':
-                total_multiple_offers_aggri,
-                'highest_salary':
-                highest_salary_max,
-                'average_salary':
-                average_salary_avg / count
-            })
-        except:
-            send_data[year1] = dict({
-                'total_offers': 0,
-                'total_multiple_offers': 0,
-                'highest_salary': 0,
-                'average_salary': 0
-            })
+                    'average_salary':
+                    average_salary_avg / count
+                })
+            except:
+                send_data[j] = dict({
+                    'total_offers': 0,
+                    'total_multiple_offers': 0,
+                    'highest_salary': 0,
+                    'average_salary': 0
+                })
 
-        send_data[year2] = dict()
+        # send_data[year2] = dict()
 
-        total_offers_aggri = 0
-        total_multiple_offers_aggri = 0
-        highest_salary_max = 0
-        average_salary_avg = 0
-        count = 0
+        # total_offers_aggri = 0
+        # total_multiple_offers_aggri = 0
+        # highest_salary_max = 0
+        # average_salary_avg = 0
+        # count = 0
 
-        for i in programs:
-            data = GraduatesWithPrograms.objects.filter(program=i,
-                                                        passing_year=year2,
-                                                        is_ug=grad)
-            if data.exists():
-                count += 1
-                serializedData = CompareSerializer(data, many=True).data
-                serializedData = serializedData[0]
-                total_offers_aggri += serializedData['total_offers']
-                total_multiple_offers_aggri += serializedData[
-                    'total_multiple_offers']
-                highest_salary_max = max(
-                    highest_salary_max,
-                    int(float(serializedData['highest_salary'])))
-                average_salary_avg += int(
-                    float(serializedData['average_salary']))
-                # send_data[year2].append(serializedData)
-        try:
-            send_data[year2] = dict({
-                'total_offers':
-                total_offers_aggri,
-                'total_multiple_offers':
-                total_multiple_offers_aggri,
-                'highest_salary':
-                highest_salary_max,
-                'average_salary':
-                average_salary_avg / count
-            })
-        except:
-            send_data[year2] = dict({
-                'total_offers': 0,
-                'total_multiple_offers': 0,
-                'highest_salary': 0,
-                'average_salary': 0,
-            })
+        # for i in programs:
+        #     data = GraduatesWithPrograms.objects.filter(program=i,
+        #                                                 passing_year=year2,
+        #                                                 is_ug=grad)
+        #     if data.exists():
+        #         count += 1
+        #         serializedData = CompareSerializer(data, many=True).data
+        #         serializedData = serializedData[0]
+        #         total_offers_aggri += serializedData['total_offers']
+        #         total_multiple_offers_aggri += serializedData[
+        #             'total_multiple_offers']
+        #         highest_salary_max = max(
+        #             highest_salary_max,
+        #             int(float(serializedData['highest_salary'])))
+        #         average_salary_avg += int(
+        #             float(serializedData['average_salary']))
+        #         # send_data[year2].append(serializedData)
+        # try:
+        #     send_data[year2] = dict({
+        #         'total_offers':
+        #         total_offers_aggri,
+        #         'total_multiple_offers':
+        #         total_multiple_offers_aggri,
+        #         'highest_salary':
+        #         highest_salary_max,
+        #         'average_salary':
+        #         average_salary_avg / count
+        #     })
+        # except:
+        #     send_data[year2] = dict({
+        #         'total_offers': 0,
+        #         'total_multiple_offers': 0,
+        #         'highest_salary': 0,
+        #         'average_salary': 0,
+        #     })
         return response.Response({'status': 'OK', 'result': send_data})
 
 
