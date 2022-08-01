@@ -17,6 +17,7 @@ import datetime
 import calendar
 import traceback
 import logging
+
 """
 class FileUploadView(views.APIView):
     parser_classes = [FileUploadParser]
@@ -204,8 +205,17 @@ def export_data_to_excel(request, name, year):
     sheet = wb.get_sheet_by_name('CF 2022')
 
     sheet_obj = wb.active
-
     dic = {}
+
+    if name.lower()=='overall':
+        try: 
+            for da in data:
+                for i in da:
+                    pass
+        except:
+            print("does not belong to this campus: ", inst)
+
+
     # camp_vals = []
 
     # campus_id_values = {
