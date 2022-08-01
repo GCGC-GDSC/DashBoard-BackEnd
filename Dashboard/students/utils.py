@@ -105,7 +105,7 @@ class FileUploadView(views.APIView):
 def log_edit_info(request):
     db_logger = logging.getLogger('db')
     try:
-        with open("DBLog.txt", "r") as file:
+        with open("./logs/dblog.txt", "r") as file:
             i = 0
             lines_size = 10
             last_lines = []
