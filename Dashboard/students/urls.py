@@ -4,12 +4,12 @@ from . import utils
 from .views import *
 
 urlpatterns = [
+     path('<int:year>/overall/<str:stream>', Overall.as_view(),
+         name='overall-view'),
     path('<int:year>', GraduateList.as_view(), name='graduates-list'),
     path('<int:year>/inst/<str:institute>/<str:campus>',
          InstituteGradList.as_view(),
          name='institute-list'),
-    path('<int:year>/overall/<stream>', Overall.as_view(),
-         name='overall-view'),
     path('<int:year>/select/<str:coursename>/<str:institute>/<str:grad>/<str:campus>',
          SelectGraduates.as_view(),
          name='data-select-view'),

@@ -15,6 +15,7 @@ import calendar
 import traceback
 import logging
 import json
+from collections import defaultdict
 
 from django.http import HttpResponse
 
@@ -107,9 +108,10 @@ class Overall(generics.ListAPIView):
     def get(self, request, year, stream):
         db_logger = logging.getLogger('db')
         try:
-            send_data = {}
+            send_data = defaultdict(list)
             stream_data = Stream.objects.filter(name=stream)
-
+            # print(stream_data)
+            
             if len(stream_data) == 0:
                 db_logger.warning('Stream Does not Exists with' + str(stream))
                 return response.Response(
@@ -120,19 +122,22 @@ class Overall(generics.ListAPIView):
                     status=HTTP_400_BAD_REQUEST)
 
             inst_data = Institute.objects.filter(stream=stream_data[0].id)
+
             for inst in inst_data:
-                send_data[inst.name] = []
-                graduates = Graduates.objects.filter(under_institute=inst.id,
+                suffix = inst.under_campus.name[0]
+                graduates_ug = Graduates.objects.filter(under_institute=inst.id,
                                                      is_ug=True,
                                                      passing_year=year)
-                data = InstituteGradListSeralizer(graduates, many=True).data
-                send_data[inst.name].append(data)
+                
+                data_ug = InstituteGradListSeralizer(graduates_ug, many=True).data
+                send_data[inst.name+suffix].append(data_ug)
 
-                graduates = Graduates.objects.filter(under_institute=inst.id,
+                graduates_pg = Graduates.objects.filter(under_institute=inst.id,
                                                      is_ug=False,
                                                      passing_year=year)
-                data = InstituteGradListSeralizer(graduates, many=True).data
-                send_data[inst.name].append(data)
+
+                data_pg = InstituteGradListSeralizer(graduates_pg, many=True).data
+                send_data[inst.name+suffix].append(data_pg)
 
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
