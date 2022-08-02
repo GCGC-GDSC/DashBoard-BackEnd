@@ -215,7 +215,6 @@ class UpdateGraduates(generics.UpdateAPIView):
             user = request.user
             try:
                 qs = Graduates.objects.get(id=pk, passing_year=year)
-                print("======>", qs)
             except:
                 return response.Response(
                     {
@@ -271,7 +270,7 @@ class UpdateGraduates(generics.UpdateAPIView):
             data_time = timer + ", " + day + " " + calendar.month_name[
                 month] + " " + year
 
-            f = open('DBLog.txt', 'a')
+            f = open('./logs/dblog.txt', 'a')
 
             filecontent = f'''<p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>{qs.under_campus.name.upper()}>{qs.under_institute.name.upper()}>{ug_pg}</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>{user.name}({user.designation})</b></span> at <span style="color:#555;">{data_time}</span></p>\n'''
 
@@ -362,7 +361,7 @@ class UpdateGraduates(generics.UpdateAPIView):
             data_time = timer + ", " + day + " " + calendar.month_name[
                 month] + " " + year
 
-            f = open('DBLog.txt', 'a')
+            f = open('./logs/dblog.txt', 'a')
 
             filecontent = f'''<p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>{qs.under_campus.name.upper()}>{qs.under_institute.name.upper()}>{ug_pg}</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>{user.name}({user.designation})</b></span> at <span style="color:#555;">{data_time}</span></p>\n'''
 
@@ -614,9 +613,9 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
             data_time = timer + ", " + day + " " + calendar.month_name[
                 month] + " " + year
 
-            f = open('DBLog.txt', 'a')
+            f = open('./logs/dblog.txt', 'a')
 
-            filecontent = f'''<p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>{qs.under_campus.name.upper()}>{qs.under_institute.name.upper()}>{ug_pg}</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>{user.name}({user.designation})</b></span> at <span style="color:#555;">{data_time}</span></p>\n'''
+            filecontent = f'''<p>Data <span style="font-family: monospace;font-family: monospace;text-transform: capitalize;"><em>{qs.under_campus.name.upper()}>{qs.program.name.upper()}>{qs.under_campus.name.upper()}>{ug_pg}</em></span> was <span style="">Updated</span> by <span style="color: #2c7dff;text-transform: capitalize;"><b>{user.name}({user.designation})</b></span> at <span style="color:#555;">{data_time}</span></p>\n'''
 
             f.write(filecontent)
             f.close()
