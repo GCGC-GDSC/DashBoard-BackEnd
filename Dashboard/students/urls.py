@@ -24,7 +24,7 @@ urlpatterns = [
          name='download-api'),
     
     path('<int:year>/programs', ProgramsGraduates.as_view(), name='courses'),
-    path('compare/<int:year1>/<int:year2>/<str:coursename>/<str:grad>',
+    path('compare/<int:year1>/<int:year2>/<str:campus>/<str:institute>/<str:program>/<str:grad>',
          CompareYearsData.as_view(),
          name='compare'),
      path('<int:year>/updateprograms/<pk>', UpdateGraduatesWithPrograms.as_view(), name='data-update-view-with-programs'),
