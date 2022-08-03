@@ -273,6 +273,7 @@ def export_data_to_excel(request, name, year):
             if val!=None:
                 tempval = list(dic)[-1]
                 dic[tempval][val.lower()] = x
+                
         elif dic!={} and val!=None:
             tempval = list(dic)[-1]
             # print("temp_Val: ", tempval)
@@ -293,7 +294,6 @@ def export_data_to_excel(request, name, year):
             #print("val", val, inst)
             if da['is_ug'] is False:
                 val += 1
-            print("hell")
             for i in da:
                 if num < 28:
                     totnum = 64 + val
