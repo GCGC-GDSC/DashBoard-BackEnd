@@ -164,7 +164,6 @@ class Gbstats(generics.ListAPIView):
 
 
 class SelectGraduates(generics.ListAPIView):
-    queryset = Graduates.objects.all()
     serializer_class = GraduatesSerializer
     permission_classes = (IsAuthenticated, )
 
@@ -298,7 +297,7 @@ class UpdateGraduates(generics.UpdateAPIView):
             user = request.user
             try:
                 qs = Graduates.objects.get(id=pk, passing_year=year)
-                print("==>", qs)
+                # print("==>", qs)
             except:
                 return response.Response(
                     {
@@ -373,7 +372,7 @@ class UpdateGraduates(generics.UpdateAPIView):
                 },
                 status=HTTP_201_CREATED)
         except Exception as e:
-            print(e)
+            # print(e)
             db_logger.exception(e)
             return response.Response({
                 'status': 'Error',
@@ -415,7 +414,7 @@ class ProgramsGraduates(generics.ListAPIView):
 
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
-            print(e)
+            # print(e)
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -439,7 +438,7 @@ class CompareYearsData(generics.ListAPIView):
             campus = Campus.objects.get(name=campus)
             institute = Institute.objects.get(name=institute, under_campus=campus)
         except Exception as e:
-            print(e)
+            # print(e)
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -447,14 +446,14 @@ class CompareYearsData(generics.ListAPIView):
                                      status=HTTP_400_BAD_REQUEST)
 
         prog= Programs.objects.get(under_campus=campus, under_institute=institute, name=program, is_ug=grad)
-        print("programs: ", program)
+        # print("programs: ", program)
         for j in compare_years:
             send_data[j] = dict()
             data = GraduatesWithPrograms.objects.filter(program=prog,
                                                     passing_year=j)
 
             if data.exists():
-                print("==>>", data)
+                # print("==>>", data)
                 try:
                     send_data[j] = dict({
                         'total_offers': data[0].total_offers,
@@ -553,7 +552,6 @@ class LogsDataListAPIView(generics.ListAPIView):
     serializer_class = GraduatesSerializer
 
     def get(self, request):
-        print("Hello")
         db_logger = logging.getLogger('db')
         try:
             with open("DBLog.txt", "r") as file:
@@ -573,7 +571,6 @@ class LogsDataListAPIView(generics.ListAPIView):
             send_data = []
             for line in last_lines:
                 send_data.append(line)
-            print("HI")
             return Response({'status': 'ok', 'result': send_data[::-1]})
         except Exception as e:
             db_logger.exception(e)
@@ -591,7 +588,7 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
             try:
                 qs = GraduatesWithPrograms.objects.get(id=pk,
                                                        passing_year=year)
-                print("===>>>", qs)
+                # print("===>>>", qs)
             except:
                 return response.Response(
                     {
@@ -630,7 +627,7 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
             data = request.data
 
             serializer = UpdateGraduatesWithProgramsSerializer(qs, data=data)
-            print("==>", serializer)
+            # print("==>", serializer)
 
             if not serializer.is_valid():
                 return response.Response(
@@ -667,7 +664,6 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
                 },
                 status=HTTP_201_CREATED)
         except Exception as e:
-            print(e)
             db_logger.exception(e)
             return response.Response({
                 'status': 'Error',
@@ -708,7 +704,6 @@ def CreateInstances(request, year):
         return HttpResponse(json.dumps(response_data),
                             content_type="application/json")
     except Exception as e:
-        print("==> ", e)
         response_data = {}
         response_data['result'] = 'error'
         response_data['message'] = 'Some error message'
