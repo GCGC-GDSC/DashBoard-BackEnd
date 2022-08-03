@@ -234,22 +234,22 @@ def export_data_to_excel(request, name, year):
     sheet_obj = wb.active
     dic = {}
 
-    if name.lower()=='overall':
-        try: 
-            for da in data:
-                for i in da:
-                    pass
-        except:
-            print("does not belong to this campus: ", inst)
+    # if name.lower()=='overall':
+    #     try: 
+    #         for da in data:
+    #             for i in da:
+    #                 pass
+    #     except:
+    #         print("does not belong to this campus: ", inst)
 
 
     # camp_vals = []
 
-    # campus_id_values = {
-    #     'visakhapatnam campus': 'vskp',
-    #     'hyderabad campus': 'hyd', 
-    #     'bengaluru campus': 'blr',
-    # }
+    campus_id_values = {
+        'Visakhapatnam Campus': 'vskp',
+        'Hyderabad Campus': 'hyd', 
+        'Bengaluru Campus': 'blr',
+    }
 
     # for x in range(3, sheet_obj.max_column + 1):
     #     val = (sheet_obj.cell(row=2, column=x).value)
@@ -263,22 +263,37 @@ def export_data_to_excel(request, name, year):
 
     for x in range(3, sheet_obj.max_column + 1):
         val = (sheet_obj.cell(row=3, column=x).value)
-        if val == None:
+        camp_val = (sheet_obj.cell(row=2, column=x).value)
+        if camp_val==None and val==None:
             continue
-        dic[val.lower()] = x
+        if camp_val!=None:
+            if camp_val != 'Total':          
+                camp_val = campus_id_values[camp_val]
+                dic[camp_val] = {}
+            if val!=None:
+                tempval = list(dic)[-1]
+                dic[tempval][val.lower()] = x
+        elif dic!={} and val!=None:
+            tempval = list(dic)[-1]
+            # print("temp_Val: ", tempval)
+            dic[tempval][val.lower()] = x
+        
 
-    # print("this is the value: ",dic)
-    # print("te temp val: ", tempvar)
+    print("this is the value: ",dic)
 
     for da in data:
         inst = da['under_institute_name']
+        camp = da['under_campus']
+        # print(camp, "-->", inst)
+        # print("values: ", dic[camp.name][inst])
         try:
             num = 5
-            val = dic[inst.lower()]
+            val = dic[camp.name][inst.lower()]
+            # print("===>>", val)
             #print("val", val, inst)
             if da['is_ug'] is False:
                 val += 1
-
+            print("hell")
             for i in da:
                 if num < 28:
                     totnum = 64 + val
