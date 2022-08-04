@@ -1,3 +1,4 @@
+from socket import INADDR_ALLHOSTS_GROUP
 from tokenize import Name
 from unicodedata import name
 from rest_framework import generics, status, views, response
@@ -445,22 +446,62 @@ class CompareYearsData(generics.ListAPIView):
                 'result': str(e)
             },
                                      status=HTTP_400_BAD_REQUEST)
+        if program!="None":
+            print("hi")
+            prog = Programs.objects.get(under_campus=campus, under_institute=institute, name=program, is_ug=grad)
+            print("programs: ", program)
+            for j in compare_years:
+                send_data[j] = dict()
+                data = GraduatesWithPrograms.objects.filter(program=prog,
+                                                        passing_year=j)
 
-        prog= Programs.objects.get(under_campus=campus, under_institute=institute, name=program, is_ug=grad)
-        print("programs: ", program)
-        for j in compare_years:
-            send_data[j] = dict()
-            data = GraduatesWithPrograms.objects.filter(program=prog,
-                                                    passing_year=j)
-
-            if data.exists():
-                print("==>>", data)
+                if data.exists():
+                    try:
+                        send_data[j] = dict({
+                            'total_offers': data[0].total_offers,
+                            'total_multiple_offers': data[0].total_multiple_offers,
+                            'highest_salary': data[0].highest_salary,
+                            'average_salary': data[0].average_salary
+                        })
+                    except:
+                        send_data[j] = dict({
+                            'total_offers': 0,
+                            'total_multiple_offers': 0,
+                            'highest_salary': 0,
+                            'average_salary': 0
+                        })
+        else:
+            for j in compare_years:
+                send_data[j] = dict()
+                data = Graduates.objects.filter(under_institute=institute, under_campus=campus, is_ug=grad, passing_year=j)
+                print("data: ", data)
+                total_offers_aggri = 0
+                total_multiple_offers_aggri = 0
+                highest_salary_max = 0
+                average_salary_avg = 0
+                if data.exists():
+                    serializedData = CompareSerializer(data, many=True).data
+                    for i in serializedData:
+                        print("data i ========> ", i)
+                        total_offers_aggri += i['total_offers']
+                        total_multiple_offers_aggri += i[
+                            'total_multiple_offers']
+                        highest_salary_max = max(
+                            highest_salary_max,
+                            int(float(i['highest_salary'])))
+                        average_salary_avg += int(
+                            float(i['average_salary']))
+                    # send_data[year1].append(serializedData)
                 try:
                     send_data[j] = dict({
-                        'total_offers': data[0].total_offers,
-                        'total_multiple_offers': data[0].total_multiple_offers,
-                        'highest_salary': data[0].highest_salary,
-                        'average_salary': data[0].average_salary
+                        'total_offers':
+                        total_offers_aggri,
+                        'total_multiple_offers':
+                        total_multiple_offers_aggri,
+                        'highest_salary':
+                        highest_salary_max,
+                        'average_salary':
+                        average_salary_avg
                     })
                 except:
                     send_data[j] = dict({
@@ -469,39 +510,6 @@ class CompareYearsData(generics.ListAPIView):
                         'highest_salary': 0,
                         'average_salary': 0
                     })
-
-
-        #         if data.exists():
-        #             count += 1
-        #             serializedData = CompareSerializer(data, many=True).data
-        #             serializedData = serializedData[0]
-        #             total_offers_aggri += serializedData['total_offers']
-        #             total_multiple_offers_aggri += serializedData[
-        #                 'total_multiple_offers']
-        #             highest_salary_max = max(
-        #                 highest_salary_max,
-        #                 int(float(serializedData['highest_salary'])))
-        #             average_salary_avg += int(
-        #                 float(serializedData['average_salary']))
-        #             # send_data[year1].append(serializedData)
-        #     try:
-        #         send_data[j] = dict({
-        #             'total_offers':
-        #             total_offers_aggri,
-        #             'total_multiple_offers':
-        #             total_multiple_offers_aggri,
-        #             'highest_salary':
-        #             highest_salary_max,
-        #             'average_salary':
-        #             average_salary_avg / count
-        #         })
-        #     except:
-        #         send_data[j] = dict({
-        #             'total_offers': 0,
-        #             'total_multiple_offers': 0,
-        #             'highest_salary': 0,
-        #             'average_salary': 0
-        #         })
 
         # send_data[year2] = dict()
 
