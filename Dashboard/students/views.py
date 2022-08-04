@@ -475,26 +475,24 @@ class CompareYearsData(generics.ListAPIView):
 
             return response.Response({'status': 'OK', 'result': send_data})
         elif program=="null" and grad!=None:
-            send_data = dict({
-                "total_offers":0,
-                "total_multiple_offers": 0,
-                "highest_salary": 0,
-                "average_salary": 0
-                })
+            send_data = dict()
             try:
                 for j in compare_years:
-                    res = Graduates.objects.get(under_institute=institute, passing_year=j, is_ug=grad)
-                    send_data[j]["total_offers"] = res.total_offers
-                    send_data[j]["total_multiple_offers"] = res.total_multiple_offers
-                    send_data[j]["highest_salary"] = res.highest_salary
-                    send_data[j]["average_salary"]=res.average_salary
+                    res = Graduates.objects.filter(under_institute=institute, passing_year=j, is_ug=grad)
+                    send_data[j] = dict({
+                                'total_offers': res[0].total_offers,
+                                'total_multiple_offers': res[0].total_multiple_offers,
+                                'highest_salary': res[0].highest_salary,
+                                'average_salary': res[0].average_salary
+                            })
                 return response.Response({
                     "status": "ok",
                     "result": send_data
                     })
-            except:
+            except Exception as e:
                 return response.Response({
                     "status": "Error",
+                    "message": str(e),
                     "result": send_data
                     }, status=HTTP_400_BAD_REQUEST)
         else:
