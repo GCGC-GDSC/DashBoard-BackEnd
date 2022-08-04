@@ -1,5 +1,5 @@
 from rest_framework import generics, status, views, response
-from organization.models import Institute, Campus, Stream
+from organization.models import Institute, Campus, Stream, Programs
 from organization.serializers import CampusSerialize, InstituteSerialize
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser
@@ -8,6 +8,7 @@ from rest_framework import generics
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper
 from tablib import Dataset
+from rest_framework.decorators import api_view
 from rest_framework.status import *
 from .serializers import *
 from .models import *
@@ -99,13 +100,44 @@ class FileUploadView(views.APIView):
 """
 
 
-def export_data_to_excel(request, name):
+@api_view(('GET', ))
+def log_edit_info(request):
+    db_logger = logging.getLogger('db')
+    try:
+        with open("./logs/dblog.txt", "r") as file:
+            i = 0
+            lines_size = 10
+            last_lines = []
+            for line in file:
+                if i < lines_size:
+                    last_lines.append(line)
+                else:
+                    last_lines[i % lines_size] = line
+                i = i + 1
+
+        last_lines = last_lines[(i % lines_size):] + last_lines[:(i %
+                                                                  lines_size)]
+
+        send_data = []
+        for line in last_lines:
+            send_data.append(line)
+        return Response({'status': 'ok', 'result': send_data[::-1]})
+    except Exception as e:
+        db_logger.exception(e)
+
+
+def export_data_to_excel(request, name, year):
     ext = '.xlsx'
     searchfilename = name + ext
-    obj = Graduates.objects.all()
+    if name.lower() == 'overall':
+        obj = Graduates.objects.filter(passing_year=year)
+    else:
+        camp = Campus.objects.get(name=name)
+        obj = Graduates.objects.filter(passing_year=year, under_campus=camp)
+    # print("All objects: ", obj)
     data = []
-    for i in obj:
 
+    for i in obj:
         if i.total_final_years == 0:
             Percentage_of_students_opted_HS_to_the_total_number = 0
             Percentage_of_students_having_backlogs_to_the_total_number_of_students = 0
@@ -119,13 +151,13 @@ def export_data_to_excel(request, name):
             Percentage_of_students_eligible_for_and_requiring_placement = round(
                 ((i.total_students_eligible / i.total_final_years) * 100), 2)
 
-        if i.total_placed == 0:
+        if i.total_students_eligible == 0:
             Percentage_of_students_placed_out_of_eligible_students = 0
         else:
             Percentage_of_students_placed_out_of_eligible_students = round(
                 ((i.total_placed / i.total_students_eligible) * 100), 2)
 
-        if i.total_yet_to_place == 0:
+        if i.total_students_eligible == 0:
             Percentage_of_students_yet_to_be_placed_out_of_eligible_students = 0
         else:
             Percentage_of_students_yet_to_be_placed_out_of_eligible_students = round(
@@ -189,30 +221,77 @@ def export_data_to_excel(request, name):
             "under_institute":
             i.under_institute,
         })
+
+    # print("============================================")
+    # print(data)
+    # print("data: ", len(data))
+    # print("============================================")
     searchpath = "media/" + searchfilename
     #print("=============================", searchpath, "============================")
     wb = openpyxl.load_workbook(searchpath)
     sheet = wb.get_sheet_by_name('CF 2022')
 
     sheet_obj = wb.active
-
     dic = {}
+
+    # if name.lower()=='overall':
+    #     try:
+    #         for da in data:
+    #             for i in da:
+    #                 pass
+    #     except:
+    #         print("does not belong to this campus: ", inst)
+
+    # camp_vals = []
+
+    campus_id_values = {
+        'Visakhapatnam Campus': 'vskp',
+        'Hyderabad Campus': 'hyd',
+        'Bengaluru Campus': 'blr',
+    }
+
+    # for x in range(3, sheet_obj.max_column + 1):
+    #     val = (sheet_obj.cell(row=2, column=x).value)
+    #     if val == None:
+    #         continue
+    #     if val.lower() == 'total':
+    #         continue
+    #     camp_vals.append(campus_id_values[val.lower()])
+
+    # print("campvals: ", camp_vals)
 
     for x in range(3, sheet_obj.max_column + 1):
         val = (sheet_obj.cell(row=3, column=x).value)
-        if val == None:
+        camp_val = (sheet_obj.cell(row=2, column=x).value)
+        if camp_val == None and val == None:
             continue
-        dic[val.lower()] = x
+        if camp_val != None:
+            if camp_val != 'Total':
+                camp_val = campus_id_values[camp_val]
+                dic[camp_val] = {}
+            if val != None:
+                tempval = list(dic)[-1]
+                dic[tempval][val.lower()] = x
+
+        elif dic != {} and val != None:
+            tempval = list(dic)[-1]
+            # print("temp_Val: ", tempval)
+            dic[tempval][val.lower()] = x
+
+    print("this is the value: ", dic)
 
     for da in data:
         inst = da['under_institute_name']
+        camp = da['under_campus']
+        # print(camp, "-->", inst)
+        # print("values: ", dic[camp.name][inst])
         try:
             num = 5
-            val = dic[inst.lower()]
+            val = dic[camp.name][inst.lower()]
+            # print("===>>", val)
             #print("val", val, inst)
             if da['is_ug'] is False:
                 val += 1
-
             for i in da:
                 if num < 28:
                     totnum = 64 + val
@@ -238,7 +317,7 @@ class FileDownloadListAPIView(generics.ListAPIView):
         try:
             filename = f"{str(name).upper()} Career Fulfillment Statistics - 2022 Batch"
             try:
-                export_data_to_excel(request, name)
+                export_data_to_excel(request, name, year)
             except Exception as e:
                 return Response({
                     'status': 'error',
