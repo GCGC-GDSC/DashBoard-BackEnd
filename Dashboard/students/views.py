@@ -55,6 +55,7 @@ class GraduateList(generics.ListAPIView):
                                      status=HTTP_500_INTERNAL_SERVER_ERROR)
         return response.Response({'status': 'OK', 'result': send_data})
 
+
 class InstituteGradList(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
     permission_classes = (IsAuthenticated, )
@@ -124,7 +125,7 @@ class Overall(generics.ListAPIView):
 
             inst_data = Institute.objects.filter(stream=stream_data[0].id)
             for inst in inst_data:
-                name = inst.name+"-"+inst.under_campus.name
+                name = inst.name + "-" + inst.under_campus.name
                 graduates = Graduates.objects.filter(under_institute=inst.id,
                                                      is_ug=True,
                                                      passing_year=year)
@@ -161,7 +162,8 @@ class Gbstats(generics.ListAPIView):
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
-            },status=HTTP_400_BAD_REQUEST)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
 
 
 class SelectGraduates(generics.ListAPIView):
@@ -177,14 +179,19 @@ class SelectGraduates(generics.ListAPIView):
                 grads = Graduates.objects.get(
                     under_institute=inst,
                     is_ug=(True if grad == "ug" else False),
-                    passing_year=year, under_campus=campus)
+                    passing_year=year,
+                    under_campus=campus)
                 send_data = GraduatesSerializer(grads).data
-                return response.Response({'status': 'OK', 'result': [send_data]})
+                return response.Response({
+                    'status': 'OK',
+                    'result': [send_data]
+                })
             else:
                 program = Programs.objects.get(
                     name=coursename,
                     is_ug=(True if grad == "ug" else False),
-                    under_institute=inst, under_campus=campus)
+                    under_institute=inst,
+                    under_campus=campus)
                 queryset = GraduatesWithPrograms.objects.filter(
                     program=program, under_campus=campus).all()
                 grads = queryset.filter(
@@ -431,7 +438,7 @@ class CompareYearsData(generics.ListAPIView):
         compare_years = [year1, year2]
         if grad == 'ug':
             grad = True
-        elif grad== 'pg':
+        elif grad == 'pg':
             grad = False
         else:
             grad = None
@@ -439,7 +446,8 @@ class CompareYearsData(generics.ListAPIView):
         send_data = {}
         try:
             campus = Campus.objects.get(name=campus)
-            institute = Institute.objects.get(name=institute, under_campus=campus)
+            institute = Institute.objects.get(name=institute,
+                                              under_campus=campus)
         except Exception as e:
             # print(e)
             return response.Response({
@@ -447,23 +455,30 @@ class CompareYearsData(generics.ListAPIView):
                 'result': str(e)
             },
                                      status=HTTP_400_BAD_REQUEST)
-        
-        if program!="null":
-            prog= Programs.objects.get(under_campus=campus, under_institute=institute, name=program, is_ug=grad)
+
+        if program != "null":
+            prog = Programs.objects.get(under_campus=campus,
+                                        under_institute=institute,
+                                        name=program,
+                                        is_ug=grad)
             # print("programs: ", program)
             for j in compare_years:
                 send_data[j] = dict()
                 data = GraduatesWithPrograms.objects.filter(program=prog,
-                                                        passing_year=j)
+                                                            passing_year=j)
 
                 if data.exists():
                     # print("==>>", data)
                     try:
                         send_data[j] = dict({
-                            'total_offers': data[0].total_offers,
-                            'total_multiple_offers': data[0].total_multiple_offers,
-                            'highest_salary': data[0].highest_salary,
-                            'average_salary': data[0].average_salary
+                            'total_offers':
+                            data[0].total_offers,
+                            'total_multiple_offers':
+                            data[0].total_multiple_offers,
+                            'highest_salary':
+                            data[0].highest_salary,
+                            'average_salary':
+                            data[0].average_salary
                         })
                     except:
                         send_data[j] = dict({
@@ -474,35 +489,44 @@ class CompareYearsData(generics.ListAPIView):
                         })
 
             return response.Response({'status': 'OK', 'result': send_data})
-        elif program=="null" and grad!=None:
+        elif program == "null" and grad != None:
             send_data = dict({
-                "total_offers":0,
+                "total_offers": 0,
                 "total_multiple_offers": 0,
                 "highest_salary": 0,
                 "average_salary": 0
-                })
+            })
             try:
                 for j in compare_years:
-                    res = Graduates.objects.get(under_institute=institute, passing_year=j, is_ug=grad)
+                    res = Graduates.objects.get(under_institute=institute,
+                                                passing_year=j,
+                                                is_ug=grad)
                     send_data[j]["total_offers"] = res.total_offers
-                    send_data[j]["total_multiple_offers"] = res.total_multiple_offers
+                    send_data[j][
+                        "total_multiple_offers"] = res.total_multiple_offers
                     send_data[j]["highest_salary"] = res.highest_salary
-                    send_data[j]["average_salary"]=res.average_salary
-                return response.Response({
-                    "status": "ok",
-                    "result": send_data
-                    })
+                    send_data[j]["average_salary"] = res.average_salary
+                return response.Response({"status": "ok", "result": send_data})
             except:
-                return response.Response({
-                    "status": "Error",
-                    "result": send_data
-                    }, status=HTTP_400_BAD_REQUEST)
+                return response.Response(
+                    {
+                        "status": "Error",
+                        "result": send_data
+                    },
+                    status=HTTP_400_BAD_REQUEST)
         else:
-            return response.Response({
-                    "status": "Error",
-                    "result": None,
-                    "message": "request is not allowed with the params"+str((year1,year2, campus, institute, program,grad))
-                    }, status=HTTP_400_BAD_REQUEST)
+            return response.Response(
+                {
+                    "status":
+                    "Error",
+                    "result":
+                    None,
+                    "message":
+                    "request is not allowed with the params" + str(
+                        (year1, year2, campus, institute, program, grad))
+                },
+                status=HTTP_400_BAD_REQUEST)
+
 
 class LogsDataListAPIView(generics.ListAPIView):
     serializer_class = GraduatesSerializer
