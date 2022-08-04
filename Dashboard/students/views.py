@@ -17,6 +17,7 @@ import calendar
 import traceback
 import logging
 import json
+from collections import defaultdict
 
 from django.http import HttpResponse
 
@@ -109,7 +110,7 @@ class Overall(generics.ListAPIView):
     def get(self, request, year, stream):
         db_logger = logging.getLogger('db')
         try:
-            send_data = {}
+            send_data = defaultdict(list)
             stream_data = Stream.objects.filter(name=stream)
 
             if len(stream_data) == 0:
@@ -123,18 +124,18 @@ class Overall(generics.ListAPIView):
 
             inst_data = Institute.objects.filter(stream=stream_data[0].id)
             for inst in inst_data:
-                send_data[inst.name] = []
+                name = inst.name+"-"+inst.under_campus.name
                 graduates = Graduates.objects.filter(under_institute=inst.id,
                                                      is_ug=True,
                                                      passing_year=year)
                 data = InstituteGradListSeralizer(graduates, many=True).data
-                send_data[inst.name].append(data)
+                send_data[name].append(data)
 
                 graduates = Graduates.objects.filter(under_institute=inst.id,
                                                      is_ug=False,
                                                      passing_year=year)
                 data = InstituteGradListSeralizer(graduates, many=True).data
-                send_data[inst.name].append(data)
+                send_data[name].append(data)
 
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
