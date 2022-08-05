@@ -25,6 +25,7 @@ class InstituteSerialize(serializers.ModelSerializer):
         fields = ('id', 'name', 'campus_name')
         ordering = ['-under_campus']
 
+
 class CoursesSeralizer(serializers.ModelSerializer):
     # campus_name = serializers.SerializerMethodField('_course_name')
     # institute_name = serializers.SerializerMethodField('_institute_name')
@@ -44,7 +45,8 @@ class ProgramSeralizer(serializers.ModelSerializer):
 
     class Meta:
         model = Programs
-        fields = ['name','is_ug']
+        fields = ['name', 'is_ug']
+
 
 class StreamsSeralizer(serializers.ModelSerializer):
 
@@ -68,7 +70,9 @@ class InstituteSerializeParse(serializers.ModelSerializer):
         return str(obj.under_campus)
 
     def _programs(self, obj):
-        return ProgramSeralizer(Programs.objects.filter(under_institute=obj, under_campus=obj.under_campus), many=True).data
+        return ProgramSeralizer(Programs.objects.filter(
+            under_institute=obj, under_campus=obj.under_campus),
+                                many=True).data
 
     class Meta:
         model = Institute

@@ -5,6 +5,7 @@ from .models import Graduates, GraduatesWithPrograms
 from django.db.models import Q, Count, Max, Sum, Min, Avg
 from math import *
 
+
 class GraduatesSerializer(serializers.ModelSerializer):
 
     Percentage_of_students_opted_HS_to_the_total_number = serializers.SerializerMethodField(
@@ -279,31 +280,26 @@ class ProgramGraduatesSerializer(serializers.ModelSerializer):
         except:
             return 0
 
-
     class Meta:
         model = GraduatesWithPrograms
         fields = [
-        'id',
-        'under_institute_name',
-        'under_campus_name',
-        'program_name',
-        'passing_year',
-        'total_students', 'total_final_years',
-        'total_higher_study_and_pay_crt',
-        'total_opted_for_higher_studies_only',
-        'total_not_intrested_in_placments',
-        'total_backlogs_opted_for_placements',
-        'total_backlogs_opted_for_higherstudies',
-        'total_backlogs_opted_for_other_career_options', 'total_backlogs',
-        'total_students_eligible', 'total_offers', 'total_multiple_offers',
-        'total_placed', 'total_yet_to_place', 'highest_salary',
-        'average_salary', 'lowest_salary',
-        'Percentage_of_students_opted_HS_to_the_total_number',
-        'Percentage_of_students_having_backlogs_to_the_total_number_of_students',
-        'Percentage_of_students_eligible_for_and_requiring_placement',
-        'Percentage_of_students_placed_out_of_eligible_students',
-        'Percentage_of_students_yet_to_be_placed_out_of_eligible_students',
-        'is_ug'
+            'id', 'under_institute_name', 'under_campus_name', 'program_name',
+            'passing_year', 'total_students', 'total_final_years',
+            'total_higher_study_and_pay_crt',
+            'total_opted_for_higher_studies_only',
+            'total_not_intrested_in_placments',
+            'total_backlogs_opted_for_placements',
+            'total_backlogs_opted_for_higherstudies',
+            'total_backlogs_opted_for_other_career_options', 'total_backlogs',
+            'total_students_eligible', 'total_offers', 'total_multiple_offers',
+            'total_placed', 'total_yet_to_place', 'highest_salary',
+            'average_salary', 'lowest_salary',
+            'Percentage_of_students_opted_HS_to_the_total_number',
+            'Percentage_of_students_having_backlogs_to_the_total_number_of_students',
+            'Percentage_of_students_eligible_for_and_requiring_placement',
+            'Percentage_of_students_placed_out_of_eligible_students',
+            'Percentage_of_students_yet_to_be_placed_out_of_eligible_students',
+            'is_ug'
         ]
 
 
@@ -441,6 +437,7 @@ class CompareSerializer(serializers.ModelSerializer):
             'average_salary'
         ]
 
+
 class GraduatesWithProgramsSerializer(serializers.ModelSerializer):
     Program = serializers.SerializerMethodField('_Program')
 
@@ -448,8 +445,8 @@ class GraduatesWithProgramsSerializer(serializers.ModelSerializer):
         return obj.program.name
 
     class Meta:
-        model=GraduatesWithPrograms
-        fields='__all__'
+        model = GraduatesWithPrograms
+        fields = '__all__'
 
 
 class UpdateGraduatesWithProgramsSerializer(serializers.ModelSerializer):

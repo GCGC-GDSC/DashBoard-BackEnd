@@ -18,7 +18,6 @@ import datetime
 import calendar
 import traceback
 import logging
-
 """
 class FileUploadView(views.APIView):
     parser_classes = [FileUploadParser]
@@ -101,7 +100,7 @@ class FileUploadView(views.APIView):
 """
 
 
-@api_view(('GET',))
+@api_view(('GET', ))
 def log_edit_info(request):
     db_logger = logging.getLogger('db')
     try:
@@ -116,8 +115,8 @@ def log_edit_info(request):
                     last_lines[i % lines_size] = line
                 i = i + 1
 
-        last_lines = last_lines[
-            (i % lines_size):] + last_lines[:(i % lines_size)]
+        last_lines = last_lines[(i % lines_size):] + last_lines[:(i %
+                                                                  lines_size)]
 
         send_data = []
         for line in last_lines:
@@ -126,10 +125,11 @@ def log_edit_info(request):
     except Exception as e:
         db_logger.exception(e)
 
+
 def export_data_to_excel(request, name, year):
     ext = '.xlsx'
     searchfilename = name + ext
-    if name.lower()=='overall':
+    if name.lower() == 'overall':
         obj = Graduates.objects.filter(passing_year=year)
     else:
         camp = Campus.objects.get(name=name)
@@ -235,19 +235,18 @@ def export_data_to_excel(request, name, year):
     dic = {}
 
     # if name.lower()=='overall':
-    #     try: 
+    #     try:
     #         for da in data:
     #             for i in da:
     #                 pass
     #     except:
     #         print("does not belong to this campus: ", inst)
 
-
     # camp_vals = []
 
     campus_id_values = {
         'Visakhapatnam Campus': 'vskp',
-        'Hyderabad Campus': 'hyd', 
+        'Hyderabad Campus': 'hyd',
         'Bengaluru Campus': 'blr',
     }
 
@@ -258,29 +257,28 @@ def export_data_to_excel(request, name, year):
     #     if val.lower() == 'total':
     #         continue
     #     camp_vals.append(campus_id_values[val.lower()])
-    
+
     # print("campvals: ", camp_vals)
 
     for x in range(3, sheet_obj.max_column + 1):
         val = (sheet_obj.cell(row=3, column=x).value)
         camp_val = (sheet_obj.cell(row=2, column=x).value)
-        if camp_val==None and val==None:
+        if camp_val == None and val == None:
             continue
-        if camp_val!=None:
-            if camp_val != 'Total':          
+        if camp_val != None:
+            if camp_val != 'Total':
                 camp_val = campus_id_values[camp_val]
                 dic[camp_val] = {}
-            if val!=None:
+            if val != None:
                 tempval = list(dic)[-1]
                 dic[tempval][val.lower()] = x
-                
-        elif dic!={} and val!=None:
+
+        elif dic != {} and val != None:
             tempval = list(dic)[-1]
             # print("temp_Val: ", tempval)
             dic[tempval][val.lower()] = x
-        
 
-    print("this is the value: ",dic)
+    print("this is the value: ", dic)
 
     for da in data:
         inst = da['under_institute_name']
