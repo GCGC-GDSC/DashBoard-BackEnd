@@ -1,7 +1,7 @@
 from dataclasses import fields
 from rest_framework import serializers, status
 from organization.models import Institute
-from .models import Graduates, GraduatesWithPrograms
+from .models import Graduates, GraduatesWithPrograms, Highlights
 from django.db.models import Q, Count, Max, Sum, Min, Avg
 from math import *
 
@@ -528,3 +528,10 @@ class UpdateGraduatesWithProgramsSerializer(serializers.ModelSerializer):
             'Percentage_of_students_placed_out_of_eligible_students',
             'Percentage_of_students_yet_to_be_placed_out_of_eligible_students',
         )
+
+
+class HighlightsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Highlights
+        fields = '__all__'

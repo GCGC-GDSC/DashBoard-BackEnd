@@ -34,6 +34,7 @@ urlpatterns = [
          UpdateGraduatesWithPrograms.as_view(),
          name='data-update-view-with-programs'),
     path('logs', utils.log_edit_info, name='logs-api'),
+    path('<int:year>/highlights', HighlightsView.as_view(), name='Highlights'),
 
     # Dont touch
     # path('createinstances/<str:year>/', CreateInstances, name='CreateInstances'),

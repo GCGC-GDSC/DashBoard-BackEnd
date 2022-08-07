@@ -777,3 +777,19 @@ def CreateInstances(request, year):
 
         return HttpResponse(json.dumps(response_data),
                             content_type="application/json")
+
+class HighlightsView(generics.ListAPIView):
+    serializer_class = HighlightsSerializer
+    permission_classes = (IsAuthenticated, )
+    
+    def get(self, request, year):
+        try:
+            data = Highlights.objects.filter(passing_year=year)
+            responce_data = HighlightsSerializer(data, many=True).data
+            return response.Response({'status': 'OK', 'result': responce_data})
+        except Exception as e:
+            return response.Response({
+                'status': 'Error',
+                'result': str(e)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
