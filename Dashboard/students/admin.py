@@ -113,5 +113,5 @@ class GraduatesWithProgramsAdmin(admin.ModelAdmin):
 
 
 admin.site.register(GraduatesWithPrograms, GraduatesWithProgramsAdmin)
-admin.site.register(Highlights)
+# admin.site.register(Highlights)
 

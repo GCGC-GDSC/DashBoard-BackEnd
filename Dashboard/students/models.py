@@ -201,9 +201,9 @@ class GraduatesWithPrograms(models.Model):
 
 '''class ExcelData(models.Model):
     uploadedFile = models.FileField(upload_to="UploadedFiles/")'''
-class Highlights(models.Model):
-    companies = models.IntegerField(default=0)
-    students_placed = models.IntegerField(default=0)
-    Highest_package = models.IntegerField(default=0)
-    off_placements = models.IntegerField(default=0)
-    passing_year = models.CharField(choices=PASSING_YEAR, default='2022', max_length=4)
+# class Highlights(models.Model):
+#     companies = models.IntegerField(default=0)
+#     students_placed = models.IntegerField(default=0)
+#     Highest_package = models.IntegerField(default=0)
+#     off_placements = models.IntegerField(default=0)
+#     passing_year = models.CharField(choices=PASSING_YEAR, default='2022', max_length=4)

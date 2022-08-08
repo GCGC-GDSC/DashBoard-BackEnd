@@ -435,7 +435,7 @@ class CompareYearsData(generics.ListAPIView):
     serializer_class = CompareSerializer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, year1, year2, campus, institute, program, grad):
+    def get(self, request, year1, year2, campus, institute, course, grad):
         compare_years = [year1, year2]
         if grad == 'ug':
             grad = True
@@ -457,29 +457,53 @@ class CompareYearsData(generics.ListAPIView):
             },
                                      status=HTTP_400_BAD_REQUEST)
 
-        if program != "null":
-            prog = Programs.objects.get(under_campus=campus,
+        if course != "null":
+            course = Courses.objects.get(course=course)
+            prog = Programs.objects.filter(under_campus=campus,
                                         under_institute=institute,
-                                        name=program,
+                                        under_course=course,
                                         is_ug=grad)
+            print("Programs ===> ", prog)
+
+            # prog = Programs.objects.get(under_campus=campus,
+            #                             under_institute=institute,
+            #                             name=program,
+            #                             is_ug=grad)
             # print("programs: ", program)
+
             for j in compare_years:
                 send_data[j] = dict()
-                data = GraduatesWithPrograms.objects.filter(program=prog,
-                                                            passing_year=j)
-
-                if data.exists():
-                    # print("==>>", data)
+                total_offers_aggri = 0
+                total_multiple_offers_aggri = 0
+                highest_salary_max = 0
+                average_salary_avg = 0
+                for pro in prog:
+                    data = GraduatesWithPrograms.objects.filter(program=pro,
+                                                                passing_year=j)
+                    print("data: ", data)
+                    if data.exists():
+                        serializedData = CompareSerializer(data, many=True).data
+                        for i in serializedData:
+                            # print("data i ========> ", i)
+                            total_offers_aggri += i['total_offers']
+                            total_multiple_offers_aggri += i[
+                                'total_multiple_offers']
+                            highest_salary_max = max(
+                                highest_salary_max,
+                                int(float(i['highest_salary'])))
+                            average_salary_avg += int(
+                                float(i['average_salary']))
+                        # send_data[year1].append(serializedData)
                     try:
                         send_data[j] = dict({
                             'total_offers':
-                            data[0].total_offers,
+                            total_offers_aggri,
                             'total_multiple_offers':
-                            data[0].total_multiple_offers,
+                            total_multiple_offers_aggri,
                             'highest_salary':
-                            data[0].highest_salary,
+                            highest_salary_max,
                             'average_salary':
-                            data[0].average_salary
+                            average_salary_avg
                         })
                     except:
                         send_data[j] = dict({
@@ -488,6 +512,28 @@ class CompareYearsData(generics.ListAPIView):
                             'highest_salary': 0,
                             'average_salary': 0
                         })
+            return response.Response({'status': 'OK', 'result': send_data})
+
+                # if data.exists():
+                #     # print("==>>", data)
+                #     try:
+                #         send_data[j] = dict({
+                #             'total_offers':
+                #             data[0].total_offers,
+                #             'total_multiple_offers':
+                #             data[0].total_multiple_offers,
+                #             'highest_salary':
+                #             data[0].highest_salary,
+                #             'average_salary':
+                #             data[0].average_salary
+                #         })
+                #     except:
+                #         send_data[j] = dict({
+                #             'total_offers': 0,
+                #             'total_multiple_offers': 0,
+                #             'highest_salary': 0,
+                #             'average_salary': 0
+                #         })
         # else:
         #     for j in compare_years:
         #         send_data[j] = dict()
@@ -575,8 +621,8 @@ class CompareYearsData(generics.ListAPIView):
         # return response.Response({'status': 'OK', 'result': send_data})
 
 
-            return response.Response({'status': 'OK', 'result': send_data})
-        elif program == "null" and grad != None:
+            # return response.Response({'status': 'OK', 'result': send_data})
+        elif course == "null" and grad != None:
             send_data = dict({
                 "total_offers": 0,
                 "total_multiple_offers": 0,
@@ -610,7 +656,7 @@ class CompareYearsData(generics.ListAPIView):
                     None,
                     "message":
                     "request is not allowed with the params" + str(
-                        (year1, year2, campus, institute, program, grad))
+                        (year1, year2, campus, institute, course, grad))
                 },
                 status=HTTP_400_BAD_REQUEST)
 
@@ -778,18 +824,18 @@ def CreateInstances(request, year):
         return HttpResponse(json.dumps(response_data),
                             content_type="application/json")
 
-class HighlightsView(generics.ListAPIView):
-    serializer_class = HighlightsSerializer
-    permission_classes = (IsAuthenticated, )
+# class HighlightsView(generics.ListAPIView):
+#     serializer_class = HighlightsSerializer
+#     permission_classes = (IsAuthenticated, )
     
-    def get(self, request, year):
-        try:
-            data = Highlights.objects.filter(passing_year=year)
-            responce_data = HighlightsSerializer(data, many=True).data
-            return response.Response({'status': 'OK', 'result': responce_data})
-        except Exception as e:
-            return response.Response({
-                'status': 'Error',
-                'result': str(e)
-            },
-                                     status=HTTP_400_BAD_REQUEST)
+#     def get(self, request, year):
+#         try:
+#             data = Highlights.objects.filter(passing_year=year)
+#             responce_data = HighlightsSerializer(data, many=True).data
+#             return response.Response({'status': 'OK', 'result': responce_data})
+#         except Exception as e:
+#             return response.Response({
+#                 'status': 'Error',
+#                 'result': str(e)
+#             },
+#                                      status=HTTP_400_BAD_REQUEST)
