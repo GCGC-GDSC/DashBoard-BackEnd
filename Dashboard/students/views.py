@@ -1,3 +1,4 @@
+from socket import INADDR_ALLHOSTS_GROUP
 from tokenize import Name
 from unicodedata import name
 from rest_framework import generics, status, views, response
@@ -54,6 +55,7 @@ class GraduateList(generics.ListAPIView):
             },
                                      status=HTTP_500_INTERNAL_SERVER_ERROR)
         return response.Response({'status': 'OK', 'result': send_data})
+
 
 class InstituteGradList(generics.ListAPIView):
     serializer_class = InstituteGradListSeralizer
@@ -124,7 +126,7 @@ class Overall(generics.ListAPIView):
 
             inst_data = Institute.objects.filter(stream=stream_data[0].id)
             for inst in inst_data:
-                name = inst.name+"-"+inst.under_campus.name
+                name = inst.name + "-" + inst.under_campus.name
                 graduates = Graduates.objects.filter(under_institute=inst.id,
                                                      is_ug=True,
                                                      passing_year=year)
@@ -163,7 +165,8 @@ class Gbstats(generics.ListAPIView):
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
-            },status=HTTP_400_BAD_REQUEST)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
 
 
 class SelectGraduates(generics.ListAPIView):
@@ -179,14 +182,19 @@ class SelectGraduates(generics.ListAPIView):
                 grads = Graduates.objects.get(
                     under_institute=inst,
                     is_ug=(True if grad == "ug" else False),
-                    passing_year=year, under_campus=campus)
+                    passing_year=year,
+                    under_campus=campus)
                 send_data = GraduatesSerializer(grads).data
-                return response.Response({'status': 'OK', 'result': [send_data]})
+                return response.Response({
+                    'status': 'OK',
+                    'result': [send_data]
+                })
             else:
                 program = Programs.objects.get(
                     under_course=course,
                     is_ug=(True if grad == "ug" else False),
-                    under_institute=inst, under_campus=campus)
+                    under_institute=inst,
+                    under_campus=campus)
                 queryset = GraduatesWithPrograms.objects.filter(
                     program=program, under_campus=campus).all()
                 grads = queryset.filter(
@@ -429,19 +437,20 @@ class CompareYearsData(generics.ListAPIView):
     serializer_class = CompareSerializer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, year1, year2, campus, institute, program, grad):
+    def get(self, request, year1, year2, campus, institute, course, grad):
         compare_years = [year1, year2]
         if grad == 'ug':
             grad = True
-        elif grad== 'pg':
+        elif grad == 'pg':
             grad = False
         else:
-            grad = "all"
+            grad = None
 
         send_data = {}
         try:
             campus = Campus.objects.get(name=campus)
-            institute = Institute.objects.get(name=institute, under_campus=campus)
+            institute = Institute.objects.get(name=institute,
+                                              under_campus=campus)
         except Exception as e:
             # print(e)
             return response.Response({
@@ -449,61 +458,210 @@ class CompareYearsData(generics.ListAPIView):
                 'result': str(e)
             },
                                      status=HTTP_400_BAD_REQUEST)
-        
-        if program!="null":
-            prog= Programs.objects.get(under_campus=campus, under_institute=institute, name=program, is_ug=grad)
+# 
+        if course != "null":
+            course = Courses.objects.get(course=course)
+            prog = Programs.objects.filter(under_campus=campus,
+                                        under_institute=institute,
+                                        under_course=course,
+                                        is_ug=grad)
+            print("Programs ===> ", prog)
+
+            # prog = Programs.objects.get(under_campus=campus,
+            #                             under_institute=institute,
+            #                             name=program,
+            #                             is_ug=grad)
             # print("programs: ", program)
+
             for j in compare_years:
                 send_data[j] = dict()
-                data = GraduatesWithPrograms.objects.filter(program=prog,
-                                                        passing_year=j)
-
-                if data.exists():
-                    # print("==>>", data)
+                total_offers_aggri = 0
+                total_multiple_offers_aggri = 0
+                highest_salary_max = 0
+                average_salary_avg = 0
+                for pro in prog:
+                    data = GraduatesWithPrograms.objects.filter(program=pro,
+                                                                passing_year=j)
+                    print("data: ", data)
+                    if data.exists():
+                        serializedData = CompareSerializer(data, many=True).data
+                        for i in serializedData:
+                            # print("data i ========> ", i)
+                            total_offers_aggri += i['total_offers']
+                            total_multiple_offers_aggri += i[
+                                'total_multiple_offers']
+                            highest_salary_max = max(
+                                highest_salary_max,
+                                int(float(i['highest_salary'])))
+                            average_salary_avg += int(
+                                float(i['average_salary']))
+                        # send_data[year1].append(serializedData)
                     try:
                         send_data[j] = dict({
-                            'total_offers': data[0].total_offers,
-                            'total_multiple_offers': data[0].total_multiple_offers,
-                            'highest_salary': data[0].highest_salary,
-                            'average_salary': data[0].average_salary
+                            'total_offers':
+                            total_offers_aggri,
+                            'total_multiple_offers':
+                            total_multiple_offers_aggri,
+                            'highest_salary':
+                            highest_salary_max,
+                            'average_salary':
+                            average_salary_avg
                         })
-                    except Exception as e:
+                    except:
                         send_data[j] = dict({
                             'total_offers': 0,
                             'total_multiple_offers': 0,
                             'highest_salary': 0,
                             'average_salary': 0
                         })
-
             return response.Response({'status': 'OK', 'result': send_data})
-        elif program=="null" and grad!="all":
-            send_data = dict()
+
+                # if data.exists():
+                #     # print("==>>", data)
+                #     try:
+                #         send_data[j] = dict({
+                #             'total_offers':
+                #             data[0].total_offers,
+                #             'total_multiple_offers':
+                #             data[0].total_multiple_offers,
+                #             'highest_salary':
+                #             data[0].highest_salary,
+                #             'average_salary':
+                #             data[0].average_salary
+                #         })
+                #     except:
+                #         send_data[j] = dict({
+                #             'total_offers': 0,
+                #             'total_multiple_offers': 0,
+                #             'highest_salary': 0,
+                #             'average_salary': 0
+                #         })
+        # else:
+        #     for j in compare_years:
+        #         send_data[j] = dict()
+        #         data = Graduates.objects.filter(under_institute=institute, under_campus=campus, is_ug=grad, passing_year=j)
+        #         print("data: ", data)
+        #         total_offers_aggri = 0
+        #         total_multiple_offers_aggri = 0
+        #         highest_salary_max = 0
+        #         average_salary_avg = 0
+        #         if data.exists():
+        #             serializedData = CompareSerializer(data, many=True).data
+        #             for i in serializedData:
+        #                 print("data i ========> ", i)
+        #                 total_offers_aggri += i['total_offers']
+        #                 total_multiple_offers_aggri += i[
+        #                     'total_multiple_offers']
+        #                 highest_salary_max = max(
+        #                     highest_salary_max,
+        #                     int(float(i['highest_salary'])))
+        #                 average_salary_avg += int(
+        #                     float(i['average_salary']))
+        #             # send_data[year1].append(serializedData)
+        #         try:
+        #             send_data[j] = dict({
+        #                 'total_offers':
+        #                 total_offers_aggri,
+        #                 'total_multiple_offers':
+        #                 total_multiple_offers_aggri,
+        #                 'highest_salary':
+        #                 highest_salary_max,
+        #                 'average_salary':
+        #                 average_salary_avg
+        #             })
+        #         except:
+        #             send_data[j] = dict({
+        #                 'total_offers': 0,
+        #                 'total_multiple_offers': 0,
+        #                 'highest_salary': 0,
+        #                 'average_salary': 0
+        #             })
+
+        # # send_data[year2] = dict()
+
+        # # total_offers_aggri = 0
+        # # total_multiple_offers_aggri = 0
+        # # highest_salary_max = 0
+        # # average_salary_avg = 0
+        # # count = 0
+
+        # # for i in programs:
+        # #     data = GraduatesWithPrograms.objects.filter(program=i,
+        # #                                                 passing_year=year2,
+        # #                                                 is_ug=grad)
+        # #     if data.exists():
+        # #         count += 1
+        # #         serializedData = CompareSerializer(data, many=True).data
+        # #         serializedData = serializedData[0]
+        # #         total_offers_aggri += serializedData['total_offers']
+        # #         total_multiple_offers_aggri += serializedData[
+        # #             'total_multiple_offers']
+        # #         highest_salary_max = max(
+        # #             highest_salary_max,
+        # #             int(float(serializedData['highest_salary'])))
+        # #         average_salary_avg += int(
+        # #             float(serializedData['average_salary']))
+        # #         # send_data[year2].append(serializedData)
+        # # try:
+        # #     send_data[year2] = dict({
+        # #         'total_offers':
+        # #         total_offers_aggri,
+        # #         'total_multiple_offers':
+        # #         total_multiple_offers_aggri,
+        # #         'highest_salary':
+        # #         highest_salary_max,
+        # #         'average_salary':
+        # #         average_salary_avg / count
+        # #     })
+        # # except:
+        # #     send_data[year2] = dict({
+        # #         'total_offers': 0,
+        # #         'total_multiple_offers': 0,
+        # #         'highest_salary': 0,
+        # #         'average_salary': 0,
+        # #     })
+        # return response.Response({'status': 'OK', 'result': send_data})
+
+
+            # return response.Response({'status': 'OK', 'result': send_data})
+        elif course == "null" and grad != None:
+            send_data = dict({
+                "total_offers": 0,
+                "total_multiple_offers": 0,
+                "highest_salary": 0,
+                "average_salary": 0
+            })
             try:
                 for j in compare_years:
-                    res = Graduates.objects.filter(under_institute=institute, passing_year=j, is_ug=grad)
-                    send_data[j] = dict({
-                                'total_offers': res[0].total_offers,
-                                'total_multiple_offers': res[0].total_multiple_offers,
-                                'highest_salary': res[0].highest_salary,
-                                'average_salary': res[0].average_salary
-                            })
-                return response.Response({
-                    "status": "ok",
-                    "result": send_data
-                    })
-            except Exception as e:
-                return response.Response({
-                    "status": "Error",
-                    "message": str(e),
-                    "result": send_data
-                    }, status=HTTP_400_BAD_REQUEST)
-
+                    res = Graduates.objects.get(under_institute=institute,
+                                                passing_year=j,
+                                                is_ug=grad)
+                    send_data[j]["total_offers"] = res.total_offers
+                    send_data[j][
+                        "total_multiple_offers"] = res.total_multiple_offers
+                    send_data[j]["highest_salary"] = res.highest_salary
+                    send_data[j]["average_salary"] = res.average_salary
+                return response.Response({"status": "ok", "result": send_data})
+            except:
+                return response.Response(
+                    {
+                        "status": "Error",
+                        "result": send_data
+                    },
+                    status=HTTP_400_BAD_REQUEST)
         else:
-            return response.Response({
-                    "status": "Error",
-                    "result": None,
-                    "message": "request is not allowed with the params"+str((year1,year2, campus, institute, program,grad))
-                    }, status=HTTP_400_BAD_REQUEST)
+            return response.Response(
+                {
+                    "status":
+                    "Error",
+                    "result":
+                    None,
+                    "message":
+                    "request is not allowed with the params" + str(
+                        (year1, year2, campus, institute, course, grad))
+                },
+                status=HTTP_400_BAD_REQUEST)
+
 
 class LogsDataListAPIView(generics.ListAPIView):
     serializer_class = GraduatesSerializer
@@ -667,3 +825,19 @@ def CreateInstances(request, year):
 
         return HttpResponse(json.dumps(response_data),
                             content_type="application/json")
+
+# class HighlightsView(generics.ListAPIView):
+#     serializer_class = HighlightsSerializer
+#     permission_classes = (IsAuthenticated, )
+    
+#     def get(self, request, year):
+#         try:
+#             data = Highlights.objects.filter(passing_year=year)
+#             responce_data = HighlightsSerializer(data, many=True).data
+#             return response.Response({'status': 'OK', 'result': responce_data})
+#         except Exception as e:
+#             return response.Response({
+#                 'status': 'Error',
+#                 'result': str(e)
+#             },
+#                                      status=HTTP_400_BAD_REQUEST)
