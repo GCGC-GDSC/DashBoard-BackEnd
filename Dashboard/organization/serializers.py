@@ -41,10 +41,14 @@ class CoursesSeralizer(serializers.ModelSerializer):
 
 
 class ProgramSeralizer(serializers.ModelSerializer):
+    course = serializers.SerializerMethodField('_course')
+
+    def _course(self, obj):
+        return obj.under_course.course
 
     class Meta:
         model = Programs
-        fields = ['name','is_ug']
+        fields = ['name','course','is_ug']
 
 class StreamsSeralizer(serializers.ModelSerializer):
 

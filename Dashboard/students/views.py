@@ -153,6 +153,8 @@ class Gbstats(generics.ListAPIView):
             ug_grad = Graduates.objects.filter(is_ug=True, passing_year=year)
             pg_grad = Graduates.objects.filter(is_ug=False, passing_year=year)
 
+            print("UG: ",ug_grad)
+
             send_data['UG'] = GBstatsSerializer(ug_grad).data
             send_data['PG'] = GBstatsSerializer(pg_grad).data
             return response.Response({'status': 'OK', 'result': send_data})
@@ -182,7 +184,7 @@ class SelectGraduates(generics.ListAPIView):
                 return response.Response({'status': 'OK', 'result': [send_data]})
             else:
                 program = Programs.objects.get(
-                    name=coursename,
+                    under_course=course,
                     is_ug=(True if grad == "ug" else False),
                     under_institute=inst, under_campus=campus)
                 queryset = GraduatesWithPrograms.objects.filter(
@@ -434,7 +436,7 @@ class CompareYearsData(generics.ListAPIView):
         elif grad== 'pg':
             grad = False
         else:
-            grad = None
+            grad = "all"
 
         send_data = {}
         try:
@@ -465,7 +467,7 @@ class CompareYearsData(generics.ListAPIView):
                             'highest_salary': data[0].highest_salary,
                             'average_salary': data[0].average_salary
                         })
-                    except:
+                    except Exception as e:
                         send_data[j] = dict({
                             'total_offers': 0,
                             'total_multiple_offers': 0,
@@ -474,7 +476,7 @@ class CompareYearsData(generics.ListAPIView):
                         })
 
             return response.Response({'status': 'OK', 'result': send_data})
-        elif program=="null" and grad!=None:
+        elif program=="null" and grad!="all":
             send_data = dict()
             try:
                 for j in compare_years:
@@ -495,6 +497,7 @@ class CompareYearsData(generics.ListAPIView):
                     "message": str(e),
                     "result": send_data
                     }, status=HTTP_400_BAD_REQUEST)
+
         else:
             return response.Response({
                     "status": "Error",
