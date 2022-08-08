@@ -456,7 +456,7 @@ class CompareYearsData(generics.ListAPIView):
                 'result': str(e)
             },
                                      status=HTTP_400_BAD_REQUEST)
-
+# 
         if course != "null":
             course = Courses.objects.get(course=course)
             prog = Programs.objects.filter(under_campus=campus,
