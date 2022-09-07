@@ -399,11 +399,19 @@ class GBstatsSerializer(serializers.ModelSerializer):
                                    total_not_intrested_in_placments -
                                    total_backlogs_opted_for_placements)
 
+        # serializer = (Graduates.objects.filter(id__in=obj).aggregate(
+        #     total_not_intrested_in_placments=Sum(
+        #         total_not_intrested_in_placments),
+        #     total_offers=Sum(total_offers),
+        #     total_multiple_offers=Sum(total_multiple_offers)))
+               
+
+        ## This is a tempory solution need to be fix ASAP /15 is not accaptable
         serializer = (Graduates.objects.filter(id__in=obj).aggregate(
             total_not_intrested_in_placments=Sum(
-                total_not_intrested_in_placments),
-            total_offers=Sum(total_offers),
-            total_multiple_offers=Sum(total_multiple_offers)))
+                total_not_intrested_in_placments)/15,
+            total_offers=Sum(total_offers)/15,
+            total_multiple_offers=Sum(total_multiple_offers)/15))
 
         serializer.update({
             "placed": (total_offers - total_multiple_offers),

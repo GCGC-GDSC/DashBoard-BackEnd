@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 from organization.serializers import CampusSerialize, InstituteSerialize
 from rest_framework.response import Response
-from django.db.models import Q
+from django.db.models import Q, Sum
 from .serializers import *
 from .models import *
 from rest_framework.status import *
@@ -155,7 +155,17 @@ class Gbstats(generics.ListAPIView):
             ug_grad = Graduates.objects.filter(is_ug=True, passing_year=year)
             pg_grad = Graduates.objects.filter(is_ug=False, passing_year=year)
 
-            print("UG: ",ug_grad)
+            
+
+            # print(ug_grad.aggregate(total_students__sum=Sum('total_students'))['total_students__sum'])
+            # print(ug_grad.aggregate(total_final_years__sum=Sum('total_final_years'))['total_final_years__sum'])
+            # print(ug_grad.aggregate(total_higher_study_and_pay_crt__sum=Sum('total_higher_study_and_pay_crt'))['total_higher_study_and_pay_crt__sum'])
+            # print(ug_grad.aggregate(total_backlogs__sum=Sum('total_backlogs'))['total_backlogs__sum'])
+            # print(ug_grad.aggregate(total_students_eligible__sum=Sum('total_students_eligible'))['total_students_eligible__sum'])
+            # print(ug_grad.aggregate(total_not_intrested_in_placments__sum=Sum('total_not_intrested_in_placments'))['total_not_intrested_in_placments__sum'])
+            # print(ug_grad.aggregate(total_opted_for_higher_studies_only__sum=Sum('total_opted_for_higher_studies_only'))['total_opted_for_higher_studies_only__sum'])
+
+
 
             send_data['UG'] = GBstatsSerializer(ug_grad).data
             send_data['PG'] = GBstatsSerializer(pg_grad).data
@@ -432,12 +442,11 @@ class ProgramsGraduates(generics.ListAPIView):
             },
                                      status=HTTP_400_BAD_REQUEST)
 
-
 class CompareYearsData(generics.ListAPIView):
     serializer_class = CompareSerializer
     permission_classes = (IsAuthenticated, )
 
-    def get(self, request, year1, year2, campus, institute, course, grad):
+    def get(self, request, year1, year2, campus, institute, coursename, grad):
         compare_years = [year1, year2]
         if grad == 'ug':
             grad = True
@@ -459,8 +468,8 @@ class CompareYearsData(generics.ListAPIView):
             },
                                      status=HTTP_400_BAD_REQUEST)
 # 
-        if course != "null":
-            course = Courses.objects.get(course=course)
+        if coursename != "null":
+            course = Courses.objects.get(course=coursename)
             prog = Programs.objects.filter(under_campus=campus,
                                         under_institute=institute,
                                         under_course=course,
@@ -624,7 +633,7 @@ class CompareYearsData(generics.ListAPIView):
 
 
             # return response.Response({'status': 'OK', 'result': send_data})
-        elif course == "null" and grad != None:
+        elif coursename == "null" and grad != None:
             send_data = dict({
                 "total_offers": 0,
                 "total_multiple_offers": 0,
@@ -642,11 +651,12 @@ class CompareYearsData(generics.ListAPIView):
                     send_data[j]["highest_salary"] = res.highest_salary
                     send_data[j]["average_salary"] = res.average_salary
                 return response.Response({"status": "ok", "result": send_data})
-            except:
+            except Exception as e:
                 return response.Response(
                     {
                         "status": "Error",
-                        "result": send_data
+                        "result": send_data,
+                        "message": str(e)
                     },
                     status=HTTP_400_BAD_REQUEST)
         else:
@@ -658,7 +668,7 @@ class CompareYearsData(generics.ListAPIView):
                     None,
                     "message":
                     "request is not allowed with the params" + str(
-                        (year1, year2, campus, institute, course, grad))
+                        (year1, year2, campus, institute, coursename, grad))
                 },
                 status=HTTP_400_BAD_REQUEST)
 
