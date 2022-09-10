@@ -406,12 +406,13 @@ class GBstatsSerializer(serializers.ModelSerializer):
         #     total_multiple_offers=Sum(total_multiple_offers)))
                
 
-        ## This is a tempory solution need to be fix ASAP /15 is not accaptable
+        ## This is a tempory solution need to be fix ASAP /length is not accaptable
+        length = len(Graduates.objects.filter(id__in=obj))
         serializer = (Graduates.objects.filter(id__in=obj).aggregate(
             total_not_intrested_in_placments=Sum(
-                total_not_intrested_in_placments)/15,
-            total_offers=Sum(total_offers)/15,
-            total_multiple_offers=Sum(total_multiple_offers)/15))
+                total_not_intrested_in_placments)/length,
+            total_offers=Sum(total_offers)/length,
+            total_multiple_offers=Sum(total_multiple_offers)/length))
 
         serializer.update({
             "placed": (total_offers - total_multiple_offers),
@@ -441,8 +442,8 @@ class CompareSerializer(serializers.ModelSerializer):
     class Meta:
         model = Graduates
         fields = [
-            'total_offers', 'total_multiple_offers', 'highest_salary',
-            'average_salary'
+            'total_placed', 'total_multiple_offers', 'highest_salary',
+            'average_salary', 'total_students_eligible'
         ]
 
 

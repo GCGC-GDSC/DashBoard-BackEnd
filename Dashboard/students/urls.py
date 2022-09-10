@@ -26,8 +26,12 @@ urlpatterns = [
          utils.FileDownloadListAPIView.as_view(),
          name='download-api'),
     path('<int:year>/programs', ProgramsGraduates.as_view(), name='courses'),
+    # path(
+    #     'compare/<int:year1>/<int:year2>/<str:campus>/<str:institute>/<str:coursename>/<str:grad>',
+    #     CompareYearsData.as_view(),
+    #     name='compare'),
     path(
-        'compare/<int:year1>/<int:year2>/<str:campus>/<str:institute>/<str:coursename>/<str:grad>',
+        'compare/<int:year1>/<int:year2>/<str:campus>/<str:institute>',
         CompareYearsData.as_view(),
         name='compare'),
     path('<int:year>/updateprograms/<pk>',
