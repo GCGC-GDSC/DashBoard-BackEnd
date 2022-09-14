@@ -1,0 +1,1 @@
+[{"model": "organization.campus", "pk": 1, "fields": {"name": "vskp", "inst_count": 8}}, {"model": "organization.campus", "pk": 2, "fields": {"name": "hyd", "inst_count": 4}}, {"model": "organization.campus", "pk": 3, "fields": {"name": "blr", "inst_count": 3}}]

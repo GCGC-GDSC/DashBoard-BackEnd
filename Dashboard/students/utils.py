@@ -131,6 +131,11 @@ def export_data_to_excel(request, name, year):
     searchfilename = name + ext
     if name.lower() == 'overall':
         obj = Graduates.objects.filter(passing_year=year)
+    elif name.lower() == 'gst':
+        camp = Campus.objects.get(name='vskp')
+        inst = Institute.objects.get(name='gst', under_campus=camp)
+        obj = GraduatesWithPrograms.objects.filter(passing_year=year, under_institute=inst, under_campus=camp)
+        print("objects: ", obj)
     else:
         camp = Campus.objects.get(name=name)
         obj = Graduates.objects.filter(passing_year=year, under_campus=camp)
@@ -162,6 +167,11 @@ def export_data_to_excel(request, name, year):
         else:
             Percentage_of_students_yet_to_be_placed_out_of_eligible_students = round(
                 ((i.total_yet_to_place / i.total_students_eligible) * 100), 2)
+        program = ""
+        try:
+            program = i.program
+        except:
+            pass
 
         data.append({
             "total_students":
@@ -220,6 +230,7 @@ def export_data_to_excel(request, name, year):
             i.under_campus,
             "under_institute":
             i.under_institute,
+            "program": program
         })
 
     # print("============================================")
@@ -229,7 +240,46 @@ def export_data_to_excel(request, name, year):
     searchpath = "media/" + searchfilename
     #print("=============================", searchpath, "============================")
     wb = openpyxl.load_workbook(searchpath)
-    sheet = wb.get_sheet_by_name('CF 2022')
+    if name.lower() == 'gst':
+        sheet = wb.get_sheet_by_name('CF 2022')
+        print("sheet ==>>", sheet)
+        sheet_obj = wb.active
+        dic = {}
+
+        for x in range(3, sheet_obj.max_column + 1):
+            val = (sheet_obj.cell(row=3, column=x).value)
+            if val == None:
+                continue
+            dic[val.lower()] = x
+
+        print("dic value: =====>", dic)
+        
+        for da in data:
+            inst = da['program']
+            try:
+                num = 5
+                val = dic[inst.lower()]
+                #print("val", val, inst)
+                if da['is_ug'] is False:
+                    val += 1
+
+                for i in da:
+                    if num < 28:
+                        totnum = 64 + val
+                        if totnum <= 90:
+                            cell = chr(64 + val) + str(num)
+                        else:
+                            diff = totnum - 90
+                            cell = chr(65) + chr(64 + diff) + str(num)
+                        inpval = da[i]
+                        sheet[cell] = inpval
+                    num += 1
+            except:
+                print("does not belong to this campus", inst)
+        wb.save('media/out.xlsx')
+        return JsonResponse({'status': 200})
+    else:
+        sheet = wb.get_sheet_by_name('CF 2022')
 
     sheet_obj = wb.active
     dic = {}
