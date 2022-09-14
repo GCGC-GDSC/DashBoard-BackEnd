@@ -201,7 +201,7 @@ class SelectGraduates(generics.ListAPIView):
                 })
             else:
                 program = Programs.objects.get(
-                    under_course=course,
+                    name=coursename,
                     is_ug=(True if grad == "ug" else False),
                     under_institute=inst,
                     under_campus=campus)
