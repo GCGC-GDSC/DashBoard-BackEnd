@@ -207,9 +207,9 @@ class InstituteGradListSeralizer(serializers.ModelSerializer):
 
     def _salary(self, obj):
         return {
-            "highest": obj.highest_salary,
-            "average": obj.average_salary,
-            "lowest": obj.lowest_salary
+            "highest_salary": obj.highest_salary,
+            "average_salary": obj.average_salary,
+            "lowest_salary": obj.lowest_salary
         }
 
     class Meta:
@@ -438,9 +438,9 @@ class GBstatsSerializer(serializers.ModelSerializer):
 
     def _salary(self, obj):
         return (Graduates.objects.filter(Q(id__in=obj) & (Q(average_salary__gt=0) | Q(lowest_salary__gt=0))).aggregate(
-            highest=Max("highest_salary"),
-            average=Avg("average_salary"),
-            lowest=Min("lowest_salary")))
+            highest_salary=Max("highest_salary"),
+            average_salary=Avg("average_salary"),
+            lowest_salary=Min("lowest_salary")))
 
     class Meta:
         model = Graduates
