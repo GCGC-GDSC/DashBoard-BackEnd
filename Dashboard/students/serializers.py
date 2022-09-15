@@ -200,8 +200,8 @@ class InstituteGradListSeralizer(serializers.ModelSerializer):
             "total_not_intrested_in_placments":
             obj.total_not_intrested_in_placments,
             "total_offers": obj.total_offers,
-            "placed": obj.total_placed,
-            "yet_to_place": obj.total_yet_to_place,
+            "total_placed": obj.total_placed,
+            "total_yet_to_place": obj.total_yet_to_place,
             "total_multiple_offers": obj.total_multiple_offers
         }
 
@@ -428,8 +428,8 @@ class GBstatsSerializer(serializers.ModelSerializer):
             "total_not_intrested_in_placments": total_not_intrested_in_placments,
             "total_offers": total_offers,
             "total_multiple_offers": total_multiple_offers,
-            "placed": (total_offers - total_multiple_offers),
-            "yet_to_place": (total_students_eligible - (total_offers - total_multiple_offers)),
+            "total_placed": (total_offers - total_multiple_offers),
+            "total_yet_to_place": (total_students_eligible - (total_offers - total_multiple_offers)),
             "total_students_eligible": total_students_eligible,
             "total_opted_for_higher_studies_only": total_opted_for_higher_studies_only
         }
