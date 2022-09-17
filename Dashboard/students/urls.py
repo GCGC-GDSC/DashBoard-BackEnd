@@ -30,15 +30,14 @@ urlpatterns = [
     #     'compare/<int:year1>/<int:year2>/<str:campus>/<str:institute>/<str:coursename>/<str:grad>',
     #     CompareYearsData.as_view(),
     #     name='compare'),
-    path(
-        'compare/<int:year1>/<int:year2>/<str:campus>/<str:institute>',
-        CompareYearsData.as_view(),
-        name='compare'),
+    path('compare/<int:year1>/<int:year2>/<str:campus>/<str:institute>',
+         CompareYearsData.as_view(),
+         name='compare'),
     path('<int:year>/updateprograms/<pk>',
          UpdateGraduatesWithPrograms.as_view(),
          name='data-update-view-with-programs'),
     path('logs', utils.log_edit_info, name='logs-api'),
-#     path('<int:year>/highlights', HighlightsView.as_view(), name='Highlights'),
+    #     path('<int:year>/highlights', HighlightsView.as_view(), name='Highlights'),
 
     # Dont touch
     # path('createinstances/<str:year>/', CreateInstances, name='CreateInstances'),

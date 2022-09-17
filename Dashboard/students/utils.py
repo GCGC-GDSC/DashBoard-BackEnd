@@ -100,8 +100,8 @@ class FileUploadView(views.APIView):
         return Response("Data sent", status=204)
 """
 
+
 def LastNlines(fname, N=10):
-    
 
     with open(fname) as f:
         log_buffer = f.readlines()
@@ -130,7 +130,6 @@ def log_edit_info(request):
 
         # send_data = []
 
-        
         # for line in last_lines:
         #     send_data.append(line)
         send_data = LastNlines(fname="./logs/dblog.txt")
@@ -148,7 +147,9 @@ def export_data_to_excel(request, name, year):
     elif name.lower() == 'gst':
         camp = Campus.objects.get(name='vskp')
         inst = Institute.objects.get(name='gst', under_campus=camp)
-        obj = GraduatesWithPrograms.objects.filter(passing_year=year, under_institute=inst, under_campus=camp)
+        obj = GraduatesWithPrograms.objects.filter(passing_year=year,
+                                                   under_institute=inst,
+                                                   under_campus=camp)
         print("objects: ", obj)
     else:
         camp = Campus.objects.get(name=name)
@@ -244,7 +245,8 @@ def export_data_to_excel(request, name, year):
             i.under_campus,
             "under_institute":
             i.under_institute,
-            "program": program
+            "program":
+            program
         })
 
     # print("============================================")
@@ -267,7 +269,7 @@ def export_data_to_excel(request, name, year):
             dic[val.lower()] = x
 
         print("dic value: =====>", dic)
-        
+
         for da in data:
             inst = da['program']
             try:

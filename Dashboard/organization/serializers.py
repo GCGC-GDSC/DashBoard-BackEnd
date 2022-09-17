@@ -49,7 +49,8 @@ class ProgramSeralizer(serializers.ModelSerializer):
 
     class Meta:
         model = Programs
-        fields = ['name','course','is_ug']
+        fields = ['name', 'course', 'is_ug']
+
 
 class StreamsSeralizer(serializers.ModelSerializer):
 

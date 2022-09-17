@@ -357,7 +357,7 @@ class GBstatsSerializer(serializers.ModelSerializer):
             (Graduates.objects.filter(id__in=obj).aggregate(
                 total_not_intrested_in_placments=Sum(
                     total_not_intrested_in_placments))
-             )['total_not_intrested_in_placments']/15,
+             )['total_not_intrested_in_placments'] / 15,
             "total_opted_for_higher_studies_only":
             total_opted_for_higher_studies_only,
         })
@@ -404,7 +404,6 @@ class GBstatsSerializer(serializers.ModelSerializer):
         #         total_not_intrested_in_placments),
         #     total_offers=Sum(total_offers),
         #     total_multiple_offers=Sum(total_multiple_offers)))
-               
 
         ## This is a tempory solution need to be fix ASAP /length is not accaptable
         # length = len(Graduates.objects.filter(id__in=obj))
@@ -425,22 +424,30 @@ class GBstatsSerializer(serializers.ModelSerializer):
         # })
 
         serializer = {
-            "total_not_intrested_in_placments": total_not_intrested_in_placments,
-            "total_offers": total_offers,
-            "total_multiple_offers": total_multiple_offers,
+            "total_not_intrested_in_placments":
+            total_not_intrested_in_placments,
+            "total_offers":
+            total_offers,
+            "total_multiple_offers":
+            total_multiple_offers,
             "total_placed": (total_offers - total_multiple_offers),
-            "total_yet_to_place": (total_students_eligible - (total_offers - total_multiple_offers)),
-            "total_students_eligible": total_students_eligible,
-            "total_opted_for_higher_studies_only": total_opted_for_higher_studies_only
+            "total_yet_to_place":
+            (total_students_eligible - (total_offers - total_multiple_offers)),
+            "total_students_eligible":
+            total_students_eligible,
+            "total_opted_for_higher_studies_only":
+            total_opted_for_higher_studies_only
         }
 
         return serializer
 
     def _salary(self, obj):
-        return (Graduates.objects.filter(Q(id__in=obj) & (Q(average_salary__gt=0) | Q(lowest_salary__gt=0))).aggregate(
-            highest_salary=Max("highest_salary"),
-            average_salary=Avg("average_salary"),
-            lowest_salary=Min("lowest_salary")))
+        return (Graduates.objects.filter(
+            Q(id__in=obj)
+            & (Q(average_salary__gt=0) | Q(lowest_salary__gt=0))).aggregate(
+                highest_salary=Max("highest_salary"),
+                average_salary=Avg("average_salary"),
+                lowest_salary=Min("lowest_salary")))
 
     class Meta:
         model = Graduates
