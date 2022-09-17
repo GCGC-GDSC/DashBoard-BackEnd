@@ -48,7 +48,7 @@ class GraduateList(generics.ListAPIView):
                     send_data[cmp_.name][int_.name].append(ug_data)
                     send_data[cmp_.name][int_.name].append(pg_data)
         except Exception as e:
-            db_logger.exception(str(e))
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'error',
                 'result': str(e)
@@ -102,7 +102,12 @@ class InstituteGradList(generics.ListAPIView):
             # ]
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
+            return response.Response({
+                'status': 'Error',
+                'result': str(e)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
 
 
 class Overall(generics.ListAPIView):
@@ -141,7 +146,12 @@ class Overall(generics.ListAPIView):
 
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
+            return response.Response({
+                'status': 'Error',
+                'result': str(e)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
 
 
 class Gbstats(generics.ListAPIView):
@@ -155,8 +165,6 @@ class Gbstats(generics.ListAPIView):
             ug_grad = Graduates.objects.filter(is_ug=True, passing_year=year)
             pg_grad = Graduates.objects.filter(is_ug=False, passing_year=year)
 
-            
-
             # print(ug_grad.aggregate(total_students__sum=Sum('total_students'))['total_students__sum'])
             # print(ug_grad.aggregate(total_final_years__sum=Sum('total_final_years'))['total_final_years__sum'])
             # print(ug_grad.aggregate(total_higher_study_and_pay_crt__sum=Sum('total_higher_study_and_pay_crt'))['total_higher_study_and_pay_crt__sum'])
@@ -165,13 +173,11 @@ class Gbstats(generics.ListAPIView):
             # print(ug_grad.aggregate(total_not_intrested_in_placments__sum=Sum('total_not_intrested_in_placments'))['total_not_intrested_in_placments__sum'])
             # print(ug_grad.aggregate(total_opted_for_higher_studies_only__sum=Sum('total_opted_for_higher_studies_only'))['total_opted_for_higher_studies_only__sum'])
 
-
-
             send_data['UG'] = GBstatsSerializer(ug_grad).data
             send_data['PG'] = GBstatsSerializer(pg_grad).data
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -201,7 +207,7 @@ class SelectGraduates(generics.ListAPIView):
                 })
             else:
                 program = Programs.objects.get(
-                    under_course=course,
+                    name=coursename,
                     is_ug=(True if grad == "ug" else False),
                     under_institute=inst,
                     under_campus=campus)
@@ -213,7 +219,7 @@ class SelectGraduates(generics.ListAPIView):
                 return response.Response({'status': 'OK', 'result': send_data})
 
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -305,7 +311,7 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_201_CREATED)
 
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -394,7 +400,7 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_201_CREATED)
         except Exception as e:
             # print(e)
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -407,6 +413,7 @@ class ProgramsGraduates(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request, year):
+        db_logger = logging.getLogger('db')
         try:
             qs_wp = GraduatesWithPrograms.objects.filter(passing_year=year)
             qs_g = Graduates.objects.filter(passing_year=year)
@@ -435,100 +442,142 @@ class ProgramsGraduates(generics.ListAPIView):
 
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
-            # print(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
             },
                                      status=HTTP_400_BAD_REQUEST)
 
+
 class CompareYearsData(generics.ListAPIView):
     serializer_class = CompareSerializer
     permission_classes = (IsAuthenticated, )
 
     def grads_helper(self, grads_array):
-            total_students_eligible = 0
-            total_placed = 0
-            total_multiple_offers = 0
-            highest_salary = 0
-            average_salary = 0
-            n = 0
-            m = 0
-            for i in grads_array:
-                n+=1
-                total_students_eligible+=i.total_students_eligible
-                total_placed+=i.total_placed
-                total_multiple_offers+=i.total_multiple_offers
-                highest_salary = max(highest_salary, i.highest_salary)
-                average_salary += i.average_salary
-                if i.average_salary>0: m += 1 
-            
-            if m>0: average_salary /= m
+        total_students_eligible = 0
+        total_placed = 0
+        total_multiple_offers = 0
+        highest_salary = 0
+        average_salary = 0
+        n = 0
+        m = 0
+        for i in grads_array:
+            n += 1
+            total_students_eligible += i.total_students_eligible
+            total_placed += i.total_placed
+            total_multiple_offers += i.total_multiple_offers
+            highest_salary = max(highest_salary, i.highest_salary)
+            average_salary += i.average_salary
+            if i.average_salary > 0: m += 1
 
-            return {
-                                "total_students_eligible"   :total_students_eligible,
-                                "total_placed"              :total_placed,
-                                "total_multiple_offers"     :total_multiple_offers,
-                                "highest_salary"            :highest_salary,
-                                "average_salary"            :average_salary,}
+        if m > 0: average_salary /= m
+
+        return {
+            "total_students_eligible": total_students_eligible,
+            "total_placed": total_placed,
+            "total_multiple_offers": total_multiple_offers,
+            "highest_salary": highest_salary,
+            "average_salary": average_salary,
+        }
 
     def get(self, request, year1, year2, campus, institute):
 
-
-        if institute=="gst":
+        db_logger = logging.getLogger('db')
+        if institute == "gst":
             try:
-                inst = Institute.objects.get(name=institute,under_campus__name=campus)
-                graduates_with_programs = GraduatesWithPrograms.objects.filter(under_institute=inst)
+                inst = Institute.objects.get(name=institute,
+                                             under_campus__name=campus)
+                graduates_with_programs = GraduatesWithPrograms.objects.filter(
+                    under_institute=inst)
                 graduates_with_programs_yearwise = {}
-                graduates_with_programs_yearwise[year1] = graduates_with_programs.filter(passing_year=year1)
-                graduates_with_programs_yearwise[year2] = graduates_with_programs.filter(passing_year=year2)
-                
-                send_data = {year1:{},year2:{}}
+                graduates_with_programs_yearwise[
+                    year1] = graduates_with_programs.filter(passing_year=year1)
+                graduates_with_programs_yearwise[
+                    year2] = graduates_with_programs.filter(passing_year=year2)
 
-                keys = ["total_students_eligible", "total_placed", "total_multiple_offers", "highest_salary", "average_salary"]
+                send_data = {year1: {}, year2: {}}
+
+                keys = [
+                    "total_students_eligible", "total_placed",
+                    "total_multiple_offers", "highest_salary", "average_salary"
+                ]
 
                 # year1
-                
+
                 programs = Programs.objects.filter(under_institute=inst)
 
-                for year in [year1,year2]:
+                for year in [year1, year2]:
                     for program in programs:
                         course_ = program.under_course
                         if course_.course not in send_data[year]:
-                            
-                            grads_array = graduates_with_programs_yearwise[year].filter(program__under_course=course_)
-                            send_data[year][course_.course] =  self.grads_helper(grads_array)
+
+                            grads_array = graduates_with_programs_yearwise[
+                                year].filter(program__under_course=course_)
+                            send_data[year][
+                                course_.course] = self.grads_helper(
+                                    grads_array)
 
                 return response.Response({"status": "OK", "result": send_data})
 
             except Exception as e:
-                print(traceback.print_exc())
-                return response.Response({"status": "Error", "result": send_data}, status=HTTP_404_NOT_FOUND)
+                db_logger.exception(traceback.print_exc())
+                return response.Response(
+                    {
+                        "status": "Error",
+                        "result": send_data
+                    },
+                    status=HTTP_404_NOT_FOUND)
             pass
         else:
             try:
-                inst = Institute.objects.get(name=institute,under_campus__name=campus)
-                send_data = {year1:{"UG":{},"PG":{}},year2:{"UG":{},"PG":{}}}
-                graduates_objects = Graduates.objects.filter(under_institute=inst)
+                inst = Institute.objects.get(name=institute,
+                                             under_campus__name=campus)
+                send_data = {
+                    year1: {
+                        "UG": {},
+                        "PG": {}
+                    },
+                    year2: {
+                        "UG": {},
+                        "PG": {}
+                    }
+                }
+                graduates_objects = Graduates.objects.filter(
+                    under_institute=inst)
                 graduates_y1 = graduates_objects.filter(passing_year=year1)
                 graduates_y2 = graduates_objects.filter(passing_year=year2)
-                
+
                 res_y1 = CompareSerializer(graduates_y1, many=True).data
                 res_y2 = CompareSerializer(graduates_y2, many=True).data
                 send_data[year1]["UG"] = res_y1[0]
                 send_data[year1]["PG"] = res_y1[1]
 
-
                 send_data[year2]["UG"] = res_y2[0]
                 send_data[year2]["PG"] = res_y2[1]
-                return response.Response({"status": "OK", "result": send_data}, status=HTTP_200_OK)
+                return response.Response({
+                    "status": "OK",
+                    "result": send_data
+                },
+                                         status=HTTP_200_OK)
             except Exception as e:
-                return response.Response({"status": "Error", "result": str(e)}, status=HTTP_404_NOT_FOUND)
+                db_logger.exception(traceback.print_exc())
+                return response.Response({
+                    "status": "Error",
+                    "result": str(e)
+                },
+                                         status=HTTP_404_NOT_FOUND)
 
-        return response.Response({"status": "Error", "result": "something went wrong."}, status=HTTP_400_BAD_REQUEST)
-
+        return response.Response(
+            {
+                "status": "Error",
+                "result": "something went wrong."
+            },
+            status=HTTP_400_BAD_REQUEST)
 
         # Prev's code:--
+
+
 #         compare_years = [year1, year2]
 #         if grad == 'ug':
 #             grad = True
@@ -549,8 +598,8 @@ class CompareYearsData(generics.ListAPIView):
 #                 'result': str(e)
 #             },
 #                                      status=HTTP_400_BAD_REQUEST)
-# # 
-        
+# #
+
 #         if coursename != "null":
 #             course = Courses.objects.get(course=coursename)
 #             prog = Programs.objects.filter(under_campus=campus,
@@ -714,7 +763,6 @@ class CompareYearsData(generics.ListAPIView):
 #         # #     })
 #         # return response.Response({'status': 'OK', 'result': send_data})
 
-
 #             # return response.Response({'status': 'OK', 'result': send_data})
 #         elif coursename == "null" and grad != None:
 #             send_data = dict({
@@ -781,7 +829,12 @@ class LogsDataListAPIView(generics.ListAPIView):
                 send_data.append(line)
             return Response({'status': 'ok', 'result': send_data[::-1]})
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
+            return response.Response({
+                'status': 'Error',
+                'result': str(e)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
 
 
 class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
@@ -872,7 +925,7 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
                 },
                 status=HTTP_201_CREATED)
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -919,10 +972,11 @@ def CreateInstances(request, year):
         return HttpResponse(json.dumps(response_data),
                             content_type="application/json")
 
+
 # class HighlightsView(generics.ListAPIView):
 #     serializer_class = HighlightsSerializer
 #     permission_classes = (IsAuthenticated, )
-    
+
 #     def get(self, request, year):
 #         try:
 #             data = Highlights.objects.filter(passing_year=year)

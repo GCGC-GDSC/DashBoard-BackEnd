@@ -1,0 +1,7 @@
+Performing system checks...
+
+System check identified no issues (0 silenced).
+September 17, 2022 - 20:14:38
+Django version 3.2.8, using settings 'Dashboard.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
