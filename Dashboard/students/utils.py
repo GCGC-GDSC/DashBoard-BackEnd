@@ -100,16 +100,17 @@ class FileUploadView(views.APIView):
         return Response("Data sent", status=204)
 """
 
+
 def LastNlines(fname, N=10):
     # taking buffer size of 8192 bytes
     bufsize = 8192
-     
+
     # calculating size of
     # file in bytes
     fsize = os.stat(fname).st_size
-     
+
     iter = 0
-     
+
     # opening file using with() method
     # so that file get closed
     # after completing work
@@ -118,39 +119,39 @@ def LastNlines(fname, N=10):
 
     with open(fname) as f:
         if bufsize > fsize:
-                 
+
             # adjusting buffer size
             # according to size
             # of file
-            bufsize = fsize-1
-             
+            bufsize = fsize - 1
+
             # list to store
             # last N lines
             fetched_lines = []
-             
+
             # while loop to
             # fetch last N lines
             while True:
                 iter += 1
-                 
+
                 # moving cursor to
                 # the last Nth line
                 # of file
-                f.seek((fsize-bufsize) * iter)
-                 
+                f.seek((fsize - bufsize) * iter)
+
                 # storing each line
                 # in list upto
                 # end of file
                 fetched_lines.extend(f.readlines())
-                 
+
                 # halting the program
                 # when size of list
                 # is equal or greater to
                 # the number of lines requested or
                 # when we reach end of file
                 if len(fetched_lines) >= N or f.tell() == 0:
-                        log_buffer.extend(fetched_lines[-N:])
-                        break
+                    log_buffer.extend(fetched_lines[-N:])
+                    break
         return log_buffer
 
 
@@ -174,7 +175,6 @@ def log_edit_info(request):
 
         # send_data = []
 
-        
         # for line in last_lines:
         #     send_data.append(line)
         send_data = LastNlines(fname="./logs/dblog.txt")
@@ -192,7 +192,9 @@ def export_data_to_excel(request, name, year):
     elif name.lower() == 'gst':
         camp = Campus.objects.get(name='vskp')
         inst = Institute.objects.get(name='gst', under_campus=camp)
-        obj = GraduatesWithPrograms.objects.filter(passing_year=year, under_institute=inst, under_campus=camp)
+        obj = GraduatesWithPrograms.objects.filter(passing_year=year,
+                                                   under_institute=inst,
+                                                   under_campus=camp)
         print("objects: ", obj)
     else:
         camp = Campus.objects.get(name=name)
@@ -288,7 +290,8 @@ def export_data_to_excel(request, name, year):
             i.under_campus,
             "under_institute":
             i.under_institute,
-            "program": program
+            "program":
+            program
         })
 
     # print("============================================")
@@ -311,7 +314,7 @@ def export_data_to_excel(request, name, year):
             dic[val.lower()] = x
 
         print("dic value: =====>", dic)
-        
+
         for da in data:
             inst = da['program']
             try:
