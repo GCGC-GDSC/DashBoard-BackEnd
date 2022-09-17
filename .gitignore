@@ -132,3 +132,4 @@ dmypy.json
 # vscode
 .vscode/
 Dashboard/data_json/*
+old_db/*
