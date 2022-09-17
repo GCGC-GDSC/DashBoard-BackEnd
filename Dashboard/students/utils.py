@@ -18,6 +18,7 @@ import datetime
 import calendar
 import traceback
 import logging
+import os
 """
 class FileUploadView(views.APIView):
     parser_classes = [FileUploadParser]
@@ -99,31 +100,88 @@ class FileUploadView(views.APIView):
         return Response("Data sent", status=204)
 """
 
+def LastNlines(fname, N=10):
+    # taking buffer size of 8192 bytes
+    bufsize = 8192
+     
+    # calculating size of
+    # file in bytes
+    fsize = os.stat(fname).st_size
+     
+    iter = 0
+     
+    # opening file using with() method
+    # so that file get closed
+    # after completing work
+
+    log_buffer = []
+
+    with open(fname) as f:
+        if bufsize > fsize:
+                 
+            # adjusting buffer size
+            # according to size
+            # of file
+            bufsize = fsize-1
+             
+            # list to store
+            # last N lines
+            fetched_lines = []
+             
+            # while loop to
+            # fetch last N lines
+            while True:
+                iter += 1
+                 
+                # moving cursor to
+                # the last Nth line
+                # of file
+                f.seek((fsize-bufsize) * iter)
+                 
+                # storing each line
+                # in list upto
+                # end of file
+                fetched_lines.extend(f.readlines())
+                 
+                # halting the program
+                # when size of list
+                # is equal or greater to
+                # the number of lines requested or
+                # when we reach end of file
+                if len(fetched_lines) >= N or f.tell() == 0:
+                        log_buffer.extend(fetched_lines[-N:])
+                        break
+        return log_buffer
+
 
 @api_view(('GET', ))
 def log_edit_info(request):
     db_logger = logging.getLogger('db')
     try:
-        with open("./logs/dblog.txt", "r") as file:
-            i = 0
-            lines_size = 10
-            last_lines = []
-            for line in file:
-                if i < lines_size:
-                    last_lines.append(line)
-                else:
-                    last_lines[i % lines_size] = line
-                i = i + 1
+        # with open("./logs/dblog.txt", "r") as file:
+        #     i = 0
+        #     lines_size = 10
+        #     last_lines = []
+        #     for line in file:
+        #         if i < lines_size:
+        #             last_lines.append(line)
+        #         else:
+        #             last_lines[i % lines_size] = line
+        #         i = i + 1
 
-        last_lines = last_lines[(i % lines_size):] + last_lines[:(i %
-                                                                  lines_size)]
+        # last_lines = last_lines[(i % lines_size):] + last_lines[:(i %
+        #                                                           lines_size)]
 
-        send_data = []
-        for line in last_lines:
-            send_data.append(line)
-        return Response({'status': 'ok', 'result': send_data[::-1]})
+        # send_data = []
+
+        
+        # for line in last_lines:
+        #     send_data.append(line)
+        send_data = LastNlines(fname="./logs/dblog.txt")
+        return Response({'status': 'ok', 'result': send_data})
     except Exception as e:
-        db_logger.exception(e)
+        db_logger.exception(traceback.print_exc())
+        return Response({'status': 'Error', 'result': str(e)})
 
 
 def export_data_to_excel(request, name, year):
@@ -383,4 +441,4 @@ class FileDownloadListAPIView(generics.ListAPIView):
                 'Content-Disposition'] = 'attachment; filename="%s"' % filename
             return response
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())

@@ -48,7 +48,7 @@ class GraduateList(generics.ListAPIView):
                     send_data[cmp_.name][int_.name].append(ug_data)
                     send_data[cmp_.name][int_.name].append(pg_data)
         except Exception as e:
-            db_logger.exception(str(e))
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'error',
                 'result': str(e)
@@ -102,7 +102,13 @@ class InstituteGradList(generics.ListAPIView):
             # ]
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
+            return response.Response({
+                'status': 'Error',
+                'result': str(e)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
+
 
 
 class Overall(generics.ListAPIView):
@@ -141,7 +147,13 @@ class Overall(generics.ListAPIView):
 
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
+            return response.Response({
+                'status': 'Error',
+                'result': str(e)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
+
 
 
 class Gbstats(generics.ListAPIView):
@@ -171,7 +183,7 @@ class Gbstats(generics.ListAPIView):
             send_data['PG'] = GBstatsSerializer(pg_grad).data
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -213,7 +225,7 @@ class SelectGraduates(generics.ListAPIView):
                 return response.Response({'status': 'OK', 'result': send_data})
 
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -305,7 +317,7 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_201_CREATED)
 
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -394,7 +406,7 @@ class UpdateGraduates(generics.UpdateAPIView):
                 status=HTTP_201_CREATED)
         except Exception as e:
             # print(e)
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -407,6 +419,7 @@ class ProgramsGraduates(generics.ListAPIView):
     permission_classes = (IsAuthenticated, )
 
     def get(self, request, year):
+        db_logger = logging.getLogger('db')
         try:
             qs_wp = GraduatesWithPrograms.objects.filter(passing_year=year)
             qs_g = Graduates.objects.filter(passing_year=year)
@@ -435,7 +448,7 @@ class ProgramsGraduates(generics.ListAPIView):
 
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
-            # print(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
@@ -474,7 +487,7 @@ class CompareYearsData(generics.ListAPIView):
 
     def get(self, request, year1, year2, campus, institute):
 
-
+        db_logger = logging.getLogger('db')
         if institute=="gst":
             try:
                 inst = Institute.objects.get(name=institute,under_campus__name=campus)
@@ -502,7 +515,7 @@ class CompareYearsData(generics.ListAPIView):
                 return response.Response({"status": "OK", "result": send_data})
 
             except Exception as e:
-                print(traceback.print_exc())
+                db_logger.exception(traceback.print_exc())
                 return response.Response({"status": "Error", "result": send_data}, status=HTTP_404_NOT_FOUND)
             pass
         else:
@@ -523,6 +536,7 @@ class CompareYearsData(generics.ListAPIView):
                 send_data[year2]["PG"] = res_y2[1]
                 return response.Response({"status": "OK", "result": send_data}, status=HTTP_200_OK)
             except Exception as e:
+                db_logger.exception(traceback.print_exc())
                 return response.Response({"status": "Error", "result": str(e)}, status=HTTP_404_NOT_FOUND)
 
         return response.Response({"status": "Error", "result": "something went wrong."}, status=HTTP_400_BAD_REQUEST)
@@ -781,7 +795,13 @@ class LogsDataListAPIView(generics.ListAPIView):
                 send_data.append(line)
             return Response({'status': 'ok', 'result': send_data[::-1]})
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
+            return response.Response({
+                'status': 'Error',
+                'result': str(e)
+            },
+                                     status=HTTP_400_BAD_REQUEST)
+
 
 
 class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
@@ -872,7 +892,7 @@ class UpdateGraduatesWithPrograms(generics.UpdateAPIView):
                 },
                 status=HTTP_201_CREATED)
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)
