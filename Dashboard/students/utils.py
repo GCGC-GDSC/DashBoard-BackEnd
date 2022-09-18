@@ -233,7 +233,7 @@ def export_data_to_excel(request, name, year):
             i.highest_salary,
             "lowest_salary":
             i.lowest_salary,
-            "average_sala":
+            "average_salary":
             i.average_salary,
             "is_ug":
             i.is_ug,
