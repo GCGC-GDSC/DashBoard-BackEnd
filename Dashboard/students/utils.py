@@ -18,6 +18,7 @@ import datetime
 import calendar
 import traceback
 import logging
+import os
 """
 class FileUploadView(views.APIView):
     parser_classes = [FileUploadParser]
@@ -100,30 +101,42 @@ class FileUploadView(views.APIView):
 """
 
 
+def LastNlines(fname, N=10):
+
+    with open(fname) as f:
+        log_buffer = f.readlines()
+        log_buffer = log_buffer[-1:-N:-1]
+
+    return log_buffer
+
+
 @api_view(('GET', ))
 def log_edit_info(request):
     db_logger = logging.getLogger('db')
     try:
-        with open("./logs/dblog.txt", "r") as file:
-            i = 0
-            lines_size = 10
-            last_lines = []
-            for line in file:
-                if i < lines_size:
-                    last_lines.append(line)
-                else:
-                    last_lines[i % lines_size] = line
-                i = i + 1
+        # with open("./logs/dblog.txt", "r") as file:
+        #     i = 0
+        #     lines_size = 10
+        #     last_lines = []
+        #     for line in file:
+        #         if i < lines_size:
+        #             last_lines.append(line)
+        #         else:
+        #             last_lines[i % lines_size] = line
+        #         i = i + 1
 
-        last_lines = last_lines[(i % lines_size):] + last_lines[:(i %
-                                                                  lines_size)]
+        # last_lines = last_lines[(i % lines_size):] + last_lines[:(i %
+        #                                                           lines_size)]
 
-        send_data = []
-        for line in last_lines:
-            send_data.append(line)
-        return Response({'status': 'ok', 'result': send_data[::-1]})
+        # send_data = []
+
+        # for line in last_lines:
+        #     send_data.append(line)
+        send_data = LastNlines(fname="./logs/dblog.txt")
+        return Response({'status': 'ok', 'result': send_data})
     except Exception as e:
-        db_logger.exception(e)
+        db_logger.exception(traceback.print_exc())
+        return Response({'status': 'Error', 'result': str(e)})
 
 
 def export_data_to_excel(request, name, year):
@@ -134,7 +147,9 @@ def export_data_to_excel(request, name, year):
     elif name.lower() == 'gst':
         camp = Campus.objects.get(name='vskp')
         inst = Institute.objects.get(name='gst', under_campus=camp)
-        obj = GraduatesWithPrograms.objects.filter(passing_year=year, under_institute=inst, under_campus=camp)
+        obj = GraduatesWithPrograms.objects.filter(passing_year=year,
+                                                   under_institute=inst,
+                                                   under_campus=camp)
         print("objects: ", obj)
     else:
         camp = Campus.objects.get(name=name)
@@ -230,7 +245,8 @@ def export_data_to_excel(request, name, year):
             i.under_campus,
             "under_institute":
             i.under_institute,
-            "program": program
+            "program":
+            program
         })
 
     # print("============================================")
@@ -253,7 +269,7 @@ def export_data_to_excel(request, name, year):
             dic[val.lower()] = x
 
         print("dic value: =====>", dic)
-        
+
         for da in data:
             inst = da['program']
             try:
@@ -383,4 +399,4 @@ class FileDownloadListAPIView(generics.ListAPIView):
                 'Content-Disposition'] = 'attachment; filename="%s"' % filename
             return response
         except Exception as e:
-            db_logger.exception(e)
+            db_logger.exception(traceback.print_exc())
