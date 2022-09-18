@@ -5,6 +5,9 @@ from .models import Graduates, GraduatesWithPrograms
 from django.db.models import Q, Count, Max, Sum, Min, Avg
 from math import *
 
+def helper(val):
+    res = [x for x in val if x != 0]
+    return res
 
 class GraduatesSerializer(serializers.ModelSerializer):
 
@@ -452,7 +455,6 @@ class GBstatsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Graduates
         fields = ['student_details', 'placement_details', 'salary', 'is_ug']
-
 
 class CompareSerializer(serializers.ModelSerializer):
 
