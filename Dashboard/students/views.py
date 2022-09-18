@@ -1,6 +1,3 @@
-from socket import INADDR_ALLHOSTS_GROUP
-from tokenize import Name
-from unicodedata import name
 from rest_framework import generics, status, views, response
 from organization.models import Institute, Campus, Stream, Programs, Courses
 from rest_framework.permissions import IsAuthenticated
@@ -172,6 +169,8 @@ class Gbstats(generics.ListAPIView):
             return response.Response({'status': 'OK', 'result': send_data})
         except Exception as e:
             db_logger.exception(e)
+            print("=============> ", e)
+            print(traceback.print_exc())
             return response.Response({
                 'status': 'Error',
                 'result': str(e)

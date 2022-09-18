@@ -5,6 +5,9 @@ from .models import Graduates, GraduatesWithPrograms
 from django.db.models import Q, Count, Max, Sum, Min, Avg
 from math import *
 
+def helper(val):
+    res = [x for x in val if x != 0]
+    return res
 
 class GraduatesSerializer(serializers.ModelSerializer):
 
@@ -427,7 +430,7 @@ class GBstatsSerializer(serializers.ModelSerializer):
         return serializer
 
     def _salary(self, obj):
-        return (Graduates.objects.filter(id__in=obj).aggregate(
+        return (Graduates.objects.filter(average_salary__gte=1).filter(id__in=obj).aggregate(
             highest=Max("highest_salary"),
             average=Avg("average_salary"),
             lowest=Min("lowest_salary")))
@@ -435,7 +438,6 @@ class GBstatsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Graduates
         fields = ['student_details', 'placement_details', 'salary', 'is_ug']
-
 
 class CompareSerializer(serializers.ModelSerializer):
 
