@@ -1,6 +1,3 @@
-from socket import INADDR_ALLHOSTS_GROUP
-from tokenize import Name
-from unicodedata import name
 from rest_framework import generics, status, views, response
 from organization.models import Institute, Campus, Stream, Programs, Courses
 from rest_framework.permissions import IsAuthenticated

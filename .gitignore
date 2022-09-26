@@ -133,3 +133,4 @@ dmypy.json
 .vscode/
 Dashboard/data_json/*
 old_db/*
+*/backup

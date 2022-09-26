@@ -6,6 +6,11 @@ from django.db.models import Q, Count, Max, Sum, Min, Avg
 from math import *
 
 
+def helper(val):
+    res = [x for x in val if x != 0]
+    return res
+
+
 class GraduatesSerializer(serializers.ModelSerializer):
 
     Percentage_of_students_opted_HS_to_the_total_number = serializers.SerializerMethodField(
